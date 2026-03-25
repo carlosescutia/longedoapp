@@ -1,0 +1,15 @@
+body > .ui.container {
+    margin-top: 3em;
+}
+
+.site {
+  display: flex;
+  min-height: 120vh;
+  flex-direction: column;
+}
+
+.Site-content {
+  flex: 1;
+}
+
+
