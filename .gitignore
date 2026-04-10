@@ -38,6 +38,9 @@
 
 php_errors.log
 
+/public/docs/*
+/public/imgs/*
+
 #-------------------------
 # User Guide Temp Files
 #-------------------------

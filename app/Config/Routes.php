@@ -41,3 +41,9 @@ $routes->get('parametro_sistema/eliminar/(:num)', 'Parametro_sistema::eliminar/$
 
 $routes->post('acceso_sistema_usuario/guardar', 'Acceso_sistema_usuario::guardar');
 $routes->get('acceso_sistema_usuario/eliminar/(:num)', 'Acceso_sistema_usuario::eliminar/$1');
+
+$routes->post('archivo/subir', 'Archivo::subir');
+$routes->post('archivo/eliminar', 'Archivo::eliminar');
+
+
+$routes->get('proceso/', 'Proceso::index');

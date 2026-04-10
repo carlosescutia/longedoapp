@@ -19,3 +19,25 @@ function confirm_delete(item, action) {
         ],
     }).modal('show');
 }
+
+function confirm_file_delete(item, frm_eliminar) {
+    $.modal({
+        title: 'Confirme que desea eliminar',
+        class: 'tiny',
+        closeIcon: false,
+        content: item,
+        actions: [
+            {
+                text: 'Eliminar',
+                class: 'red',
+                click: function () {
+                    $(frm_eliminar).submit();
+                }
+            },
+            {
+                text: 'Cancelar',
+                class: 'black'
+            },
+        ],
+    }).modal('show');
+}
