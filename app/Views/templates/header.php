@@ -74,14 +74,17 @@
             </a>
         <?php }
     ?>
-    <a class="item" href="<?=site_url('usuario')?>">
-      <i class="block layout icon"></i>
-      Proceso
-    </a>
-    <a class="item">
-      <i class="file alternate icon"></i>
-      Reportes
-    </a>
+    <?php
+        $permisos_requeridos = array(
+            'reporte.can_view',
+        );
+        if (has_permission_or($permisos_requeridos, $permisos_usuario)) { ?>
+            <a class="item" href="<?=site_url('reportes')?>">
+            <i class="file alternate icon"></i>
+            Reportes
+            </a>
+        <?php }
+    ?>
     <?php
         $permisos_requeridos = array(
             'catalogo.can_view',
@@ -122,7 +125,14 @@
                     <a class="item" href="<?=site_url('proceso')?>">Proceso</a>
                 <?php }
             ?>
-            <a class="item">Reportes</a>
+            <?php
+                $permisos_requeridos = array(
+                    'reporte.can_view',
+                );
+                if (has_permission_or($permisos_requeridos, $permisos_usuario)) { ?>
+                    <a class="item" href="<?=site_url('reportes')?>">Reportes</a>
+                <?php }
+            ?>
             <?php
                 $permisos_requeridos = array(
                     'catalogo.can_view',

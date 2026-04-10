@@ -45,5 +45,8 @@ $routes->get('acceso_sistema_usuario/eliminar/(:num)', 'Acceso_sistema_usuario::
 $routes->post('archivo/subir', 'Archivo::subir');
 $routes->post('archivo/eliminar', 'Archivo::eliminar');
 
-
 $routes->get('proceso/', 'Proceso::index');
+
+$routes->get('reportes/', 'Reportes::index');
+$routes->get('reportes/bitacora', 'Reportes::bitacora');
+$routes->get('reportes/bitacora/(:segment)', 'Reportes::bitacora/$1');

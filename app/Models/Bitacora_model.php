@@ -20,39 +20,33 @@ class Bitacora_model extends Model
         'valor',
     ];
 
-    public function get_bitacora($usuario, $nom_comunidad, $id_rol, $accion, $entidad, $salida)
+    public function get_bitacora($nom_login, $id_rol, $salida)
     {
         $dbutil = \Config\Database::utils();
 
-        if ($id_rol == 'sup') {
-            $usuario = '%';
+        if ($id_rol == 'mentor') {
+            $nom_login = '%';
         }
-        if ($id_rol == 'adm') {
-            $usuario = '%';
-            $nom_comunidad = '%';
+        if ($id_rol == 'admin') {
+            $nom_login = '%';
         }
-        $sql = "select b.* from bitacora b where b.usuario LIKE ? and b.nom_comunidad LIKE ? ";
-        if ($id_rol !== 'adm') {
-            $sql .= " and b.usuario not in (select usuario from usuario where id_rol = 'adm')";
+
+        $sql = "select b.* from bitacora b where b.nom_login LIKE ? ";
+
+        if ($id_rol !== 'admin') {
+            $sql .= " and b.nom_login not in (select nom_login from usuario where id_rol = 'admin')";
         }
+
         $parametros = array();
-        array_push($parametros, "$usuario");
-        array_push($parametros, "$nom_comunidad");
-        if ($accion <> "") {
-            $sql .= ' and b.accion = ?';
-            array_push($parametros, "$accion");
-        } 
-        if ($entidad <> "") {
-            $sql .= ' and b.entidad = ?';
-            array_push($parametros, "$entidad");
-        } 
+        array_push($parametros, "$nom_login");
         $sql .= ' order by b.id_evento desc;';
         $query = $this->db->query($sql, $parametros);
 
         if ($salida == 'csv') {
             $delimiter = ",";
             $newline = "\r\n";
-            return $this->dbutil->getCSVFromResult($query, $delimiter, $newline);
+            $enclosure = '"';
+            return $dbutil->getCSVFromResult($query, $delimiter, $newline, $enclosure);
         } else {
             return $query->getResultArray();
         }
