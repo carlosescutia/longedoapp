@@ -15,6 +15,7 @@ class Usuario_model extends Model
         'nom_login',
         'password',
         'activo',
+        'evaluador',
     ];
 
     public function get_usuarios()
@@ -60,6 +61,21 @@ class Usuario_model extends Model
             .'';
         $query = $this->db->query($sql, array($nom_login, $password));
         return $query->getRowArray();
+    }
+
+    public function get_evaluadores()
+    {
+        $sql = ""
+            ."select "
+            ."u.* "
+            ."from "
+            ."usuario u "
+            ."where "
+            ."id_rol = 'mentor' "
+            ."order by nom_usuario "
+            ."";
+        $query = $this->db->query($sql);
+        return $query->getResultArray();
     }
 
 }

@@ -96,7 +96,7 @@
             </a>
         <?php }
     ?>
-    <a class="item">
+    <a class="item" href="<?=site_url('perfil')?>">
       <i class="user icon"></i>
       <?= $userdata['nom_usuario'] ?>
     </a>
@@ -142,7 +142,7 @@
                 <?php }
             ?>
             <div class="right menu">
-                <a class="item usuario-menu" href="#"><i class="circular user icon"></i><?=$userdata['nom_usuario']?></a>
+                <a class="item usuario-menu" href="<?=site_url('perfil')?>"><i class="circular user icon"></i><?=$userdata['nom_usuario']?></a>
                 <a class="item" href="<?=site_url('logout')?>">Salir</a>
             </div>
         </div>

@@ -12,7 +12,7 @@
                             );
                             if (has_permission_or($permisos_requeridos, $permisos_usuario)) { ?>
                                 <div class="four wide column">
-                                    <?php include "usuario/boton.php" ?>
+                                    <?php include "usuario/boton_evaluador.php" ?>
                                 </div>
                             <?php }
                         ?>

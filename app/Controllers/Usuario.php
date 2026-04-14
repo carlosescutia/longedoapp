@@ -151,5 +151,47 @@ class Usuario extends BaseController
         }
     }
 
+    public function lista_evaluadores()
+    {
+        if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
+
+            $data['evaluadores'] = $this->usuario_model->get_evaluadores();
+
+            return view('templates/header', $data)
+                .view('catalogos/usuario/lista_evaluadores', $data)
+                .view('templates/footer');
+        } else {
+            return redirect()->to(site_url("login"));
+        }
+    }
+
+    public function guardar_evaluador()
+    {
+        if ($this->session->logueado) {
+            $usuario = $this->request->getPost();
+            if ($usuario) {
+                $accion = 'modificó';
+                $evaluador = array_key_exists('evaluador', $usuario) ? 'evaluador' : 'no_evaluador';
+
+                // guardado
+                $data = array(
+                    'id_usuario' => $usuario['id_usuario'],
+                    'evaluador' => array_key_exists('evaluador', $usuario) ? 1 : 0,
+                );
+                $this->usuario_model->save($data);
+
+                // registro en bitacora
+                $entidad = 'usuario';
+                $valor = $usuario['id_usuario'] . " " .$usuario['nom_login'] . " " . $evaluador;
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            }
+            return redirect()->to(site_url("usuario/lista_evaluadores"));
+        } else {
+            return redirect()->to(site_url("login"));
+        }
+    }
+
 }
 

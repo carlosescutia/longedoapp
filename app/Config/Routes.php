@@ -50,3 +50,18 @@ $routes->get('proceso/', 'Proceso::index');
 $routes->get('reportes/', 'Reportes::index');
 $routes->get('reportes/bitacora', 'Reportes::bitacora');
 $routes->get('reportes/bitacora/(:segment)', 'Reportes::bitacora/$1');
+
+
+
+$routes->get('perfil/', 'Perfil::detalle');
+$routes->post('perfil/guardar', 'Perfil::guardar');
+
+$routes->get('usuario/lista_evaluadores', 'Usuario::lista_evaluadores');
+$routes->post('usuario/guardar_evaluador', 'Usuario::guardar_evaluador');
+
+$routes->get('evento/detalle/(:num)', 'Evento::detalle/$1');
+$routes->post('evento/nuevo', 'Evento::nuevo');
+$routes->get('evento/editar/(:num)', 'Evento::editar/$1');
+$routes->post('evento/guardar', 'Evento::guardar');
+$routes->get('evento/eliminar/(:num)', 'Evento::eliminar/$1');
+

@@ -24,7 +24,7 @@
             <div class="row">
                 <div class="six wide column">
                     <div class="ui basic segment">
-                        <h1 class="ui header">Sistema de Evaluación de Guanajuato</h1>
+                        <h1 class="ui header">Longe do Mar</h1>
                         <div class="ui divider"></div>
 
                         <?php if ($error): ?>
@@ -41,7 +41,7 @@
                             <div class="field">
                                 <div class="ui left icon input">
                                     <i class="user icon"></i>
-                                    <input type="text" name="nom_login" placeholder="Usuario">
+                                    <input type="text" name="nom_login" id="nom_login" placeholder="Usuario">
                                 </div>
                             </div>
                             <div class="field">
@@ -58,3 +58,8 @@
         </div>
     </body>
 </html>
+<script>
+    $(document).ready( function() {
+        $('#nom_login').focus();
+    });
+</script>
