@@ -16,18 +16,27 @@ class Usuario_model extends Model
         'password',
         'activo',
         'evaluador',
+        'id_comunidad',
     ];
 
-    public function get_usuarios()
+    public function get_usuarios($id_rol, $id_comunidad)
     {
         $sql = ""
             ."select "
-            ."u.* "
+            ."u.*, c.nom_comunidad "
             ."from "
             ."usuario u "
-            ."order by nom_usuario "
+            ."left join comunidad c on c.id_comunidad = u.id_comunidad "
             ."";
-        $query = $this->db->query($sql);
+
+        $parametros = [];
+        if ($id_rol !== 'admin') {
+            $sql .= " where u.id_comunidad = ? ";
+            array_push($parametros, "$id_comunidad");
+        }
+
+        $sql .= ' order by u.nom_usuario;';
+        $query = $this->db->query($sql, $parametros);
         return $query->getResultArray();
     }
 

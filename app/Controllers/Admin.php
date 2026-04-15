@@ -7,8 +7,7 @@ class Admin extends BaseController
     public function __construct()
     {
         $this->usuario_model = model('Usuario_model');
-        $this->acceso_sistema_model = model('Acceso_sistema_model');
-        $this->opcion_sistema_model = model('Opcion_sistema_model');
+        $this->evento_model = model('Evento_model');
     }
 
     public function index()
@@ -17,16 +16,7 @@ class Admin extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $permisos_requeridos = array(
-                'reporte_mentor.can_view',
-            );
-            if (has_permission_or($permisos_requeridos, $data['permisos_usuario'])) {
-                $acceso = 'Puede ver reportes de mentor';
-            } else {
-                $acceso = 'NO Puede ver reportes de mentor';
-            }
-
-            $data['acceso'] = $acceso;
+            $data['eventos'] = $this->evento_model->get_eventos();
 
             return view('templates/header', $data)
                 .view('admin/index', $data)
@@ -68,6 +58,7 @@ class Admin extends BaseController
                 $userdata = array(
                     'id_usuario' => $usuario['id_usuario'],
                     'id_rol' => $usuario['id_rol'],
+                    'id_comunidad' => $usuario['id_comunidad'],
                     'nom_usuario' => $usuario['nom_usuario'],
                     'nom_login' => $usuario['nom_login'],
                     'logueado' => TRUE,

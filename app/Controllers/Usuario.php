@@ -8,6 +8,7 @@ class Usuario extends BaseController
     {
         $this->usuario_model = model('Usuario_model');
         $this->rol_model = model('Rol_model');
+        $this->comunidad_model = model('Comunidad_model');
         $this->acceso_sistema_model = model('Acceso_sistema_model');
         $this->acceso_sistema_usuario_model = model('Acceso_sistema_usuario_model');
         $this->opcion_sistema_model = model('Opcion_sistema_model');
@@ -19,7 +20,9 @@ class Usuario extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $data['usuarios'] = $this->usuario_model->get_usuarios();
+            $id_rol = $data['userdata']['id_rol'];
+            $id_comunidad = $data['userdata']['id_comunidad'];
+            $data['usuarios'] = $this->usuario_model->get_usuarios($id_rol, $id_comunidad);
 
             return view('templates/header', $data)
                 .view('catalogos/usuario/lista', $data)
@@ -37,6 +40,7 @@ class Usuario extends BaseController
 
             $data['usuario'] = $this->usuario_model->get_usuario($id_usuario);
             $data['roles'] = $this->rol_model->get_roles();
+            $data['comunidades'] = $this->comunidad_model->get_comunidades();
             $data['accesos_sistema_rol'] = $this->acceso_sistema_model->get_accesos_sistema_rol_usuario($id_usuario);
             $data['accesos_sistema_usuario'] = $this->acceso_sistema_usuario_model->get_accesos_sistema_usuario($id_usuario);
             $data['opciones_sistema_otorgables'] = $this->opcion_sistema_model->get_opciones_sistema_otorgables();
@@ -56,6 +60,7 @@ class Usuario extends BaseController
             $data += $this->fn_sis->get_userdata();
 
             $data['roles'] = $this->rol_model->get_roles();
+            $data['comunidades'] = $this->comunidad_model->get_comunidades();
 
             return view('templates/header', $data)
                 .view('catalogos/usuario/nuevo', $data)
@@ -82,6 +87,7 @@ class Usuario extends BaseController
                     'nom_login' => $usuario['nom_login'],
                     'password' => $usuario['password'],
                     'activo' => array_key_exists('activo', $usuario) ? 1 : 0,
+                    'id_comunidad' => $usuario['id_comunidad'],
                 );
                 // guardar
                 $this->usuario_model->save($data);

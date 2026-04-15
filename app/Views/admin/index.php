@@ -1,24 +1,69 @@
 <div class="ui stackable grid container">
     <div class="row">
-        <div class="ten wide column">
-            <h1 class="ui header">Inicio</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            <h3 class="ui header">Bienvenido <?=$userdata['nom_usuario']?></h3>
-            <p><?=$acceso?></p>
-        </div>
-        <div class="six wide column">
-            <p><?= print_r($userdata) ?></p>
-            <hr>
-            <p><?= print_r($permisos_usuario) ?></p>
-            <hr>
-        </div>
-    </div>
-</div>
-<div class="ui stackable center aligned grid container">
-    <div class="row">
-        <div class="ten wide column">
-            <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
-            <p>"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"</p>
+        <div class="twelve wide column">
+            <div class="ui green segment">
+                <div class="ui grid">
+                    <div class="row">
+                        <div class="eight wide column">
+                            <h1 class="ui header">Próximos eventos</h1>
+                        </div>
+                        <div class="eight wide right aligned column">
+                            <?php
+                                $permisos_requeridos = array(
+                                    'evento.can_edit',
+                                );
+                            ?>
+                            <?php if (has_permission_and($permisos_requeridos, $permisos_usuario)): ?>
+                                <form class="ui form" method="post" action="/evento/nuevo">
+                                    <button class="circular ui primary icon button"><i class="icon add"></i></button>
+                                </form>
+                            <?php endif ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui hidden divider"></div>
+
+                <div class="ui three stackable link cards">
+                    <?php foreach ($eventos as $eventos_item): ?>
+                        <a class="ui card" href="<?= site_url('evento/detalle/') ?><?= $eventos_item['id_evento'] ?>">
+                            <?php
+                                $nombre = 'evento_' . $eventos_item['id_evento'] ;
+                                $tipo_archivo = 'png';
+                                $nombre_archivo = $nombre . '.' . $tipo_archivo;
+                                $up_dir = 'imgs/';
+                                $nombre_archivo_fs = $up_dir . $nombre_archivo;
+                                $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
+                            ?>
+                            <?php
+                                $fmt = datefmt_create(
+                                    'es_MX',
+                                    IntlDateFormatter::NONE,
+                                    IntlDateFormatter::NONE,
+                                    null,
+                                    IntlDateFormatter::GREGORIAN,
+                                    'MMM yy'
+                                );
+                                $fech_ini = strtotime($eventos_item['fech_ini']);
+                            ?>
+                            <div class="image">
+                                <div class="ui teal left ribbon label">
+                                    <?= datefmt_format($fmt, $fech_ini) ?>
+                                </div>
+                                <?php if ( file_exists($nombre_archivo_fs) ): ?>
+                                    <img src="<?= $nombre_archivo_url ?>">
+                                <?php else: ?>
+                                    <img src="<?= base_url('assets/img/image.png') ?>">
+                                <?php endif ?>
+                            </div>
+                            <div class="content">
+                                <div class="header"><?= $eventos_item['nom_evento'] ?></div>
+                                <div class="description"><?= $eventos_item['nom_comunidad'] ?></div>
+                            </div>
+                        </a>
+                    <?php endforeach ?>
+                </div>
+            </div>
         </div>
     </div>
 </div>

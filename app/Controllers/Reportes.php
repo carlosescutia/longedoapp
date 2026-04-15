@@ -31,7 +31,10 @@ class Reportes extends BaseController
             $data += $this->fn_sis->get_userdata();
             $data['error'] = $this->session->getFlashdata('error');
 
-            $data['bitacora'] = $this->bitacora_model->get_bitacora($data['userdata']['nom_login'], $data['userdata']['id_rol'], $salida);
+            $nom_login = $data['userdata']['nom_login'];
+            $id_comunidad = $data['userdata']['id_comunidad'];
+            $id_rol = $data['userdata']['id_rol'];
+            $data['bitacora'] = $this->bitacora_model->get_bitacora($nom_login, $id_comunidad, $id_rol, $salida);
 
             if ($salida == 'csv') {
                 return $this->response->download("bitacora_" . $data['userdata']['nom_login'] . '.csv', $data['bitacora']);

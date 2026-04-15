@@ -15,12 +15,13 @@ class Bitacora_model extends Model
         'origen',
         'nom_login',
         'nom_usuario',
+        'id_comunidad',
         'accion',
         'entidad',
         'valor',
     ];
 
-    public function get_bitacora($nom_login, $id_rol, $salida)
+    public function get_bitacora($nom_login, $id_comunidad, $id_rol, $salida)
     {
         $dbutil = \Config\Database::utils();
 
@@ -32,13 +33,18 @@ class Bitacora_model extends Model
         }
 
         $sql = "select b.* from bitacora b where b.nom_login LIKE ? ";
-
         if ($id_rol !== 'admin') {
             $sql .= " and b.nom_login not in (select nom_login from usuario where id_rol = 'admin')";
         }
 
         $parametros = array();
         array_push($parametros, "$nom_login");
+
+        if ($id_rol !== 'admin') {
+            $sql .= " and b.id_comunidad = ? ";
+            array_push($parametros, "$id_comunidad");
+        }
+
         $sql .= ' order by b.id_evento desc;';
         $query = $this->db->query($sql, $parametros);
 

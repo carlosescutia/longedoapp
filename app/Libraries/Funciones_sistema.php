@@ -21,6 +21,9 @@ class Funciones_sistema {
 
         $data['permisos_usuario'] = explode(',', $this->acceso_sistema_model->get_permisos_usuario($id_usuario));
 
+        $tipo_rol = 'rol_' . $data['userdata']['id_rol'];
+        array_push($data['permisos_usuario'], $tipo_rol);
+
         return $data;
     }
 
@@ -37,6 +40,7 @@ class Funciones_sistema {
         $data['userdata'] = $this->session->get();
         $nom_login = $data['userdata']['nom_login'];
         $nom_usuario = $data['userdata']['nom_usuario'];
+        $id_comunidad = $data['userdata']['id_comunidad'];
 
         $data = array(
             'fecha' => date("Y-m-d"),
@@ -44,6 +48,7 @@ class Funciones_sistema {
             'origen' => $_SERVER['REMOTE_ADDR'],
             'nom_login' => $nom_login,
             'nom_usuario' => $nom_usuario,
+            'id_comunidad' => $id_comunidad,
             'accion' => $accion,
             'entidad' => $entidad,
             'valor' => $valor

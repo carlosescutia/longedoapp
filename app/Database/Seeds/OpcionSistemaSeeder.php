@@ -55,13 +55,28 @@ class OpcionSistemaSeeder extends Seeder
                 'otorgable' => null
             ],
             [
+                'cod_opcion_sistema' => 'comunidad.can_edit',
+                'nom_opcion_sistema' => 'Editar comunidades',
+                'otorgable' => null
+            ],
+            [
                 'cod_opcion_sistema' => 'usuario.can_edit',
                 'nom_opcion_sistema' => 'Editar usuarios',
                 'otorgable' => null
             ],
             [
+                'cod_opcion_sistema' => 'evaluador.can_edit',
+                'nom_opcion_sistema' => 'Editar evaluadores',
+                'otorgable' => null
+            ],
+            [
                 'cod_opcion_sistema' => 'rol.can_view',
                 'nom_opcion_sistema' => 'Ver roles',
+                'otorgable' => null
+            ],
+            [
+                'cod_opcion_sistema' => 'evento.can_edit',
+                'nom_opcion_sistema' => 'Editar eventos',
                 'otorgable' => null
             ],
         ];

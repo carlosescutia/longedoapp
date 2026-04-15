@@ -30,19 +30,28 @@
                             </div>
                         </div>
                         <div class="fields">
-                            <div class="four wide field">
-                                <label>Rol</label>
-                                <div class="ui selection dropdown">
-                                    <input type="hidden" name="id_rol">
-                                    <i class="dropdown icon"></i>
-                                    <div class="default text"></div>
-                                    <div class="menu">
-                                        <?php foreach ($roles as $roles_item) { ?>
-                                            <div class="item" data-value="<?=$roles_item['id_rol'] ?>"><?=$roles_item['nom_rol'] ?></div>
-                                        <?php } ?>
+                            <?php
+                                $permisos_requeridos = array(
+                                    'rol_admin',
+                                );
+                            ?>
+                            <?php if (has_permission_and($permisos_requeridos, $permisos_usuario)): ?>
+                                <div class="four wide field">
+                                    <label>Rol</label>
+                                    <div class="ui selection dropdown">
+                                        <input type="hidden" name="id_rol">
+                                        <i class="dropdown icon"></i>
+                                        <div class="default text"></div>
+                                        <div class="menu">
+                                            <?php foreach ($roles as $roles_item) { ?>
+                                                <div class="item" data-value="<?=$roles_item['id_rol'] ?>"><?=$roles_item['nom_rol'] ?></div>
+                                            <?php } ?>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            <?php else: ?>
+                                <input type="hidden" name="id_rol" value="alumno">
+                            <?php endif ?>
                             <div class="four wide field">
                                 <label>Activo</label>
                                 <div class="ui toggle checkbox">
@@ -50,6 +59,28 @@
                                     <label></label>
                                 </div>
                             </div>
+                            <?php
+                                $permisos_requeridos = array(
+                                    'rol_admin',
+                                );
+                            ?>
+                            <?php if (has_permission_and($permisos_requeridos, $permisos_usuario)): ?>
+                                <div class="four wide field">
+                                    <label>Comunidad</label>
+                                    <div class="ui selection dropdown">
+                                        <input type="hidden" name="id_comunidad">
+                                        <i class="dropdown icon"></i>
+                                        <div class="default text">Comunidad</div>
+                                        <div class="menu">
+                                            <?php foreach ($comunidades as $comunidades_item) { ?>
+                                                <div class="item" data-value="<?=$comunidades_item['id_comunidad'] ?>"><?=$comunidades_item['nom_comunidad'] ?></div>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php else: ?>
+                                <input type="hidden" name="id_comunidad" value="<?=$userdata['id_comunidad']?>">
+                            <?php endif ?>
                         </div>
 
                         <div class="ui error message"></div>

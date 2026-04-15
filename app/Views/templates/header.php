@@ -67,35 +67,35 @@
         $permisos_requeridos = array(
             'proceso.can_view',
         );
-        if (has_permission_or($permisos_requeridos, $permisos_usuario)) { ?>
-            <a class="item" href="<?=site_url('proceso')?>">
-            <i class="block layout icon"></i>
-            Proceso
-            </a>
-        <?php }
     ?>
+    <?php if (has_permission_or($permisos_requeridos, $permisos_usuario)): ?>
+        <a class="item" href="<?=site_url('proceso')?>">
+        <i class="block layout icon"></i>
+            Proceso
+        </a>
+    <?php endif ?>
     <?php
         $permisos_requeridos = array(
             'reporte.can_view',
         );
-        if (has_permission_or($permisos_requeridos, $permisos_usuario)) { ?>
-            <a class="item" href="<?=site_url('reportes')?>">
-            <i class="file alternate icon"></i>
-            Reportes
-            </a>
-        <?php }
     ?>
+    <?php if (has_permission_or($permisos_requeridos, $permisos_usuario)): ?>
+        <a class="item" href="<?=site_url('reportes')?>">
+        <i class="file alternate icon"></i>
+            Reportes
+        </a>
+    <?php endif ?>
     <?php
         $permisos_requeridos = array(
             'catalogo.can_view',
         );
-        if (has_permission_or($permisos_requeridos, $permisos_usuario)) { ?>
-            <a class="item" href="<?=site_url('catalogos')?>">
-            <i class="wrench icon"></i>
-            Catálogos
-            </a>
-        <?php }
     ?>
+    <?php if (has_permission_or($permisos_requeridos, $permisos_usuario)): ?>
+        <a class="item" href="<?=site_url('catalogos')?>">
+        <i class="wrench icon"></i>
+            Catálogos
+        </a>
+    <?php endif ?>
     <a class="item" href="<?=site_url('perfil')?>">
       <i class="user icon"></i>
       <?= $userdata['nom_usuario'] ?>
@@ -121,26 +121,26 @@
                 $permisos_requeridos = array(
                     'proceso.can_view',
                 );
-                if (has_permission_or($permisos_requeridos, $permisos_usuario)) { ?>
-                    <a class="item" href="<?=site_url('proceso')?>">Proceso</a>
-                <?php }
             ?>
+            <?php if (has_permission_or($permisos_requeridos, $permisos_usuario)): ?>
+                <a class="item" href="<?=site_url('proceso')?>">Proceso</a>
+            <?php endif ?>
             <?php
                 $permisos_requeridos = array(
                     'reporte.can_view',
                 );
-                if (has_permission_or($permisos_requeridos, $permisos_usuario)) { ?>
-                    <a class="item" href="<?=site_url('reportes')?>">Reportes</a>
-                <?php }
             ?>
+            <?php if (has_permission_or($permisos_requeridos, $permisos_usuario)): ?>
+                <a class="item" href="<?=site_url('reportes')?>">Reportes</a>
+            <?php endif ?>
             <?php
                 $permisos_requeridos = array(
                     'catalogo.can_view',
                 );
-                if (has_permission_or($permisos_requeridos, $permisos_usuario)) { ?>
-                    <a class="item" href="<?=site_url('catalogos')?>">Catálogos</a>
-                <?php }
             ?>
+            <?php if (has_permission_or($permisos_requeridos, $permisos_usuario)): ?>
+                <a class="item" href="<?=site_url('catalogos')?>">Catálogos</a>
+            <?php endif ?>
             <div class="right menu">
                 <a class="item usuario-menu" href="<?=site_url('perfil')?>"><i class="circular user icon"></i><?=$userdata['nom_usuario']?></a>
                 <a class="item" href="<?=site_url('logout')?>">Salir</a>

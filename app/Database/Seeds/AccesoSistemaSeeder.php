@@ -35,7 +35,15 @@ class AccesoSistemaSeeder extends Seeder
             ],
             [
                 'id_rol' => 'admin',
+                'cod_opcion_sistema' => 'comunidad.can_edit',
+            ],
+            [
+                'id_rol' => 'admin',
                 'cod_opcion_sistema' => 'usuario.can_edit',
+            ],
+            [
+                'id_rol' => 'admin',
+                'cod_opcion_sistema' => 'evaluador.can_edit',
             ],
             [
                 'id_rol' => 'admin',
@@ -56,6 +64,18 @@ class AccesoSistemaSeeder extends Seeder
             [
                 'id_rol' => 'mentor',
                 'cod_opcion_sistema' => 'reporte_mentor.can_view',
+            ],
+            [
+                'id_rol' => 'mentor',
+                'cod_opcion_sistema' => 'catalogo.can_view',
+            ],
+            [
+                'id_rol' => 'mentor',
+                'cod_opcion_sistema' => 'usuario.can_edit',
+            ],
+            [
+                'id_rol' => 'mentor',
+                'cod_opcion_sistema' => 'evento.can_edit',
             ],
             [
                 'id_rol' => 'alumno',

@@ -65,3 +65,9 @@ $routes->get('evento/editar/(:num)', 'Evento::editar/$1');
 $routes->post('evento/guardar', 'Evento::guardar');
 $routes->get('evento/eliminar/(:num)', 'Evento::eliminar/$1');
 
+$routes->get('comunidad/', 'Comunidad::index');
+$routes->get('comunidad/detalle/(:num)', 'Comunidad::detalle/$1');
+$routes->post('comunidad/nuevo', 'Comunidad::nuevo');
+$routes->post('comunidad/guardar', 'Comunidad::guardar');
+$routes->get('comunidad/eliminar/(:num)', 'Comunidad::eliminar/$1');
+
