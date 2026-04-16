@@ -50,6 +50,8 @@ $routes->get('proceso/', 'Proceso::index');
 $routes->get('reportes/', 'Reportes::index');
 $routes->get('reportes/bitacora', 'Reportes::bitacora');
 $routes->get('reportes/bitacora/(:segment)', 'Reportes::bitacora/$1');
+$routes->get('reportes/asistentes_evento/(:segment)', 'Reportes::asistentes_evento/$1');
+$routes->get('reportes/asistentes_evento/(:segment)/(:segment)', 'Reportes::asistentes_evento/$1/$2');
 
 
 
@@ -64,6 +66,8 @@ $routes->post('evento/nuevo', 'Evento::nuevo');
 $routes->get('evento/editar/(:num)', 'Evento::editar/$1');
 $routes->post('evento/guardar', 'Evento::guardar');
 $routes->get('evento/eliminar/(:num)', 'Evento::eliminar/$1');
+$routes->post('evento/asistir', 'Evento::asistir');
+$routes->post('evento/cancelar', 'Evento::cancelar');
 
 $routes->get('comunidad/', 'Comunidad::index');
 $routes->get('comunidad/detalle/(:num)', 'Comunidad::detalle/$1');

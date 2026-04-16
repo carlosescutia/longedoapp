@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="icon" href="<?=base_url('favicon.png')?>"/>
 
-    <title>phpapp4</title>
+    <title>Longe do App</title>
 
     <link href="<?=base_url('assets/css/phpapp4.css')?>" rel="stylesheet"/>
 
@@ -58,7 +58,7 @@
 <body>
 
 <!-- Sidebar Menu -->
-<div class="ui inverted left vertical sidebar menu">
+<div class="ui left vertical sidebar massive menu">
     <a class="item" href="<?=site_url()?>">
       <i class="home icon"></i>
       Inicio
@@ -115,7 +115,10 @@
             <a class="toc item">
                 <i class="sidebar icon"></i>
             </a>
-            <h3 class="ui header toc item">PHPapp4</h3>
+            <div class="header item">
+                Longe do App
+            </div>
+            <div class="ui header toc item">Longe do App</div>
             <a class="item" href="<?=site_url()?>">Inicio</a>
             <?php
                 $permisos_requeridos = array(

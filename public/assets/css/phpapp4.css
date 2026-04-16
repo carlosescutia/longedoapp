@@ -22,3 +22,9 @@ body .pusher {
     font-size: 1.2rem;
     white-space: pre-wrap;
 }
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+}

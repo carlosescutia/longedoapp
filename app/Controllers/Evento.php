@@ -7,6 +7,7 @@ class Evento extends BaseController
     public function __construct()
     {
         $this->evento_model = model('Evento_model');
+        $this->evento_usuario_model = model('Evento_usuario_model');
     }
 
     public function detalle($id_evento)
@@ -16,6 +17,7 @@ class Evento extends BaseController
             $data += $this->fn_sis->get_userdata();
 
             $data['evento'] = $this->evento_model->get_evento($id_evento);
+            $data['asiste'] = $this->evento_usuario_model->get_asistencia($id_evento, $data['userdata']['id_usuario']);
 
             return view('templates/header', $data)
                 .view('evento/detalle', $data)
@@ -97,6 +99,56 @@ class Evento extends BaseController
             return redirect()->to(site_url("login"));
         }
     }
+
+    public function asistir()
+    {
+        if ($this->session->logueado) {
+            $evento = $this->request->getPost();
+            if ($evento) {
+                $id_evento = $evento['id_evento'];
+                $id_usuario = $evento['id_usuario'];
+                $data = array(
+                    'id_evento' => $id_evento,
+                    'id_usuario' => $id_usuario,
+                    'fecha' => date("Y-m-d"),
+                );
+                // guardar
+                $this->evento_usuario_model->save($data);
+
+                // registro en bitacora
+                $accion = 'agregó';
+                $entidad = 'evento_usuario';
+                $valor = 'evnt: ' . $id_evento . ' usr: ' . $id_usuario ;
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            }
+            return redirect()->to(site_url('evento/detalle/' . $id_evento));
+        } else {
+            return redirect()->to(site_url("login"));
+        }
+    }
+
+    public function cancelar()
+    {
+        if ($this->session->logueado) {
+            $evento = $this->request->getPost();
+            if ($evento) {
+                $id_evento = $evento['id_evento'];
+                $id_usuario = $evento['id_usuario'];
+                // eliminar
+                $this->evento_usuario_model->where('id_evento', $id_evento)->where('id_usuario', $id_usuario)->delete();
+
+                // registro en bitacora
+                $accion = 'agregó';
+                $entidad = 'evento_usuario';
+                $valor = 'evnt: ' . $id_evento . ' usr: ' . $id_usuario ;
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            }
+            return redirect()->to(site_url('evento/detalle/' . $id_evento));
+        } else {
+            return redirect()->to(site_url("login"));
+        }
+    }
+
 
     public function eliminar($id_evento)
     {

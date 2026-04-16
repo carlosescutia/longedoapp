@@ -48,6 +48,12 @@
                     <a class="item" href="<?=$evento['ubicacion']?>" target="_blank"><i class="marker icon"></i><?= $evento['lugar'] ?></a>
                 </div>
             </div>
+
+            <div class="ui hidden divider"></div>
+
+            <?php if ( $evento['activo'] ): ?>
+                <?php include "user_actions_evento.php" ?>
+            <?php endif ?>
         </div>
 
         <?php
@@ -58,23 +64,7 @@
         <?php if ($userdata['id_comunidad'] == $evento['id_comunidad']): ?>
             <?php if (has_permission_and($permisos_requeridos, $permisos_usuario)): ?>
                 <div class="five wide column">
-                    <div class="ui segment">
-                        <h4 class="ui header">Administración del evento</h4>
-                        <div class="ui hidden divider"></div>
-                        <div class="ui list">
-                            <div class="item"><a href="<?= site_url('evento/editar/')?><?=$evento['id_evento']?>">Editar información</a></div>
-                            <?php
-                                $item_eliminar = '¡Se eliminará el evento ' . $evento['nom_evento'] . ' y sus evaluaciones!<br>¿Está seguro de eliminarlo?' ;
-                                $action = base_url("evento/eliminar/") . $evento['id_evento'];
-                            ?>
-                            <div class="ui divider"></div>
-                            <div class="item">
-                                <a href="#" onclick="confirm_delete('<?=$item_eliminar?>','<?=$action?>')">
-                                    <span class="ui red text">Eliminar evento</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    <?php include "admin_evento.php" ?>
                 </div>
             <?php endif ?>
         <?php endif ?>
@@ -86,4 +76,16 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready( function() {
+    });
 
+    $('#btn_asistir').click( function() {
+        $('#frm_asistir').submit();
+    });
+
+    $('#btn_cancelar').click( function() {
+        $('#frm_cancelar').submit();
+    });
+
+</script>
