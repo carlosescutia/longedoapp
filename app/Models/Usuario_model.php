@@ -44,9 +44,10 @@ class Usuario_model extends Model
     {
         $sql = ""
             ."select "
-            ."u.* "
+            ."u.*, p.* "
             ."from "
             ."usuario u "
+            ."left join perfil p on p.id_usuario = u.id_usuario "
             ."where "
             ."u.id_usuario = ? "
             ."";
@@ -72,6 +73,21 @@ class Usuario_model extends Model
         return $query->getRowArray();
     }
 
+    public function get_mentores()
+    {
+        $sql = ""
+            ."select "
+            ."u.* "
+            ."from "
+            ."usuario u "
+            ."where "
+            ."id_rol = 'mentor' "
+            ."order by nom_usuario "
+            ."";
+        $query = $this->db->query($sql);
+        return $query->getResultArray();
+    }
+
     public function get_evaluadores()
     {
         $sql = ""
@@ -81,6 +97,8 @@ class Usuario_model extends Model
             ."usuario u "
             ."where "
             ."id_rol = 'mentor' "
+            ."and evaluador = 1 "
+            ."and activo = 1 "
             ."order by nom_usuario "
             ."";
         $query = $this->db->query($sql);

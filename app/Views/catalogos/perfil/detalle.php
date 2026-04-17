@@ -138,4 +138,47 @@
         }
     });
 
+    $('.ui.form')
+        .form({
+            fields: {
+                nom_capoeira: {
+                    identifier: 'nom_capoeira',
+                    rules: [
+                        {
+                            type   : 'notEmpty',
+                            prompt : 'Nombre de capoeira no puede estar vacio'
+                        }
+                    ]
+                },
+                sexo: {
+                    identifier: 'sexo',
+                    rules: [
+                        {
+                            type   : 'notEmpty',
+                            prompt : 'Sexo no puede estar vacio'
+                        }
+                    ]
+                },
+                edad: {
+                    identifier: 'edad',
+                    rules: [
+                        {
+                            type   : 'notEmpty',
+                            prompt : 'Edad no puede estar vacio'
+                        }
+                    ]
+                },
+                id_talla: {
+                    identifier: 'id_talla',
+                    rules: [
+                        {
+                            type   : 'notEmpty',
+                            prompt : 'Talla no puede estar vacio'
+                        }
+                    ]
+                },
+            }
+        })
+    ;
+
 </script>

@@ -46,5 +46,23 @@ class Perfil_model extends Model
         return $query->getRowArray();
     }
 
+    public function get_perfil_completo($id_usuario)
+    {
+        $sql = ""
+            ."select "
+            ."1 as completo "
+            ."from "
+            ."perfil "
+            ."where "
+            ."nom_capoeira is not null "
+            ."and sexo is not null "
+            ."and id_talla is not null "
+            ."and edad is not null "
+            ."and id_usuario = ? "
+            ."";
+        $query = $this->db->query($sql, array($id_usuario));
+        return $query->getRowArray()['completo'] ?? null ;
+    }
+
 }
 

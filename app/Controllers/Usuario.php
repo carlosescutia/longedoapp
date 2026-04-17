@@ -163,7 +163,7 @@ class Usuario extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $data['evaluadores'] = $this->usuario_model->get_evaluadores();
+            $data['evaluadores'] = $this->usuario_model->get_mentores();
 
             return view('templates/header', $data)
                 .view('catalogos/usuario/lista_evaluadores', $data)

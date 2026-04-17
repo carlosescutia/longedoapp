@@ -8,6 +8,10 @@ class Evento extends BaseController
     {
         $this->evento_model = model('Evento_model');
         $this->evento_usuario_model = model('Evento_usuario_model');
+        $this->evaluacion_model = model('Evaluacion_model');
+        $this->perfil_model = model('Perfil_model');
+        $this->evaluacion_usuario_model = model('Evaluacion_usuario_model');
+        $this->usuario_model = model('Usuario_model');
     }
 
     public function detalle($id_evento)
@@ -16,8 +20,15 @@ class Evento extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
+            $id_usuario = $data['userdata']['id_usuario'];
+            $usuario = $this->usuario_model->get_usuario($id_usuario);
+            $edad = $usuario['edad'];
             $data['evento'] = $this->evento_model->get_evento($id_evento);
-            $data['asiste'] = $this->evento_usuario_model->get_asistencia($id_evento, $data['userdata']['id_usuario']);
+            $data['asiste'] = $this->evento_usuario_model->get_asiste($id_evento, $id_usuario);
+            $data['perfil_completo'] = $this->perfil_model->get_perfil_completo($id_usuario);
+            $data['evaluacion_disponible'] = $this->evaluacion_model->get_evaluacion_disponible($id_evento, $edad);
+            $data['evaluaciones'] = $this->evaluacion_model->get_evaluaciones($id_evento);
+            $data['evalua'] = $this->evaluacion_usuario_model->get_evalua($id_evento, $id_usuario);
 
             return view('templates/header', $data)
                 .view('evento/detalle', $data)
@@ -134,7 +145,15 @@ class Evento extends BaseController
             if ($evento) {
                 $id_evento = $evento['id_evento'];
                 $id_usuario = $evento['id_usuario'];
-                // eliminar
+
+                // eliminar asistencia a evaluacion
+                $usuario = $this->usuario_model->get_usuario($id_usuario);
+                $edad = $usuario['edad'];
+                $evaluacion = $this->evaluacion_model->get_evaluacion_evento_edad($id_evento, $edad);
+                $id_evaluacion = $evaluacion['id_evaluacion'];
+                $this->evaluacion_usuario_model->where('id_evaluacion', $id_evaluacion)->where('id_usuario', $id_usuario)->delete();
+
+                // eliminar asistencia a evento
                 $this->evento_usuario_model->where('id_evento', $id_evento)->where('id_usuario', $id_usuario)->delete();
 
                 // registro en bitacora

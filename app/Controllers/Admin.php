@@ -9,6 +9,7 @@ class Admin extends BaseController
         $this->usuario_model = model('Usuario_model');
         $this->evento_model = model('Evento_model');
         $this->evento_usuario_model = model('Evento_usuario_model');
+        $this->evaluacion_usuario_model = model('Evaluacion_usuario_model');
     }
 
     public function index()
@@ -19,6 +20,7 @@ class Admin extends BaseController
 
             $data['eventos'] = $this->evento_model->get_eventos();
             $data['asistencias'] = $this->evento_usuario_model->get_asistencias_usuario($data['userdata']['id_usuario']);
+            $data['evaluaciones'] = $this->evaluacion_usuario_model->get_evaluaciones_usuario($data['userdata']['id_usuario']);
 
             return view('templates/header', $data)
                 .view('admin/index', $data)

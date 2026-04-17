@@ -28,11 +28,11 @@ class Evento_usuario_model extends Model
         return $query->getRowArray();
     }
 
-    public function get_asistencia($id_evento, $id_usuario)
+    public function get_asiste($id_evento, $id_usuario)
     {
         $sql = ""
             ."select "
-            ."1 as asistencia "
+            ."1 as asiste "
             ."from "
             ."evento_usuario ea "
             ."where "
@@ -40,7 +40,7 @@ class Evento_usuario_model extends Model
             ."and ea.id_usuario = ? "
             ."";
         $query = $this->db->query($sql, array($id_evento, $id_usuario));
-        return $query->getRowArray()['asistencia'] ?? null ;
+        return $query->getRowArray()['asiste'] ?? null ;
     }
 
     public function get_asistencias_usuario($id_usuario)

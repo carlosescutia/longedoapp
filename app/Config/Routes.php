@@ -75,3 +75,10 @@ $routes->post('comunidad/nuevo', 'Comunidad::nuevo');
 $routes->post('comunidad/guardar', 'Comunidad::guardar');
 $routes->get('comunidad/eliminar/(:num)', 'Comunidad::eliminar/$1');
 
+$routes->get('evaluacion/detalle/(:num)', 'Evaluacion::detalle/$1');
+$routes->post('evaluacion/nuevo', 'Evaluacion::nuevo');
+$routes->post('evaluacion/guardar', 'Evaluacion::guardar');
+$routes->get('evaluacion/eliminar/(:num)', 'Evaluacion::eliminar/$1');
+$routes->post('evaluacion/asistir', 'Evaluacion::asistir');
+$routes->post('evaluacion/cancelar', 'Evaluacion::cancelar');
+

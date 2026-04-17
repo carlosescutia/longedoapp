@@ -59,17 +59,28 @@
                             <div class="content">
                                 <div class="header"><?= $eventos_item['nom_evento'] ?></div>
                                 <div class="description">
-                                    <span class="left floated">
-                                        <?= $eventos_item['nom_comunidad'] ?>
-                                    </span>
                                     <span class="right floated">
-                                        <?php if ( in_array($eventos_item['id_evento'], array_column($asistencias, 'id_evento')) ): ?>
-                                            <div class="ui green label">
-                                                <i class="check icon"></i>Asistencia
-                                            </div>
-                                        <?php endif ?>
+                                        <i class="users icon"></i>
+                                        <?= $eventos_item['num_asistentes'] ?> asistentes
                                     </span>
+                                    <?= $eventos_item['nom_comunidad'] ?>
                                 </div>
+                            </div>
+                            <div class="extra content">
+                                <span class="left floated">
+                                    <?php if ( in_array($eventos_item['id_evento'], array_column($asistencias, 'id_evento')) ): ?>
+                                        <div class="ui green label">
+                                            <i class="check icon"></i>Asistencia
+                                        </div>
+                                    <?php endif ?>
+                                </span>
+                                <span class="right floated">
+                                    <?php if ( in_array($eventos_item['id_evento'], array_column($evaluaciones, 'id_evento')) ): ?>
+                                        <div class="ui purple label">
+                                            <i class="check icon"></i>Evaluación
+                                        </div>
+                                    <?php endif ?>
+                                </span>
                             </div>
                         </a>
                     <?php endforeach ?>

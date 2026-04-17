@@ -24,7 +24,8 @@ class Evento_model extends Model
     {
         $sql = ""
             ."select "
-            ."e.*, c.nom_comunidad "
+            ."e.*, c.nom_comunidad, "
+            ."(select count(*) from evento_usuario etu where etu.id_evento = e.id_evento) as num_asistentes "
             ."from "
             ."evento e "
             ."left join comunidad c on c.id_comunidad = e.id_comunidad "

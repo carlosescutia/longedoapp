@@ -76,16 +76,3 @@
         </div>
     </div>
 </div>
-<script>
-    $(document).ready( function() {
-    });
-
-    $('#btn_asistir').click( function() {
-        $('#frm_asistir').submit();
-    });
-
-    $('#btn_cancelar').click( function() {
-        $('#frm_cancelar').submit();
-    });
-
-</script>
