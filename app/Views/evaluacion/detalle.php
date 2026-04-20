@@ -36,7 +36,7 @@
                             </div>
                             <div class="four wide field">
                                 <label>Edad</label>
-                                <div class="ui selection dropdown">
+                                <div class="ui selection read-only dropdown">
                                     <input type="hidden" name="edad" id="edad" value="<?= $evaluacion['edad'] ?>">
                                     <i class="dropdown icon"></i>
                                     <div class="default text">Edad</div>
@@ -66,8 +66,8 @@
                             </div>
                         </div>
 
+                        <input type="hidden" name="id_evaluacion" id="id_evaluacion" value="<?= $evaluacion['id_evaluacion'] ?>">
                         <input type="hidden" name="id_evento" id="id_evento" value="<?= $evaluacion['id_evento'] ?>">
-                        <input type="hidden" name="status" id="status" value="cerrado">
 
                         <div class="ui error message"></div>
                     </form>
@@ -82,6 +82,7 @@
                                 <th data-priority="1">Música</th>
                                 <th data-priority="1">Cultura</th>
                                 <th data-priority="1">Jogo</th>
+                                <th data-priority="1">Promovido</th>
                                 <th data-priority="1">Observaciones</th>
                                 <th data-priority="1">Retroalimentación</th>
                             </tr>
@@ -108,9 +109,14 @@
                                     <td>
                                         <?=$evaluados_item['jogo']?>
                                     </td>
-                                    <td>
+                                    <td class="center aligned">
+                                        <?=$evaluados_item['promovido'] ? 'Si' : '' ?>
                                     </td>
                                     <td>
+                                        <?=$evaluados_item['observacion_evaluador']?>
+                                    </td>
+                                    <td>
+                                        <?=$evaluados_item['observacion_alumno']?>
                                     </td>
                                 </tr>
                             <?php endforeach ?>

@@ -19,16 +19,18 @@ class Evento extends BaseController
         if ($this->session->logueado) {
             $data = [];
             $data += $this->fn_sis->get_userdata();
+            $data['error'] = $this->session->getFlashdata('error');
 
             $id_usuario = $data['userdata']['id_usuario'];
             $usuario = $this->usuario_model->get_usuario($id_usuario);
             $edad = $usuario['edad'];
             $data['evento'] = $this->evento_model->get_evento($id_evento);
-            $data['asiste'] = $this->evento_usuario_model->get_asiste($id_evento, $id_usuario);
+            $data['usuario_asiste'] = $this->evento_usuario_model->get_usuario_asiste($id_evento, $id_usuario);
             $data['perfil_completo'] = $this->perfil_model->get_perfil_completo($id_usuario);
             $data['evaluacion_disponible'] = $this->evaluacion_model->get_evaluacion_disponible($id_evento, $edad);
             $data['evaluaciones'] = $this->evaluacion_model->get_evaluaciones($id_evento);
-            $data['evalua'] = $this->evaluacion_usuario_model->get_evalua($id_evento, $id_usuario);
+            $data['usuario_evalua'] = $this->evaluacion_usuario_model->get_usuario_evalua($id_evento, $id_usuario);
+            $data['evaluadores_evento'] = $this->evaluacion_model->get_evaluadores_evento($id_evento);
 
             return view('templates/header', $data)
                 .view('evento/detalle', $data)

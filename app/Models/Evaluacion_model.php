@@ -39,9 +39,10 @@ class Evaluacion_model extends Model
     {
         $sql = ""
             ."select "
-            ."e.* "
+            ."e.*, u.nom_usuario as nom_evaluador "
             ."from "
             ."evaluacion e "
+            ."left join usuario u on u.id_usuario = e.id_evaluador "
             ."where "
             ."e.id_evaluacion = ? "
             ."";
@@ -70,13 +71,55 @@ class Evaluacion_model extends Model
             ."select "
             ."1 as evaluacion_disponible "
             ."from "
-            ."evaluacion el "
+            ."evaluacion evl "
             ."where "
-            ."el.id_evento = ? "
-            ."and el.edad in ('todos', ?) "
+            ."evl.id_evento = ? "
+            ."and evl.edad in ('todos', ?) "
+            ."and evl.status = 'abierto' "
             ."";
         $query = $this->db->query($sql, array($id_evento, $edad));
         return $query->getRowArray()['evaluacion_disponible'] ?? null ;
+    }
+
+    public function get_evaluacion_registrada($id_evento, $edad)
+    {
+        if ($edad == 'todos') {
+            $sql = ""
+                ."select "
+                ."1 as evaluacion_registrada "
+                ."from "
+                ."evaluacion evl "
+                ."where "
+                ."evl.id_evento = ? "
+                ."";
+            $query = $this->db->query($sql, array($id_evento));
+        } else {
+            $sql = ""
+                ."select "
+                ."1 as evaluacion_registrada "
+                ."from "
+                ."evaluacion evl "
+                ."where "
+                ."evl.id_evento = ? "
+                ."and ( evl.edad = 'todos' or evl.edad = ? ) "
+                ."";
+            $query = $this->db->query($sql, array($id_evento, $edad));
+        }
+        return $query->getRowArray()['evaluacion_registrada'] ?? null ;
+    }
+
+    public function get_evaluadores_evento($id_evento)
+    {
+        $sql = ""
+            ."select "
+            ."evl.id_evaluador "
+            ."from "
+            ."evaluacion evl "
+            ."where "
+            ."evl.id_evento = ? "
+            ."";
+        $query = $this->db->query($sql, array($id_evento));
+        return $query->getResultArray();
     }
 
 }

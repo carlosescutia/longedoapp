@@ -81,4 +81,6 @@ $routes->post('evaluacion/guardar', 'Evaluacion::guardar');
 $routes->get('evaluacion/eliminar/(:num)', 'Evaluacion::eliminar/$1');
 $routes->post('evaluacion/asistir', 'Evaluacion::asistir');
 $routes->post('evaluacion/cancelar', 'Evaluacion::cancelar');
-
+$routes->get('evaluacion/aplicar/(:num)', 'Evaluacion::aplicar/$1');
+$routes->post('evaluacion/actualizar_status', 'Evaluacion::actualizar_status');
+$routes->post('evaluacion/actualizar_item', 'Evaluacion::actualizar_item');

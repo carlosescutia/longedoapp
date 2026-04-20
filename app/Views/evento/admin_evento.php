@@ -2,6 +2,9 @@
     <h4 class="ui header">Administración del evento</h4>
     <div class="ui hidden divider"></div>
     <div class="ui list">
+        <?php if ($error): ?>
+            <p><span class="ui red text"><?= $error ?></span></p>
+        <?php endif ?>
         <div class="item"><a href="<?= site_url('evento/editar/')?><?=$evento['id_evento']?>">Editar información</a></div>
         <div class="item"><a href="<?= site_url('reportes/asistentes_evento/')?><?=$evento['id_evento']?>">Lista de asistentes</a></div>
 

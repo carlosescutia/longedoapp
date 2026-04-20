@@ -11,7 +11,13 @@ class Evaluacion_usuario_model extends Model
     protected $allowedFields = [
         'id_evaluacion',
         'id_usuario',
-        'fecha',
+        'id_grado',
+        'musica',
+        'cultura',
+        'jogo',
+        'promovido',
+        'observacion_evaluador',
+        'observacion_alumno',
     ];
 
     public function get_evaluacion_usuario($id_evaluacion_usuario)
@@ -59,11 +65,11 @@ class Evaluacion_usuario_model extends Model
         return $query->getResultArray();
     }
 
-    public function get_evalua($id_evento, $id_usuario)
+    public function get_usuario_evalua($id_evento, $id_usuario)
     {
         $sql = ""
             ."select "
-            ."1 as evalua "
+            ."1 as usuario_evalua "
             ."from "
             ."evaluacion_usuario ela "
             ."left join evaluacion el on el.id_evaluacion = ela.id_evaluacion "
@@ -73,7 +79,7 @@ class Evaluacion_usuario_model extends Model
             ."and ela.id_usuario = ? "
             ."";
         $query = $this->db->query($sql, array($id_evento, $id_usuario));
-        return $query->getRowArray()['evalua'] ?? null ;
+        return $query->getRowArray()['usuario_evalua'] ?? null ;
     }
 
 }

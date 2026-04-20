@@ -2,7 +2,7 @@
     <div class="ui grid">
         <div class="eight wide column">
             <div class="ui horizontal list">
-                <?php if ( $asiste ): ?>
+                <?php if ( $usuario_asiste ): ?>
                     <div class="item">
                         <div class="ui green label">
                             <i class="check icon"></i>Confirmaste asistencia
@@ -32,10 +32,10 @@
                 <?php endif ?>
             </div>
         </div>
-        <?php if ( $asiste && $evaluacion_disponible ): ?>
+        <?php if ( $usuario_asiste ): ?>
             <div class="eight wide column">
                 <div class="ui horizontal list">
-                    <?php if ( $evalua ): ?>
+                    <?php if ( $usuario_evalua ): ?>
                         <div class="item">
                             <div class="ui purple label">
                                 <i class="check icon"></i>Estás inscrito para evaluación
@@ -49,13 +49,15 @@
                             </form>
                         </div>
                     <?php else: ?>
-                        <div class="item">
-                            <form class="ui form" method="post" action="/evaluacion/asistir" id="frm_evaluacion_asistir">
-                                <input type="hidden" name="id_evento" id="id_evento" value="<?= $evento['id_evento'] ?>">
-                                <input type="hidden" name="id_usuario" id="id_usuario" value="<?= $userdata['id_usuario'] ?>">
-                                <a href="#" id="btn_evaluacion_asistir">Quiero hacer mi evaluación</a>
-                            </form>
-                        </div>
+                        <?php if ( $evaluacion_disponible ): ?>
+                            <div class="item">
+                                <form class="ui form" method="post" action="/evaluacion/asistir" id="frm_evaluacion_asistir">
+                                    <input type="hidden" name="id_evento" id="id_evento" value="<?= $evento['id_evento'] ?>">
+                                    <input type="hidden" name="id_usuario" id="id_usuario" value="<?= $userdata['id_usuario'] ?>">
+                                    <a href="#" id="btn_evaluacion_asistir">Quiero hacer mi evaluación</a>
+                                </form>
+                            </div>
+                        <?php endif ?>
                     <?php endif ?>
                 </div>
             </div>

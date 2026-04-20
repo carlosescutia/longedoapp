@@ -5,6 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
         <link rel="icon" href="<?=base_url('favicon.png')?>"/>
 
+        <title>Longe do App</title>
+
         <!-- semantic-ui -->
         <script src="<?=base_url('assets/js/jquery.min.js')?>"></script>
         <link href="<?=base_url('assets/css/semantic.min.css')?>" rel="stylesheet"/>
@@ -24,7 +26,7 @@
             <div class="row">
                 <div class="six wide column">
                     <div class="ui basic segment">
-                        <h1 class="ui header">Longe do Mar</h1>
+                        <h1 class="ui header">Longe do App</h1>
                         <div class="ui divider"></div>
 
                         <?php if ($error): ?>
