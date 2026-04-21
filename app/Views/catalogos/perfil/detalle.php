@@ -82,7 +82,7 @@
                                         </div>
                                         <div class="five wide field">
                                             <label>Edad</label>
-                                            <div class="ui selection dropdown">
+                                            <div class="ui selection dropdown" id="dp_edad">
                                                 <input type="hidden" name="edad" id="edad" value="<?=$perfil['edad']?>">
                                                 <i class="dropdown icon"></i>
                                                 <div class="default text">Edad</div>
@@ -94,13 +94,13 @@
                                         </div>
                                         <div class="six wide field">
                                             <label>Talla</label>
-                                            <div class="ui selection dropdown">
+                                            <div class="ui selection dropdown" id="dp_talla">
                                                 <input type="hidden" name="id_talla" id="id_talla" value="<?=$perfil['id_talla']?>">
                                                 <i class="dropdown icon"></i>
                                                 <div class="default text">Talla</div>
                                                 <div class="menu">
-                                                    <?php foreach ($tallas as $tallas_item) { ?>
-                                                        <div class="item" data-value="<?=$tallas_item['id_talla'] ?>"><?=$tallas_item['nom_talla'] ?></div>
+                                                    <?php foreach ($tallas_actual as $tallas_actual_item) { ?>
+                                                        <div class="item" data-value="<?=$tallas_actual_item['id_talla'] ?>"><?=$tallas_actual_item['nom_talla'] ?></div>
                                                     <?php } ?>
                                                 </div>
                                             </div>
@@ -136,6 +136,16 @@
         if ('<?= $borrado ?>' == 'habilitado') {
             confirm_file_delete('<?=$nombre_archivo?>', '#frm_eliminar');
         }
+    });
+
+    $('#edad').change( function () {
+        edad = $('#edad').val();
+        if ( edad == 'niño' ) {
+            tallas = JSON.parse('<?php echo json_encode($tallas_niño) ?>');
+        } else {
+            tallas = JSON.parse('<?php echo json_encode($tallas_adulto) ?>');
+        }
+        $('#dp_talla').dropdown('change values', tallas);
     });
 
     $('.ui.form')

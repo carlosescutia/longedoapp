@@ -105,4 +105,20 @@ class Usuario_model extends Model
         return $query->getResultArray();
     }
 
+    public function get_alumnos_evaluar_carga_grado($id_comunidad, $id_evaluacion)
+    {
+        $sql = ""
+            ."select "
+            ."u.id_usuario, ? as id_evaluacion, coalesce(grado_actual(id_usuario), 0) + 1 as id_grado "
+            ."from "
+            ."usuario u "
+            ."where u.id_comunidad = ? "
+            ."and activo = 1 "
+            ."and id_rol <> 'mentor' "
+            ."";
+
+        $query = $this->db->query($sql, array($id_evaluacion, $id_comunidad));
+        return $query->getResultArray();
+    }
+
 }

@@ -122,5 +122,23 @@ class Evaluacion_model extends Model
         return $query->getResultArray();
     }
 
+    public function get_cargas_grado($id_evaluador)
+    {
+        $sql = ""
+            ."select "
+            ."e.*, "
+            ."u.nom_usuario as nom_evaluador "
+            ."from "
+            ."evaluacion e "
+            ."left join usuario u on u.id_usuario = e.id_evaluador "
+            ."where "
+            ."e.id_evaluador = ? "
+            ."and e.id_evento is null "
+            ."order by e.id_evaluacion "
+            ."";
+        $query = $this->db->query($sql, array($id_evaluador));
+        return $query->getResultArray();
+    }
+
 }
 

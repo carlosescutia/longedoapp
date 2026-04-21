@@ -11,6 +11,7 @@ class Evaluacion extends BaseController
         $this->usuario_model = model('Usuario_model');
         $this->evento_model = model('Evento_model');
         $this->evento_usuario_model = model('Evento_usuario_model');
+        $this->perfil_model = model('Perfil_model');
     }
 
     public function detalle($id_evaluacion)
@@ -132,9 +133,12 @@ class Evaluacion extends BaseController
                 $evaluacion = $this->evaluacion_model->get_evaluacion_evento_edad($id_evento, $edad);
                 $id_evaluacion = $evaluacion['id_evaluacion'];
 
+                $id_grado = $this->perfil_model->get_grado_proximo($id_usuario);
+
                 $data = array(
                     'id_evaluacion' => $id_evaluacion,
                     'id_usuario' => $id_usuario,
+                    'id_grado' => $id_grado,
                 );
                 // guardar
                 $this->evaluacion_usuario_model->save($data);

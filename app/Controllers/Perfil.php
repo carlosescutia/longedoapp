@@ -23,7 +23,10 @@ class Perfil extends BaseController
                 $perfil = $this->perfil_model->get_perfil_usuario($data['userdata']['id_usuario']);
             }
             $data['perfil'] = $perfil;
-            $data['tallas'] = $this->talla_model->get_tallas();
+            $data['tallas_actual'] = $this->talla_model->get_tallas_edad($data['perfil']['edad']);
+            $data['tallas_niño'] = $this->talla_model->get_tallas_edad_drop('niño');
+            $data['tallas_adulto'] = $this->talla_model->get_tallas_edad_drop('adulto');
+            $data['tallas_adulto_mayor'] = $this->talla_model->get_tallas_edad_drop('adulto');
 
             return view('templates/header', $data)
                 .view('catalogos/perfil/detalle', $data)

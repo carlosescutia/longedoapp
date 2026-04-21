@@ -64,5 +64,17 @@ class Perfil_model extends Model
         return $query->getRowArray()['completo'] ?? null ;
     }
 
+    public function get_grado_proximo($id_usuario)
+    {
+        $sql = ""
+            ."select "
+            ."coalesce(grado_actual, 0) + 1 as grado_proximo "
+            ."from "
+            ."grado_actual(?) "
+            ."";
+        $query = $this->db->query($sql, array($id_usuario));
+        return $query->getRowArray()['grado_proximo'] ?? null;
+    }
+
 }
 

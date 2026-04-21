@@ -84,3 +84,10 @@ $routes->post('evaluacion/cancelar', 'Evaluacion::cancelar');
 $routes->get('evaluacion/aplicar/(:num)', 'Evaluacion::aplicar/$1');
 $routes->post('evaluacion/actualizar_status', 'Evaluacion::actualizar_status');
 $routes->post('evaluacion/actualizar_item', 'Evaluacion::actualizar_item');
+
+$routes->get('carga_grado/', 'Carga_grado::index');
+$routes->post('carga_grado/nuevo', 'Carga_grado::nuevo');
+$routes->get('carga_grado/aplicar/(:num)', 'Carga_grado::aplicar/$1');
+$routes->get('carga_grado/eliminar/(:num)', 'Carga_grado::eliminar/$1');
+$routes->post('carga_grado/eliminar_usuario', 'Carga_grado::eliminar_usuario');
+

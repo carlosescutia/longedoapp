@@ -101,6 +101,7 @@
                                             </h4>
                                         </td>
                                         <td>
+                                            <?= $evaluados_item['nom_grado'] ?>
                                         </td>
                                         <td>
                                             <form class="ui form" method="post" action="/evaluacion/actualizar_item" id="frm_mus_<?=$evaluados_item['id_evaluacion_usuario']?>">

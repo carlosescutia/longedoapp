@@ -99,6 +99,7 @@
                                         </h4>
                                     </td>
                                     <td>
+                                        <?= $evaluados_item['nom_grado'] ?>
                                     </td>
                                     <td>
                                         <?=$evaluados_item['musica']?>

@@ -36,18 +36,20 @@
             <div class="eight wide column">
                 <div class="ui horizontal list">
                     <?php if ( $usuario_evalua ): ?>
-                        <div class="item">
-                            <div class="ui purple label">
-                                <i class="check icon"></i>Estás inscrito para evaluación
+                        <?php if ( $evaluacion_disponible ): ?>
+                            <div class="item">
+                                <div class="ui purple label">
+                                    <i class="check icon"></i>Estás inscrito para evaluación
+                                </div>
                             </div>
-                        </div>
-                        <div class="item">
-                            <form class="ui form" method="post" action="/evaluacion/cancelar" id="frm_evaluacion_cancelar">
-                                <input type="hidden" name="id_evento" id="id_evento" value="<?= $evento['id_evento'] ?>">
-                                <input type="hidden" name="id_usuario" id="id_usuario" value="<?= $userdata['id_usuario'] ?>">
-                                <a href="#" id="btn_evaluacion_cancelar"><span class="ui red text">Cancelar</span></a>
-                            </form>
-                        </div>
+                            <div class="item">
+                                <form class="ui form" method="post" action="/evaluacion/cancelar" id="frm_evaluacion_cancelar">
+                                    <input type="hidden" name="id_evento" id="id_evento" value="<?= $evento['id_evento'] ?>">
+                                    <input type="hidden" name="id_usuario" id="id_usuario" value="<?= $userdata['id_usuario'] ?>">
+                                    <a href="#" id="btn_evaluacion_cancelar"><span class="ui red text">Cancelar</span></a>
+                                </form>
+                            </div>
+                        <?php endif ?>
                     <?php else: ?>
                         <?php if ( $evaluacion_disponible ): ?>
                             <div class="item">

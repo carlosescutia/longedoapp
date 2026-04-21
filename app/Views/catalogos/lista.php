@@ -26,6 +26,16 @@
                                 </div>
                             <?php }
                         ?>
+                        <?php
+                            $permisos_requeridos = array(
+                            'rol_mentor',
+                            );
+                            if (has_permission_or($permisos_requeridos, $permisos_usuario)) { ?>
+                                <div class="four wide column">
+                                    <?php include "carga_grado/boton.php" ?>
+                                </div>
+                            <?php }
+                        ?>
                     </div>
                 </div>
             </div>
