@@ -36,9 +36,10 @@ class Perfil_model extends Model
     {
         $sql = ""
             ."select "
-            ."p.* "
+            ."p.*, u.password "
             ."from "
             ."perfil p "
+            ."left join usuario u on p.id_usuario = u.id_usuario "
             ."where "
             ."p.id_usuario = ? "
             ."";

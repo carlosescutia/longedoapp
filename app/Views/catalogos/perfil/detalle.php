@@ -20,7 +20,7 @@
                                 <div class="ui card">
                                     <?php
                                         $nombre = 'perfil_' . $perfil['id_perfil'] ;
-                                        $tipo_archivo = 'png';
+                                        $tipo_archivo = 'jpg';
                                         $nombre_archivo = $nombre . '.' . $tipo_archivo;
                                         $up_dir = 'imgs/';
                                         $url_actual = site_url('perfil') ;
@@ -107,6 +107,10 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="eight wide field">
+                                        <label>Contraseña</label>
+                                        <input type="text" name="password" id="password" value="<?=$perfil['password']?>">
+                                    </div>
                                     <input type="hidden" name="id_perfil" id="id_perfil" value="<?=$perfil['id_perfil']?>">
                                     <input type="hidden" name="id_usuario" id="id_usuario" value="<?=$perfil['id_usuario']?>">
 
@@ -185,6 +189,15 @@
                         {
                             type   : 'notEmpty',
                             prompt : 'Talla no puede estar vacio'
+                        }
+                    ]
+                },
+                password: {
+                    identifier: 'password',
+                    rules: [
+                        {
+                            type   : 'notEmpty',
+                            prompt : 'Contraseña no puede estar vacio'
                         }
                     ]
                 },

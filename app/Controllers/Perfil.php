@@ -75,6 +75,14 @@ class Perfil extends BaseController
                 // guardar
                 $this->perfil_model->save($data);
 
+                // actualizar contraseña
+                $data = array(
+                    'id_usuario' => $perfil['id_usuario'],
+                    'password' => $perfil['password'],
+                );
+                // guardar
+                $this->usuario_model->save($data);
+
                 $accion = 'modificó';
                 $id_perfil = $perfil['id_perfil'];
 
