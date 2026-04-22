@@ -42,7 +42,7 @@ function confirm_file_delete(item, frm_eliminar) {
     }).modal('show');
 }
 
-function confirm_enviar(mensaje, forma) {
+function confirm_action(mensaje, forma) {
     $.modal({
         title: 'Confirme la acción',
         class: 'tiny',

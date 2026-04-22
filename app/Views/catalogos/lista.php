@@ -28,6 +28,26 @@
                         ?>
                         <?php
                             $permisos_requeridos = array(
+                            'grado.can_edit',
+                            );
+                            if (has_permission_or($permisos_requeridos, $permisos_usuario)) { ?>
+                                <div class="four wide column">
+                                    <?php include "grado/boton.php" ?>
+                                </div>
+                            <?php }
+                        ?>
+                        <?php
+                            $permisos_requeridos = array(
+                            'talla.can_edit',
+                            );
+                            if (has_permission_or($permisos_requeridos, $permisos_usuario)) { ?>
+                                <div class="four wide column">
+                                    <?php include "talla/boton.php" ?>
+                                </div>
+                            <?php }
+                        ?>
+                        <?php
+                            $permisos_requeridos = array(
                             'rol_mentor',
                             );
                             if (has_permission_or($permisos_requeridos, $permisos_usuario)) { ?>

@@ -2,11 +2,11 @@
 
 namespace App\Controllers;
 
-class Comunidad extends BaseController
+class Talla extends BaseController
 {
     public function __construct()
     {
-        $this->comunidad_model = model('Comunidad_model');
+        $this->talla_model = model('Talla_model');
     }
 
     public function index()
@@ -15,26 +15,26 @@ class Comunidad extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $data['comunidades'] = $this->comunidad_model->get_comunidades_todas();
+            $data['tallas'] = $this->talla_model->get_tallas_todas();
 
             return view('templates/header', $data)
-                .view('catalogos/comunidad/lista', $data)
+                .view('catalogos/talla/lista', $data)
                 .view('templates/footer');
         } else {
             return redirect()->to(site_url("login"));
         }
     }
 
-    public function detalle($id_comunidad)
+    public function detalle($id_talla)
     {
         if ($this->session->logueado) {
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $data['comunidad'] = $this->comunidad_model->get_comunidad($id_comunidad);
+            $data['talla'] = $this->talla_model->get_talla($id_talla);
 
             return view('templates/header', $data)
-                .view('catalogos/comunidad/detalle', $data)
+                .view('catalogos/talla/detalle', $data)
                 .view('templates/footer');
         } else {
             return redirect()->to(site_url("login"));
@@ -48,7 +48,7 @@ class Comunidad extends BaseController
             $data += $this->fn_sis->get_userdata();
 
             return view('templates/header', $data)
-                .view('catalogos/comunidad/nuevo', $data)
+                .view('catalogos/talla/nuevo', $data)
                 .view('templates/footer');
         } else {
             return redirect()->to(site_url("login"));
@@ -58,60 +58,62 @@ class Comunidad extends BaseController
     public function guardar()
     {
         if ($this->session->logueado) {
-            $comunidad = $this->request->getPost();
-            if ($comunidad) {
+            $talla = $this->request->getPost();
+            if ($talla) {
                 $data = [];
-                if (array_key_exists('id_comunidad', $comunidad)) {
+                if (array_key_exists('id_talla', $talla)) {
                     $data += array(
-                        'id_comunidad' => $comunidad['id_comunidad'],
+                        'id_talla' => $talla['id_talla'],
                     );
                 }
                 $data += array(
-                    'nom_comunidad' => $comunidad['nom_comunidad'],
-                    'ciudad' => $comunidad['ciudad'],
-                    'activo' => array_key_exists('activo', $comunidad) ? 1 : 0,
+                    'nom_talla' => $talla['nom_talla'],
+                    'edad' => $talla['edad'],
+                    'orden' => $talla['orden'],
+                    'activo' => array_key_exists('activo', $talla) ? 1 : 0,
                 );
                 // guardar
-                $this->comunidad_model->save($data);
+                $this->talla_model->save($data);
 
-                if (array_key_exists('id_comunidad', $comunidad)) {
+                if (array_key_exists('id_talla', $talla)) {
                     $accion = 'modificó';
-                    $id_comunidad = $comunidad['id_comunidad'];
+                    $id_talla = $talla['id_talla'];
                 } else {
                     $accion = 'agregó';
-                    $id_comunidad = $this->comunidad_model->getInsertID();
+                    $id_talla = $this->talla_model->getInsertID();
                 }
 
                 // registro en bitacora
-                $entidad = 'comunidad';
-                $valor = $id_comunidad . " " .$comunidad['nom_comunidad'];
+                $entidad = 'talla';
+                $valor = $id_talla . " " .$talla['nom_talla'];
                 $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
             }
-            return redirect()->to(site_url("comunidad"));
+            return redirect()->to(site_url("talla"));
         } else {
             return redirect()->to(site_url("login"));
         }
     }
 
-    public function eliminar($id_comunidad)
+    public function eliminar($id_talla)
     {
         if ($this->session->logueado) {
 
             // registro en bitacora
-            $comunidad = $this->comunidad_model->get_comunidad($id_comunidad);
+            $talla = $this->talla_model->get_talla($id_talla);
             $accion = "eliminó";
-            $entidad = 'comunidad';
-            $valor = $comunidad['id_comunidad'] . " " . $comunidad['nom_comunidad'];
+            $entidad = 'talla';
+            $valor = $talla['id_talla'] . " " . $talla['nom_talla'];
             $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
 
             // eliminado
-            $this->comunidad_model->delete($id_comunidad);
+            $this->talla_model->delete($id_talla);
 
-            return redirect()->to(site_url("comunidad"));
+            return redirect()->to(site_url("talla"));
         } else {
             return redirect()->to(site_url("login"));
         }
     }
 
 }
+
 

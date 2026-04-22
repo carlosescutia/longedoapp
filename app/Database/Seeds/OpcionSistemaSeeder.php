@@ -79,6 +79,16 @@ class OpcionSistemaSeeder extends Seeder
                 'nom_opcion_sistema' => 'Editar eventos',
                 'otorgable' => null
             ],
+            [
+                'cod_opcion_sistema' => 'talla.can_edit',
+                'nom_opcion_sistema' => 'Editar tallas',
+                'otorgable' => null
+            ],
+            [
+                'cod_opcion_sistema' => 'grado.can_edit',
+                'nom_opcion_sistema' => 'Editar grados',
+                'otorgable' => null
+            ],
         ];
 
         $this->db->table('opcion_sistema')->insertBatch($data);

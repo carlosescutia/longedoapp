@@ -17,7 +17,7 @@
                                         $mensaje = '¿Está seguro de finalizar la evaluación?<br>Ya no se podrá modificar' ;
                                         $forma = '#frm_evaluacion';
                                     ?>
-                                    <a class="field ui right floated orange button" href="#" onclick="confirm_enviar('<?=$mensaje?>','<?=$forma?>')" >Finalizar</a>
+                                    <a class="field ui right floated orange button" href="#" onclick="confirm_action('<?=$mensaje?>','<?=$forma?>')" >Finalizar</a>
                                 </form>
                             </div>
                         </div>
@@ -219,6 +219,6 @@
     });
 
     $('#btn_finalizar').click( function() {
-        confirm_enviar('Finalizar evaluacion', '#frm_evaluacion');
+        confirm_action('Finalizar evaluacion', '#frm_evaluacion');
     });
 </script>

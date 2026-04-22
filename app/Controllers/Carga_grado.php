@@ -9,10 +9,7 @@ class Carga_grado extends BaseController
         $this->evaluacion_model = model('Evaluacion_model');
         $this->evaluacion_usuario_model = model('Evaluacion_usuario_model');
         $this->usuario_model = model('Usuario_model');
-        /*
-        $this->evento_model = model('Evento_model');
-        $this->evento_usuario_model = model('Evento_usuario_model');
-        */
+        $this->grado_model = model('Grado_model');
     }
 
     public function index()
@@ -95,6 +92,7 @@ class Carga_grado extends BaseController
 
             $data['evaluacion'] = $this->evaluacion_model->get_evaluacion($id_evaluacion);
             $data['evaluados'] = $this->evaluacion_usuario_model->get_evaluados($id_evaluacion);
+            $data['grados'] = $this->grado_model->get_grados_activos();
 
             return view('templates/header', $data)
                 .view('carga_grado/aplicacion', $data)
@@ -145,7 +143,32 @@ class Carga_grado extends BaseController
                 $valor = $data['id_evaluacion_usuario'] ;
                 $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
             }
-            return redirect()->to(site_url('evaluacion/aplicar/' . $evaluacion_usuario['id_evaluacion']));
+            return redirect()->to(site_url('carga_grado/aplicar/' . $evaluacion_usuario['id_evaluacion']));
+        } else {
+            return redirect()->to(site_url("login"));
+        }
+    }
+
+    public function actualizar_status()
+    {
+        if ($this->session->logueado) {
+            $evaluacion = $this->request->getPost();
+            if ($evaluacion) {
+
+                $data = array(
+                    'id_evaluacion' => $evaluacion['id_evaluacion'],
+                    'status' => $evaluacion['status'],
+                );
+                // guardar
+                $this->evaluacion_model->save($data);
+
+                // registro en bitacora
+                $accion = 'modificó';
+                $entidad = 'evaluacion';
+                $valor = $evaluacion['id_evaluacion'] . " " . $evaluacion['status'];
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            }
+            return redirect()->to(site_url('carga_grado'));
         } else {
             return redirect()->to(site_url("login"));
         }

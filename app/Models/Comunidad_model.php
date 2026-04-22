@@ -14,7 +14,13 @@ class Comunidad_model extends Model
         'activo',
     ];
 
-    public function get_comunidades() {
+    public function get_comunidades_todas() {
+        $sql = 'select * from comunidad order by nom_comunidad;';
+        $query = $this->db->query($sql);
+        return $query->getResultArray();
+    }
+
+    public function get_comunidades_activas() {
         $sql = 'select * from comunidad where activo = 1 order by nom_comunidad;';
         $query = $this->db->query($sql);
         return $query->getResultArray();

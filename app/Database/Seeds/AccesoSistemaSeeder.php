@@ -58,6 +58,14 @@ class AccesoSistemaSeeder extends Seeder
                 'cod_opcion_sistema' => 'parametro_sistema.can_edit',
             ],
             [
+                'id_rol' => 'admin',
+                'cod_opcion_sistema' => 'talla.can_edit',
+            ],
+            [
+                'id_rol' => 'admin',
+                'cod_opcion_sistema' => 'grado.can_edit',
+            ],
+            [
                 'id_rol' => 'mentor',
                 'cod_opcion_sistema' => 'reporte.can_view',
             ],

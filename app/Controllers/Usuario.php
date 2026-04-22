@@ -40,7 +40,7 @@ class Usuario extends BaseController
 
             $data['usuario'] = $this->usuario_model->get_usuario($id_usuario);
             $data['roles'] = $this->rol_model->get_roles();
-            $data['comunidades'] = $this->comunidad_model->get_comunidades();
+            $data['comunidades'] = $this->comunidad_model->get_comunidades_activas();
             $data['accesos_sistema_rol'] = $this->acceso_sistema_model->get_accesos_sistema_rol_usuario($id_usuario);
             $data['accesos_sistema_usuario'] = $this->acceso_sistema_usuario_model->get_accesos_sistema_usuario($id_usuario);
             $data['opciones_sistema_otorgables'] = $this->opcion_sistema_model->get_opciones_sistema_otorgables();
@@ -60,7 +60,7 @@ class Usuario extends BaseController
             $data += $this->fn_sis->get_userdata();
 
             $data['roles'] = $this->rol_model->get_roles();
-            $data['comunidades'] = $this->comunidad_model->get_comunidades();
+            $data['comunidades'] = $this->comunidad_model->get_comunidades_activas();
 
             return view('templates/header', $data)
                 .view('catalogos/usuario/nuevo', $data)

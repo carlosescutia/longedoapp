@@ -34,33 +34,51 @@ class TallaSeeder extends Seeder
                 'activo' => 1
             ],
             [
-                'nom_talla' => '6',
+                'nom_talla' => '3',
                 'edad' => 'niño',
                 'orden' => '1',
                 'activo' => 1
             ],
             [
-                'nom_talla' => '8',
+                'nom_talla' => '5',
                 'edad' => 'niño',
                 'orden' => '2',
                 'activo' => 1
             ],
             [
-                'nom_talla' => '10',
+                'nom_talla' => '6',
                 'edad' => 'niño',
                 'orden' => '3',
                 'activo' => 1
             ],
             [
-                'nom_talla' => '12',
+                'nom_talla' => '8',
                 'edad' => 'niño',
                 'orden' => '4',
                 'activo' => 1
             ],
             [
-                'nom_talla' => '14',
+                'nom_talla' => '10',
                 'edad' => 'niño',
                 'orden' => '5',
+                'activo' => 1
+            ],
+            [
+                'nom_talla' => '12',
+                'edad' => 'niño',
+                'orden' => '6',
+                'activo' => 1
+            ],
+            [
+                'nom_talla' => '14',
+                'edad' => 'niño',
+                'orden' => '7',
+                'activo' => 1
+            ],
+            [
+                'nom_talla' => '16',
+                'edad' => 'niño',
+                'orden' => '8',
                 'activo' => 1
             ],
         ];

@@ -10,14 +10,14 @@
                                 <h1 class="ui header">Carga de grados</h1>
                             </div>
                             <div class="eight wide right aligned column">
-                                <form class="ui form" method="post" action="/evaluacion/actualizar_status" id="frm_evaluacion">
+                                <form class="ui form" method="post" action="/carga_grado/actualizar_status" id="frm_evaluacion">
                                     <input type="hidden" name="id_evaluacion" id="id_evaluacion" value="<?= $evaluacion['id_evaluacion'] ?>" >
                                     <input type="hidden" name="status" id="status" value="cerrado">
                                     <?php
-                                        $mensaje = '¿Está seguro de finalizar la evaluación?<br>Ya no se podrá modificar' ;
+                                        $mensaje = '¿Está seguro de finalizar la Carga de grados?<br>Ya no se podrá modificar' ;
                                         $forma = '#frm_evaluacion';
                                     ?>
-                                    <a class="field ui right floated orange button" href="#" onclick="confirm_enviar('<?=$mensaje?>','<?=$forma?>')" >Finalizar</a>
+                                    <a class="field ui right floated orange button" href="#" onclick="confirm_action('<?=$mensaje?>','<?=$forma?>')" >Finalizar</a>
                                 </form>
                             </div>
                         </div>
@@ -87,6 +87,7 @@
                                 <th data-priority="1">Jogo</th>
                                 <th data-priority="1">Promovido</th>
                                 <th data-priority="1">Observaciones</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -101,10 +102,26 @@
                                         </h4>
                                     </td>
                                     <td>
-                                        <?= $evaluados_item['nom_grado'] ?>
+                                        <form class="ui form" method="post" action="/carga_grado/actualizar_item" id="frm_grd_<?=$evaluados_item['id_evaluacion_usuario']?>">
+                                            <div class="field">
+                                                <label></label>
+                                                <div class="ui selection dropdown">
+                                                    <input type="hidden" name="id_grado" id="id_grado" value="<?= $evaluados_item['id_grado'] ?>" onchange="$('#frm_grd_<?=$evaluados_item['id_evaluacion_usuario']?>').submit()">
+                                                    <i class="dropdown icon"></i>
+                                                    <div class="default text">grado</div>
+                                                    <div class="menu">
+                                                        <?php foreach ($grados as $grados_item): ?>
+                                                            <div class="item" data-value="<?=$grados_item['id_grado']?>"><?=$grados_item['nom_grado']?></div>
+                                                        <?php endforeach ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <input type="hidden" name="id_evaluacion" id="id_evaluacion" value="<?= $evaluacion['id_evaluacion'] ?>" >
+                                        <input type="hidden" name="id_evaluacion_usuario" id="id_evaluacion_usuario" value="<?= $evaluados_item['id_evaluacion_usuario'] ?>">
+                                        </form>
                                     </td>
                                     <td>
-                                        <form class="ui form" method="post" action="/evaluacion/actualizar_item" id="frm_mus_<?=$evaluados_item['id_evaluacion_usuario']?>">
+                                        <form class="ui form" method="post" action="/carga_grado/actualizar_item" id="frm_mus_<?=$evaluados_item['id_evaluacion_usuario']?>">
                                             <div class="field">
                                                 <label></label>
                                                 <div class="ui selection dropdown">
@@ -124,7 +141,7 @@
                                         </form>
                                     </td>
                                     <td>
-                                        <form class="ui form" method="post" action="/evaluacion/actualizar_item" id="frm_cul_<?=$evaluados_item['id_evaluacion_usuario']?>">
+                                        <form class="ui form" method="post" action="/carga_grado/actualizar_item" id="frm_cul_<?=$evaluados_item['id_evaluacion_usuario']?>">
                                             <div class="field">
                                                 <label></label>
                                                 <div class="ui selection dropdown">
@@ -144,7 +161,7 @@
                                         </form>
                                     </td>
                                     <td>
-                                        <form class="ui form" method="post" action="/evaluacion/actualizar_item" id="frm_jog<?=$evaluados_item['id_evaluacion_usuario']?>">
+                                        <form class="ui form" method="post" action="/carga_grado/actualizar_item" id="frm_jog<?=$evaluados_item['id_evaluacion_usuario']?>">
                                             <div class="field">
                                                 <label></label>
                                                 <div class="ui selection dropdown">
@@ -164,7 +181,7 @@
                                         </form>
                                     </td>
                                     <td>
-                                        <form class="ui form" method="post" action="/evaluacion/actualizar_item" id="frm_prom<?=$evaluados_item['id_evaluacion_usuario']?>">
+                                        <form class="ui form" method="post" action="/carga_grado/actualizar_item" id="frm_prom<?=$evaluados_item['id_evaluacion_usuario']?>">
                                             <div class="field">
                                                 <label></label>
                                                 <div class="ui selection dropdown">
@@ -182,7 +199,7 @@
                                         </form>
                                     </td>
                                     <td>
-                                        <form class="ui form" method="post" action="/evaluacion/actualizar_item" id="frm_obs<?=$evaluados_item['id_evaluacion_usuario']?>">
+                                        <form class="ui form" method="post" action="/carga_grado/actualizar_item" id="frm_obs<?=$evaluados_item['id_evaluacion_usuario']?>">
                                             <div class="field">
                                                 <label></label>
                                                 <div class="ui action input">
@@ -202,7 +219,7 @@
                                             ?>
                                             <input type="hidden" name="id_evaluacion" id="id_evaluacion" value="<?= $evaluados_item['id_evaluacion'] ?>" >
                                             <input type="hidden" name="id_usuario" id="id_usuario" value="<?= $evaluados_item['id_usuario'] ?>" >
-                                            <a href="#" onclick="confirm_enviar('<?=$mensaje?>','<?=$forma?>')" ><span class="ui red text"><i class="icon times circle outline"></span></i></a>
+                                            <a href="#" onclick="confirm_action('<?=$mensaje?>','<?=$forma?>')" ><span class="ui red text"><i class="icon times circle outline"></span></i></a>
                                         </form>
                                     </td>
                                 </tr>
@@ -230,6 +247,6 @@
     });
 
     $('#btn_finalizar').click( function() {
-        confirm_enviar('Finalizar evaluacion', '#frm_evaluacion');
+        confirm_action('Finalizar evaluacion', '#frm_evaluacion');
     });
 </script>

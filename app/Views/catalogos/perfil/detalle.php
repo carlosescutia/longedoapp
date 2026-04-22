@@ -89,6 +89,7 @@
                                                 <div class="menu">
                                                     <div class="item" data-value="niño">Niño</div>
                                                     <div class="item" data-value="adulto">Adulto</div>
+                                                    <div class="item" data-value="adulto_mayor">Adulto mayor</div>
                                                 </div>
                                             </div>
                                         </div>

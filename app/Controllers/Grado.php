@@ -16,7 +16,7 @@ class Grado extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $data['grados'] = $this->grado_model->get_grados();
+            $data['grados'] = $this->grado_model->get_grados_todos();
 
             return view('templates/header', $data)
                 .view('catalogos/grado/lista', $data)
@@ -69,7 +69,10 @@ class Grado extends BaseController
                 }
                 $data += array(
                     'nom_grado' => $grado['nom_grado'],
-                    'ciudad' => $grado['ciudad'],
+                    'edad' => $grado['edad'],
+                    'iniciales' => $grado['iniciales'],
+                    'color' => $grado['color'],
+                    'orden' => $grado['orden'],
                     'activo' => array_key_exists('activo', $grado) ? 1 : 0,
                 );
                 // guardar

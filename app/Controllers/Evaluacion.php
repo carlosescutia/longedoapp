@@ -133,7 +133,7 @@ class Evaluacion extends BaseController
                 $evaluacion = $this->evaluacion_model->get_evaluacion_evento_edad($id_evento, $edad);
                 $id_evaluacion = $evaluacion['id_evaluacion'];
 
-                $id_grado = $this->perfil_model->get_grado_proximo($id_usuario);
+                $id_grado = $this->perfil_model->get_grado_proximo($id_usuario, $edad);
 
                 $data = array(
                     'id_evaluacion' => $id_evaluacion,

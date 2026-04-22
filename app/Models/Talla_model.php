@@ -16,8 +16,14 @@ class Talla_model extends Model
         'activo',
     ];
 
-    public function get_tallas() {
-        $sql = 'select * from talla where activo = 1 order by orden ;';
+    public function get_tallas_todas() {
+        $sql = 'select * from talla order by edad, orden ;';
+        $query = $this->db->query($sql);
+        return $query->getResultArray();
+    }
+
+    public function get_tallas_activas() {
+        $sql = 'select * from talla where activo = 1 order by edad, orden ;';
         $query = $this->db->query($sql);
         return $query->getResultArray();
     }
@@ -34,7 +40,6 @@ class Talla_model extends Model
         $query = $this->db->query($sql, array($edad));
         return $query->getResultArray();
     }
-
 
     public function get_talla($id_talla) {
         $sql = 'select * from talla where id_talla = ?;';

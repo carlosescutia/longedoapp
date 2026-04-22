@@ -90,4 +90,18 @@ $routes->post('carga_grado/nuevo', 'Carga_grado::nuevo');
 $routes->get('carga_grado/aplicar/(:num)', 'Carga_grado::aplicar/$1');
 $routes->get('carga_grado/eliminar/(:num)', 'Carga_grado::eliminar/$1');
 $routes->post('carga_grado/eliminar_usuario', 'Carga_grado::eliminar_usuario');
+$routes->post('carga_grado/actualizar_status', 'Carga_grado::actualizar_status');
+$routes->post('carga_grado/actualizar_item', 'Carga_grado::actualizar_item');
+
+$routes->get('talla/', 'Talla::index');
+$routes->get('talla/detalle/(:num)', 'Talla::detalle/$1');
+$routes->post('talla/nuevo', 'Talla::nuevo');
+$routes->post('talla/guardar', 'Talla::guardar');
+$routes->get('talla/eliminar/(:num)', 'Talla::eliminar/$1');
+
+$routes->get('grado/', 'Grado::index');
+$routes->get('grado/detalle/(:num)', 'Grado::detalle/$1');
+$routes->post('grado/nuevo', 'Grado::nuevo');
+$routes->post('grado/guardar', 'Grado::guardar');
+$routes->get('grado/eliminar/(:num)', 'Grado::eliminar/$1');
 

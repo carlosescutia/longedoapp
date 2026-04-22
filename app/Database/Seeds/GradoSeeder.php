@@ -10,59 +10,195 @@ class GradoSeeder extends Seeder
     {
         $data = [
             [
-                'cve_grado' => 'vr',
                 'nom_grado' => 'Verde',
+                'edad' => 'adulto',
+                'color' => 'verde',
                 'iniciales' => '',
-                'orden' => '1',
+                'orden' => 1,
                 'activo' => 1
             ],
             [
-                'cve_grado' => 'va',
-                'nom_grado' => 'Verde amarela',
+                'nom_grado' => 'Apropiación Verde amarelo',
+                'edad' => 'adulto',
+                'color' => '3verde_1amarillo',
                 'iniciales' => '',
-                'orden' => '2',
+                'orden' => 2,
                 'activo' => 1
             ],
             [
-                'cve_grado' => 'am',
-                'nom_grado' => 'Amarela',
+                'nom_grado' => 'Verde amarelo',
+                'edad' => 'adulto',
+                'color' => 'verde_amarillo',
                 'iniciales' => '',
-                'orden' => '3',
+                'orden' => 3,
                 'activo' => 1
             ],
             [
-                'cve_grado' => 'mn',
+                'nom_grado' => 'Apropiación Amarelo',
+                'edad' => 'adulto',
+                'color' => '1verde_3amarillo',
+                'iniciales' => '',
+                'orden' => 4,
+                'activo' => 1
+            ],
+            [
+                'nom_grado' => 'Amarelo',
+                'edad' => 'adulto',
+                'color' => 'amarillo',
+                'iniciales' => '',
+                'orden' => 5,
+                'activo' => 1
+            ],
+            [
+                'nom_grado' => 'Apropiación Monitor',
+                'edad' => 'adulto',
+                'color' => '3amarillo_1azul',
+                'iniciales' => '',
+                'orden' => 6,
+                'activo' => 1
+            ],
+            [
                 'nom_grado' => 'Monitor',
+                'edad' => 'adulto',
+                'color' => 'amarillo_azul',
                 'iniciales' => 'Mn',
-                'orden' => '4',
+                'orden' => 7,
                 'activo' => 1
             ],
             [
-                'cve_grado' => 'in',
                 'nom_grado' => 'Instructor',
+                'edad' => 'adulto',
+                'color' => '',
                 'iniciales' => 'In',
-                'orden' => '5',
+                'orden' => 8,
                 'activo' => 1
             ],
             [
-                'cve_grado' => 'pf',
                 'nom_grado' => 'Profesor',
+                'edad' => 'adulto',
+                'color' => '',
                 'iniciales' => 'Pf',
-                'orden' => '6',
+                'orden' => 9,
                 'activo' => 1
             ],
             [
-                'cve_grado' => 'cm',
                 'nom_grado' => 'Contramestre',
+                'edad' => 'adulto',
+                'color' => '',
                 'iniciales' => 'Cm',
-                'orden' => '7',
+                'orden' => 10,
                 'activo' => 1
             ],
             [
-                'cve_grado' => 'm',
                 'nom_grado' => 'Mestre',
+                'edad' => 'adulto',
+                'color' => '',
                 'iniciales' => 'M',
-                'orden' => '8',
+                'orden' => 11,
+                'activo' => 1
+            ],
+            [
+                'nom_grado' => 'Verde',
+                'edad' => 'adulto_mayor',
+                'color' => 'verde',
+                'iniciales' => '',
+                'orden' => 1,
+                'activo' => 1
+            ],
+            [
+                'nom_grado' => 'Apropiación Verde amarelo',
+                'edad' => 'adulto_mayor',
+                'color' => '3verde_1amarillo',
+                'iniciales' => '',
+                'orden' => 2,
+                'activo' => 1
+            ],
+            [
+                'nom_grado' => 'Verde amarelo',
+                'edad' => 'adulto_mayor',
+                'color' => 'verde_amarillo',
+                'iniciales' => '',
+                'orden' => 3,
+                'activo' => 1
+            ],
+            [
+                'nom_grado' => 'Primer grado',
+                'edad' => 'niño',
+                'color' => '',
+                'iniciales' => '',
+                'orden' => 1,
+                'activo' => 1
+            ],
+            [
+                'nom_grado' => 'Segundo grado',
+                'edad' => 'niño',
+                'color' => '',
+                'iniciales' => '',
+                'orden' => 2,
+                'activo' => 1
+            ],
+            [
+                'nom_grado' => 'Tercer grado',
+                'edad' => 'niño',
+                'color' => '',
+                'iniciales' => '',
+                'orden' => 3,
+                'activo' => 1
+            ],
+            [
+                'nom_grado' => 'Cuarto grado',
+                'edad' => 'niño',
+                'color' => '',
+                'iniciales' => '',
+                'orden' => 4,
+                'activo' => 1
+            ],
+            [
+                'nom_grado' => 'Quinto grado',
+                'edad' => 'niño',
+                'color' => '',
+                'iniciales' => '',
+                'orden' => 5,
+                'activo' => 1
+            ],
+            [
+                'nom_grado' => 'Sexto grado',
+                'edad' => 'niño',
+                'color' => '',
+                'iniciales' => '',
+                'orden' => 6,
+                'activo' => 1
+            ],
+            [
+                'nom_grado' => 'Séptimo grado',
+                'edad' => 'niño',
+                'color' => '',
+                'iniciales' => '',
+                'orden' => 7,
+                'activo' => 1
+            ],
+            [
+                'nom_grado' => 'Octavo grado',
+                'edad' => 'niño',
+                'color' => '',
+                'iniciales' => '',
+                'orden' => 8,
+                'activo' => 1
+            ],
+            [
+                'nom_grado' => 'Noveno grado',
+                'edad' => 'niño',
+                'color' => '',
+                'iniciales' => '',
+                'orden' => 9,
+                'activo' => 1
+            ],
+            [
+                'nom_grado' => 'Décimo grado',
+                'edad' => 'niño',
+                'color' => '',
+                'iniciales' => '',
+                'orden' => 10,
                 'activo' => 1
             ],
         ];
