@@ -7,6 +7,7 @@
         <?php endif ?>
         <div class="item"><a href="<?= site_url('evento/editar/')?><?=$evento['id_evento']?>">Editar información</a></div>
         <div class="item"><a href="<?= site_url('reportes/asistentes_evento/')?><?=$evento['id_evento']?>">Lista de asistentes</a></div>
+        <div class="item"><a href="<?= site_url('reportes/playeras_evento/')?><?=$evento['id_evento']?>">Reporte de playeras</a></div>
 
         <table class="ui celled unstackable tiny table">
             <thead>

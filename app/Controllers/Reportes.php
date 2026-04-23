@@ -86,5 +86,41 @@ class Reportes extends BaseController
         }
     }
 
+    public function playeras_evento($id_evento, $salida='')
+    {
+        if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
+            $data['error'] = $this->session->getFlashdata('error');
+
+            $evento = $this->evento_model->get_evento($id_evento);
+
+            $permisos_requeridos = array(
+                'evento.can_edit',
+            );
+            if ($data['userdata']['id_comunidad'] == $evento['id_comunidad']) {
+                if (has_permission_and($permisos_requeridos, $data['permisos_usuario'])) {
+
+                    $data['evento'] = $this->evento_model->get_evento($id_evento);
+                    $data['playeras_evento'] = $this->evento_usuario_model->get_playeras_evento($id_evento, $salida);
+
+                    if ($salida == 'csv') {
+                        return $this->response->download("playeras_evento" . $id_evento . '.csv', $data['playeras_evento']);
+                    } else {
+                        return view('templates/header', $data)
+                            .view('reportes/playeras_evento', $data)
+                            .view('templates/footer');
+                    }
+                } else {
+                    return redirect()->to(site_url());
+                }
+            } else {
+                return redirect()->to(site_url());
+            }
+        } else {
+            return redirect()->to(site_url("login"));
+        }
+    }
+
 
 }

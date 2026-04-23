@@ -28,3 +28,7 @@ body .pusher {
         display: none !important;
     }
 }
+
+.open_image { 
+    cursor: pointer;
+}

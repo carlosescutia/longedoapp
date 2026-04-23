@@ -53,7 +53,7 @@ class Evaluacion_usuario_model extends Model
     {
         $sql = ""
             ."select "
-            ."elu.*, u.nom_usuario, p.nom_capoeira, g.nom_grado "
+            ."elu.*, u.nom_usuario, p.id_perfil, p.nom_capoeira, g.nom_grado, g.musica as req_musica, g.cultura as req_cultura, g.jogo as req_jogo "
             ."from "
             ."evaluacion_usuario elu "
             ."left join usuario u on u.id_usuario = elu.id_usuario "
@@ -61,6 +61,7 @@ class Evaluacion_usuario_model extends Model
             ."left join grado g on g.id_grado = elu.id_grado "
             ."where "
             ."elu.id_evaluacion = ? "
+            ."order by elu.id_usuario "
             ."";
         $query = $this->db->query($sql, array($id_evaluacion));
         return $query->getResultArray();
@@ -81,6 +82,42 @@ class Evaluacion_usuario_model extends Model
             ."";
         $query = $this->db->query($sql, array($id_evento, $id_usuario));
         return $query->getRowArray()['usuario_evalua'] ?? null ;
+    }
+
+    public function get_grados_usuario($id_usuario)
+    {
+        $sql = ""
+            ."select "
+            ."evt.nom_evento, evl.fecha, evu.id_grado, g.nom_grado, g.edad, g.orden "
+            ."from "
+            ."evaluacion_usuario evu "
+            ."left join evaluacion evl on evl.id_evaluacion = evu.id_evaluacion "
+            ."left join evento evt on evt.id_evento = evl.id_evento "
+            ."left join grado g on g.id_grado = evu.id_grado "
+            ."where "
+            ."evu.id_usuario = ? "
+            ."and evu.promovido = 1 "
+            ."order by "
+            ."evl.fecha, g.edad, g.orden "
+            ."";
+        $query = $this->db->query($sql, array($id_usuario));
+        return $query->getResultArray();
+    }
+
+    public function get_evaluacion_pendiente($id_usuario)
+    {
+        $sql = ""
+            ."select "
+            ."1 as evaluacion_pendiente "
+            ."from "
+            ."evaluacion_usuario evu "
+            ."left join evaluacion evl on evl.id_evaluacion = evu.id_evaluacion "
+            ."where "
+            ."evu.id_usuario = ? "
+            ."and status <> 'cerrado' "
+            ."";
+        $query = $this->db->query($sql, array($id_usuario));
+        return $query->getRowArray()['evaluacion_pendiente'] ?? null ;
     }
 
 }

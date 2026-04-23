@@ -65,7 +65,7 @@ class Evento_usuario_model extends Model
             ."select "
             ."ea.id_usuario, "
             ."u.nom_usuario, "
-            ."p.nom_capoeira, sexo, edad, "
+            ."p.nom_capoeira, p.sexo, p.edad, "
             ."t.nom_talla "
             ."from "
             ."evento_usuario ea "
@@ -74,6 +74,34 @@ class Evento_usuario_model extends Model
             ."left join talla t on t.id_talla = p.id_talla "
             ."where "
             ."ea.id_evento = ? "
+            ."";
+        $query = $this->db->query($sql, array($id_evento));
+        if ($salida == 'csv') {
+            $delimiter = ",";
+            $newline = "\r\n";
+            $enclosure = '"';
+            return $dbutil->getCSVFromResult($query, $delimiter, $newline, $enclosure);
+        } else {
+            return $query->getResultArray();
+        }
+    }
+
+    public function get_playeras_evento($id_evento, $salida)
+    {
+        $dbutil = \Config\Database::utils();
+
+        $sql = ""
+            ."select "
+            ."t.nom_talla, t.edad, count(*) as cantidad "
+            ."from "
+            ."evento_usuario evu "
+            ."left join perfil p on p.id_usuario = evu.id_usuario "
+            ."left join talla t on t.id_talla = p.id_talla "
+            ."where "
+            ."evu.id_evento = ? "
+            ."group by "
+            ."t.orden, t.nom_talla, t.edad "
+            ."order by t.edad, t.orden "
             ."";
         $query = $this->db->query($sql, array($id_evento));
         if ($salida == 'csv') {

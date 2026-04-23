@@ -1,7 +1,7 @@
 <div class="ui container">
     <div class="ui stackable centered grid">
         <div class="row">
-            <div class="eight wide column">
+            <div class="seven wide column">
                 <div class="ui grid">
                     <div class="row">
                         <div class="eight wide column">
@@ -57,15 +57,21 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="twelve wide column">
+                            <div class="fourteen wide column">
                                 <form class="ui form" method="post" action="/perfil/guardar" id="frm_perfil">
                                     <div class="field">
                                         <label>Nombre de capoeira</label>
                                         <input type="text" name="nom_capoeira" id="nom_capoeira" value="<?=$perfil['nom_capoeira']?>">
                                     </div>
-                                    <div class="field">
-                                        <label>Fecha de ingreso</label>
-                                        <input type="date" name="fecha_ingreso" id="fecha_ingreso" value="<?=$perfil['fecha_ingreso']?>">
+                                    <div class="fields">
+                                        <div class="field">
+                                            <label>Fecha de ingreso</label>
+                                            <input type="date" name="fecha_ingreso" id="fecha_ingreso" value="<?=$perfil['fecha_ingreso']?>">
+                                        </div>
+                                        <div class="eight wide field">
+                                            <label>Contraseña</label>
+                                            <input type="text" name="password" id="password" value="<?=$perfil['password']?>">
+                                        </div>
                                     </div>
                                     <div class="fields">
                                         <div class="five wide field">
@@ -107,20 +113,55 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="eight wide field">
-                                        <label>Contraseña</label>
-                                        <input type="text" name="password" id="password" value="<?=$perfil['password']?>">
-                                    </div>
                                     <input type="hidden" name="id_perfil" id="id_perfil" value="<?=$perfil['id_perfil']?>">
                                     <input type="hidden" name="id_usuario" id="id_usuario" value="<?=$perfil['id_usuario']?>">
-
+                                    <?php if ( $evaluacion_pendiente ): ?>
+                                        <input type="hidden" name="evaluacion_pendiente" id="evaluacion_pendiente" value="<?=$evaluacion_pendiente?>">
+                                    <?php endif ?>
                                     <div class="ui error message"></div>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <div class="six wide column">
+                <h1 class="ui header right aligned">Grados</h1>
+
+                <div class="ui green segment">
+                    <table class="ui celled unstackable tiny table">
+                        <thead>
+                            <tr>
+                                <th>nombre</th>
+                                <th>edad</th>
+                                <th>fecha</th>
+                                <th>evento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($grados as $grados_item): ?>
+                                <tr>
+                                    <td><?= $grados_item['nom_grado'] ?></td>
+                                    <td><?= $grados_item['edad'] ?></td>
+                                    <?php
+                                        $fmt = datefmt_create(
+                                            'es_MX',
+                                            IntlDateFormatter::NONE,
+                                            IntlDateFormatter::NONE,
+                                            null,
+                                            IntlDateFormatter::GREGORIAN,
+                                            'ddMMMyy'
+                                        );
+                                        $fecha = strtotime($grados_item['fecha']);
+                                    ?>
+                                    <td><?= datefmt_format($fmt, $fecha) ?></td>
+                                    <td><?= $grados_item['nom_evento'] == '' ? 'carga de grado' : $grados_item['nom_evento'] ?></td>
+                                </tr>
+                            <?php endforeach ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -130,7 +171,13 @@
 <script>
     $(document).ready( function() {
         $('#btn_subir').hide();
+
+        if ( '<?= $evaluacion_pendiente ?>' == '1') {
+            $('#dp_edad').addClass('disabled');
+        }
+
     });
+
 
     $('#frm_subir').change( function () {
         $('#btn_subir').show(); 
@@ -176,11 +223,12 @@
                 },
                 edad: {
                     identifier: 'edad',
+                    depends: 'evaluacion_pendiente',
                     rules: [
                         {
                             type   : 'notEmpty',
                             prompt : 'Edad no puede estar vacio'
-                        }
+                        },
                     ]
                 },
                 id_talla: {

@@ -69,7 +69,7 @@ class Perfil_model extends Model
     {
         $sql = ""
             ."select "
-            ."id_grado "
+            ."grado_proximo "
             ."from "
             ."grado_proximo(?,?) "
             ."";

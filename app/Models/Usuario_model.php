@@ -110,7 +110,7 @@ class Usuario_model extends Model
         $sql = ""
             ."select "
             ."u.id_usuario, ? as id_evaluacion, "
-            ."(select * from grado_proximo(p.edad, ( select coalesce((select orden from grado where edad = p.edad and id_grado = ( select coalesce(grado_actual,0) from grado_actual(u.id_usuario, p.edad) )),0) ) ) ) as id_grado "
+            ."(select * from grado_proximo(u.id_usuario, p.edad)) as id_grado "
             ."from "
             ."usuario u "
             ."left join perfil p on p.id_usuario = u.id_usuario "

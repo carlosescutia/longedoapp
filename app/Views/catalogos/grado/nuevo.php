@@ -55,6 +55,20 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="fields">
+                            <div class="five wide field">
+                                <label>Requisitos de música</label>
+                                <textarea name="musica" id="musica" rows="4"></textarea>
+                            </div>
+                            <div class="five wide field">
+                                <label>Requisitos de cultura</label>
+                                <textarea name="cultura" id="cultura" rows="4"></textarea>
+                            </div>
+                            <div class="six wide field">
+                                <label>Requisitos de jogo</label>
+                                <textarea name="jogo" id="jogo" rows="4"></textarea>
+                            </div>
+                        </div>
 
                         <div class="ui error message"></div>
                     </form>

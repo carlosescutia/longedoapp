@@ -33,7 +33,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="four wide field">
+                            <div class="three wide field">
                                 <label>Iniciales</label>
                                 <input type="text" name="iniciales" id="iniciales" value="<?=$grado['iniciales']?>">
                             </div>
@@ -53,6 +53,20 @@
                                     <input type="checkbox" name="activo" id="activo" value="1" <?= ($grado['activo'] == '1') ? 'checked' : '' ?> >
                                     <label></label>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="fields">
+                            <div class="five wide field">
+                                <label>Requisitos de música</label>
+                                <textarea name="musica" id="musica" rows="4"><?= $grado['musica'] ?></textarea>
+                            </div>
+                            <div class="five wide field">
+                                <label>Requisitos de cultura</label>
+                                <textarea name="cultura" id="cultura" rows="4"><?= $grado['cultura'] ?></textarea>
+                            </div>
+                            <div class="six wide field">
+                                <label>Requisitos de jogo</label>
+                                <textarea name="jogo" id="jogo" rows="4"><?= $grado['jogo'] ?></textarea>
                             </div>
                         </div>
                         <input type="hidden" name="id_grado" id="id_grado" value="<?=$grado['id_grado']?>">
