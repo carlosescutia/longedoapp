@@ -18,6 +18,9 @@ class Evento_model extends Model
         'redaccion',
         'activo',
         'id_comunidad',
+        'token',
+        'codigo',
+        'registrar_externos',
     ];
 
     public function get_eventos()
@@ -46,6 +49,20 @@ class Evento_model extends Model
             ."e.id_evento = ? "
             ."";
         $query = $this->db->query($sql, array($id_evento));
+        return $query->getRowArray();
+    }
+
+    public function get_evento_token($token)
+    {
+        $sql = ""
+            ."select "
+            ."e.* "
+            ."from "
+            ."evento e "
+            ."where "
+            ."e.token = ? "
+            ."";
+        $query = $this->db->query($sql, array($token));
         return $query->getRowArray();
     }
 

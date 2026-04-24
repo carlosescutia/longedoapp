@@ -70,6 +70,8 @@ $routes->post('evento/guardar', 'Evento::guardar');
 $routes->get('evento/eliminar/(:num)', 'Evento::eliminar/$1');
 $routes->post('evento/asistir', 'Evento::asistir');
 $routes->post('evento/cancelar', 'Evento::cancelar');
+$routes->post('evento/actualizar_registrar_externos', 'Evento::actualizar_registrar_externos');
+$routes->post('evento/actualizar_codigo', 'Evento::actualizar_codigo');
 
 $routes->get('comunidad/', 'Comunidad::index');
 $routes->get('comunidad/detalle/(:num)', 'Comunidad::detalle/$1');
@@ -107,3 +109,7 @@ $routes->post('grado/nuevo', 'Grado::nuevo');
 $routes->post('grado/guardar', 'Grado::guardar');
 $routes->get('grado/eliminar/(:num)', 'Grado::eliminar/$1');
 
+$routes->get('registro/(:segment)', 'Externo::nuevo/$1');
+$routes->post('registro/guardar', 'Externo::guardar');
+$routes->get('externo/aprobar/(:num)', 'Externo::aprobar/$1');
+$routes->post('externo/guardar_activo', 'Externo::guardar_activo');

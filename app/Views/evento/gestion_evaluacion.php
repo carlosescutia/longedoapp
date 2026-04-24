@@ -7,8 +7,24 @@
             <?php foreach ($evaluaciones as $evaluaciones_item): ?>
                 <?php if ( $evaluaciones_item['id_evaluador'] == $userdata['id_usuario'] ): ?>
                     <tr>
-                        <td><a href="<?=site_url('evaluacion/aplicar/')?><?=$evaluaciones_item['id_evaluacion']?>"><?= $evaluaciones_item['edad'] ?></a></td>
-                        <td><?= $evaluaciones_item['status'] ?></td>
+                        <td>
+                            <a href="<?=site_url('evaluacion/aplicar/')?><?=$evaluaciones_item['id_evaluacion']?>"><?= ucfirst($evaluaciones_item['edad']) ?></a>
+                        </td>
+                        <td>
+                            <?php
+                                $fmt = datefmt_create(
+                                    'es_MX',
+                                    IntlDateFormatter::NONE,
+                                    IntlDateFormatter::NONE,
+                                    null,
+                                    IntlDateFormatter::GREGORIAN,
+                                    'ddMMMyy'
+                                );
+                                $fecha = strtotime($evaluaciones_item['fecha']);
+                            ?>
+                            <?= datefmt_format($fmt, $fecha) ?>
+                        </td>
+                        <td><?= ucfirst($evaluaciones_item['status']) ?></td>
                     </tr>
                 <?php endif ?>
             <?php endforeach ?>

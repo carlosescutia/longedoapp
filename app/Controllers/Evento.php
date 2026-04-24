@@ -80,7 +80,14 @@ class Evento extends BaseController
                     $data += array(
                         'id_evento' => $evento['id_evento'],
                     );
+                } else {
+                    // generar token y codigo solamente en nuevos eventos
+                    $data += array(
+                        'token' => $this->fn_sis->create_uuid(),
+                        'codigo' => $this->fn_sis->create_random_string(6),
+                    );
                 }
+
                 $data += array(
                     'nom_evento' => $evento['nom_evento'],
                     'fech_ini' => empty($evento['fech_ini']) ? null: $evento['fech_ini'],
@@ -190,5 +197,57 @@ class Evento extends BaseController
             return redirect()->to(site_url("login"));
         }
     }
+
+    public function actualizar_codigo()
+    {
+        if ($this->session->logueado) {
+            $evento = $this->request->getPost();
+            if ($evento) {
+
+                $data = array(
+                    'id_evento' => $evento['id_evento'],
+                    'codigo' => $evento['codigo'],
+                );
+                // guardar
+                $this->evento_model->save($data);
+
+                // registro en bitacora
+                $accion = 'modificó';
+                $entidad = 'evento';
+                $valor = $evento['id_evento'] . " codigo " . $evento['codigo'];
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            }
+            return redirect()->to(site_url('evento/detalle/' . $evento['id_evento']));
+        } else {
+            return redirect()->to(site_url('login'));
+        }
+    }
+
+    public function actualizar_registrar_externos()
+    {
+        if ($this->session->logueado) {
+            $evento = $this->request->getPost();
+            if ($evento) {
+
+                $data = array(
+                    'id_evento' => $evento['id_evento'],
+                    'registrar_externos' => array_key_exists('registrar_externos', $evento) ? 1 : 0,
+                );
+                // guardar
+                $this->evento_model->save($data);
+
+                // registro en bitacora
+                $registrar = array_key_exists('registrar_externos', $evento) ? 'registrar' : 'no registrar';
+                $accion = 'modificó';
+                $entidad = 'evento';
+                $valor = $evento['id_evento'] . " registrar_externos " . $registrar;
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            }
+            return redirect()->to(site_url('evento/detalle/' . $evento['id_evento']));
+        } else {
+            return redirect()->to(site_url('login'));
+        }
+    }
+
 
 }

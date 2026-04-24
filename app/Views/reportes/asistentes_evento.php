@@ -18,9 +18,12 @@
                         <thead>
                             <tr>
                                 <th data-priority="1">Nombre capoeira / usuario</th>
+                                <th data-priority="1">Tipo</th>
                                 <th data-priority="1">Sexo</th>
                                 <th data-priority="1">Edad</th>
                                 <th data-priority="1">Talla</th>
+                                <th data-priority="1">Nota</th>
+                                <th data-priority="1">Código</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -35,6 +38,9 @@
                                         </h4>
                                     </td>
                                     <td>
+                                        <?=$asistentes_item['tipo']?>
+                                    </td>
+                                    <td>
                                         <?=$asistentes_item['sexo']?>
                                     </td>
                                     <td>
@@ -42,6 +48,12 @@
                                     </td>
                                     <td>
                                         <?=$asistentes_item['nom_talla']?>
+                                    </td>
+                                    <td>
+                                        <?=$asistentes_item['nota']?>
+                                    </td>
+                                    <td>
+                                        <?=$asistentes_item['codigo']?>
                                     </td>
                                 </tr>
                             <?php endforeach ?>
@@ -61,6 +73,7 @@
 <script type="text/javascript">
 $(document).ready( function () {
     $('#tbl_asistentes').DataTable( {
+        order: [ [1, 'desc'], [0, 'asc'] ],
         responsive: true,
         language: {
             url: '<?=base_url()?>assets/js/es-MX.json',
