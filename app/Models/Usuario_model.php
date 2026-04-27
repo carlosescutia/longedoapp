@@ -44,7 +44,7 @@ class Usuario_model extends Model
     {
         $sql = ""
             ."select "
-            ."u.*, p.* "
+            ."u.*, p.id_perfil, p.nom_capoeira, p.fecha_ingreso, p.sexo, p.id_talla, p.edad "
             ."from "
             ."usuario u "
             ."left join perfil p on p.id_usuario = u.id_usuario "

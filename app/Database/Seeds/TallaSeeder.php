@@ -10,27 +10,33 @@ class TallaSeeder extends Seeder
     {
         $data = [
             [
-                'nom_talla' => 'Chica',
+                'nom_talla' => 'Extra chica',
                 'edad' => 'adulto',
                 'orden' => '1',
                 'activo' => 1
             ],
             [
-                'nom_talla' => 'Mediana',
+                'nom_talla' => 'Chica',
                 'edad' => 'adulto',
                 'orden' => '2',
                 'activo' => 1
             ],
             [
-                'nom_talla' => 'Grande',
+                'nom_talla' => 'Mediana',
                 'edad' => 'adulto',
                 'orden' => '3',
                 'activo' => 1
             ],
             [
-                'nom_talla' => 'Extra Grande',
+                'nom_talla' => 'Grande',
                 'edad' => 'adulto',
                 'orden' => '4',
+                'activo' => 1
+            ],
+            [
+                'nom_talla' => 'Extra Grande',
+                'edad' => 'adulto',
+                'orden' => '5',
                 'activo' => 1
             ],
             [
