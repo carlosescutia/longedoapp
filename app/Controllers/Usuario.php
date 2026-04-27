@@ -87,7 +87,7 @@ class Usuario extends BaseController
                     'nom_login' => $usuario['nom_login'],
                     'password' => $usuario['password'],
                     'activo' => array_key_exists('activo', $usuario) ? 1 : 0,
-                    'id_comunidad' => $usuario['id_comunidad'],
+                    'id_comunidad' => empty($usuario['id_comunidad']) ? null : $usuario['id_comunidad'],
                 );
                 // guardar
                 $this->usuario_model->save($data);
