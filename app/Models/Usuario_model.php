@@ -23,10 +23,11 @@ class Usuario_model extends Model
     {
         $sql = ""
             ."select "
-            ."u.*, c.nom_comunidad "
+            ."u.*, c.nom_comunidad, p.id_perfil "
             ."from "
             ."usuario u "
             ."left join comunidad c on c.id_comunidad = u.id_comunidad "
+            ."left join perfil p on p.id_usuario = u.id_usuario "
             ."";
 
         $parametros = [];
@@ -60,10 +61,12 @@ class Usuario_model extends Model
         $sql = ''
             .'select '
             .'u.*, '
-            .'r.nom_rol '
+            .'r.nom_rol, '
+            .'p.nom_capoeira '
             .'from '
             .'usuario u '
             .'left join rol r on u.id_rol = r.id_rol '
+            .'left join perfil p on p.id_usuario = u.id_usuario '
             .'where '
             .'u.nom_login = ? '
             .'and u.password = ? '
@@ -92,9 +95,11 @@ class Usuario_model extends Model
     {
         $sql = ""
             ."select "
-            ."u.* "
+            ."u.*, "
+            ."(case when p.nom_capoeira is not null then p.nom_capoeira else u.nom_usuario end) as nom_evaluador "
             ."from "
             ."usuario u "
+            ."left join perfil p on p.id_usuario = u.id_usuario "
             ."where "
             ."id_rol = 'mentor' "
             ."and evaluador = 1 "

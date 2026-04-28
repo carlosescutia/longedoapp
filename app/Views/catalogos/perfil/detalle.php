@@ -113,6 +113,30 @@
                                             </div>
                                         </div>
                                     </div>
+
+
+                                    <?php if ( empty($perfil['fech_acept_priv']) ): ?>
+                                        <div class="inline field">
+                                            <div class="ui checkbox">
+                                                <input type="checkbox" name="chk_aviso_privacidad" id="chk_aviso_privacidad">
+                                            <label>He leído y acepto el <strong><a href="<?= $aviso_privacidad ?>" target="_blank">Aviso de privacidad</a></strong></label>
+                                            </div>
+                                        </div>
+                                    <?php else: ?>
+                                        <?php
+                                            $fmt = datefmt_create(
+                                                'es_MX',
+                                                IntlDateFormatter::NONE,
+                                                IntlDateFormatter::NONE,
+                                                null,
+                                                IntlDateFormatter::GREGORIAN,
+                                                'dd/MMM/yy'
+                                            );
+                                            $fecha = strtotime($perfil['fech_acept_priv']);
+                                        ?>
+                                        <p>Fecha de aceptación del <strong><a href="<?= $aviso_privacidad ?>" target="_blank">Aviso de privacidad</a></strong>: <?= datefmt_format($fmt, $fecha) ?></p>
+                                    <?php endif ?>
+
                                     <input type="hidden" name="id_perfil" id="id_perfil" value="<?=$perfil['id_perfil']?>">
                                     <input type="hidden" name="id_usuario" id="id_usuario" value="<?=$perfil['id_usuario']?>">
                                     <?php if ( $evaluacion_pendiente ): ?>
@@ -204,7 +228,6 @@
         .form({
             fields: {
                 nom_capoeira: {
-                    identifier: 'nom_capoeira',
                     rules: [
                         {
                             type   : 'notEmpty',
@@ -213,7 +236,6 @@
                     ]
                 },
                 sexo: {
-                    identifier: 'sexo',
                     rules: [
                         {
                             type   : 'notEmpty',
@@ -222,7 +244,6 @@
                     ]
                 },
                 edad: {
-                    identifier: 'edad',
                     depends: 'evaluacion_pendiente',
                     rules: [
                         {
@@ -232,7 +253,6 @@
                     ]
                 },
                 id_talla: {
-                    identifier: 'id_talla',
                     rules: [
                         {
                             type   : 'notEmpty',
@@ -241,11 +261,18 @@
                     ]
                 },
                 password: {
-                    identifier: 'password',
                     rules: [
                         {
                             type   : 'notEmpty',
                             prompt : 'Contraseña no puede estar vacio'
+                        }
+                    ]
+                },
+                chk_aviso_privacidad: {
+                    rules: [
+                        {
+                            type   : 'notEmpty',
+                            prompt : 'Se debe aceptar el aviso de privacidad'
                         }
                     ]
                 },

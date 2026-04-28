@@ -29,7 +29,7 @@
                                     <div class="default text">Evaluador</div>
                                     <div class="menu">
                                         <?php foreach ($evaluadores as $evaluadores_item) { ?>
-                                            <div class="item" data-value="<?=$evaluadores_item['id_usuario'] ?>"><?=$evaluadores_item['nom_usuario'] ?></div>
+                                            <div class="item" data-value="<?=$evaluadores_item['id_usuario'] ?>"><?=$evaluadores_item['nom_evaluador'] ?></div>
                                         <?php } ?>
                                     </div>
                                 </div>

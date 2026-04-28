@@ -12,7 +12,11 @@
                         <form class="ui form" method="post" action="/evento/cancelar" id="frm_evento_cancelar">
                             <input type="hidden" name="id_evento" id="id_evento" value="<?= $evento['id_evento'] ?>">
                             <input type="hidden" name="id_usuario" id="id_usuario" value="<?= $userdata['id_usuario'] ?>">
-                            <a href="#" id="btn_evento_cancelar"><span class="ui red text">Cancelar</span></a>
+                            <?php
+                                $mensaje = '¿Estás seguro de cancelar la asistencia al evento?' ;
+                                $forma = '#frm_evento_cancelar';
+                            ?>
+                            <a href="#" onclick="confirm_action('<?=$mensaje?>','<?=$forma?>')"><span class="ui red text">Cancelar</span></a>
                         </form>
                     </div>
                 <?php else: ?>
@@ -46,7 +50,11 @@
                                 <form class="ui form" method="post" action="/evaluacion/cancelar" id="frm_evaluacion_cancelar">
                                     <input type="hidden" name="id_evento" id="id_evento" value="<?= $evento['id_evento'] ?>">
                                     <input type="hidden" name="id_usuario" id="id_usuario" value="<?= $userdata['id_usuario'] ?>">
-                                    <a href="#" id="btn_evaluacion_cancelar"><span class="ui red text">Cancelar</span></a>
+                                    <?php
+                                        $mensaje = '¿Estás seguro de cancelar tu evaluación?' ;
+                                        $forma = '#frm_evaluacion_cancelar';
+                                    ?>
+                                    <a href="#" onclick="confirm_action('<?=$mensaje?>','<?=$forma?>')"><span class="ui red text">Cancelar</span></a>
                                 </form>
                             </div>
                         <?php endif ?>
@@ -74,15 +82,7 @@
         $('#frm_evento_asistir').submit();
     });
 
-    $('#btn_evento_cancelar').click( function() {
-        $('#frm_evento_cancelar').submit();
-    });
-
     $('#btn_evaluacion_asistir').click( function() {
         $('#frm_evaluacion_asistir').submit();
-    });
-
-    $('#btn_evaluacion_cancelar').click( function() {
-        $('#frm_evaluacion_cancelar').submit();
     });
 </script>

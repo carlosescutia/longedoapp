@@ -64,6 +64,7 @@ class Admin extends BaseController
                     'id_rol' => $usuario['id_rol'],
                     'id_comunidad' => $usuario['id_comunidad'],
                     'nom_usuario' => $usuario['nom_usuario'],
+                    'nom_capoeira' => $usuario['nom_capoeira'],
                     'nom_login' => $usuario['nom_login'],
                     'logueado' => TRUE,
                 );

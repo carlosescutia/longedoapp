@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use SimpleSoftwareIO\QrCode\Generator;
+
 class Evento extends BaseController
 {
     public function __construct()
@@ -20,6 +22,7 @@ class Evento extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
             $data['error'] = $this->session->getFlashdata('error');
+            $qrcode = new Generator;
 
             $id_usuario = $data['userdata']['id_usuario'];
             $usuario = $this->usuario_model->get_usuario($id_usuario);
@@ -31,6 +34,7 @@ class Evento extends BaseController
             $data['evaluaciones'] = $this->evaluacion_model->get_evaluaciones($id_evento);
             $data['usuario_evalua'] = $this->evaluacion_usuario_model->get_usuario_evalua($id_evento, $id_usuario);
             $data['evaluadores_evento'] = $this->evaluacion_model->get_evaluadores_evento($id_evento);
+            $data['qr'] = $qrcode->size(450)->color(0, 0, 0)->backgroundColor(255, 255, 255)->style('dot')->format('png')->generate(site_url('registro/' . $data['evento']['token']));
 
             return view('templates/header', $data)
                 .view('evento/detalle', $data)

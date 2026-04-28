@@ -13,6 +13,10 @@ class ParametroSistemaSeeder extends Seeder
                 'nom_parametro_sistema' => 'anio',
                 'valor' => '2026',
             ],
+            [
+                'nom_parametro_sistema' => 'aviso_privacidad',
+                'valor' => 'https://www.iis.unam.mx/blog/plantilla-aviso-de-privacidad-mexico-investigadores/',
+            ],
         ];
 
         $this->db->table('parametro_sistema')->insertBatch($data);

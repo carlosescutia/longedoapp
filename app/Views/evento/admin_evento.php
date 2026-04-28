@@ -42,42 +42,44 @@
             </tbody>
         </table>
 
-        <form class="ui tiny form">
-            <div class="field">
-                <label>Enlace para registro de externos</label>
-                <div class="ui action input">
-                    <input type="text" name="url_registro" id="url_registro" value="<?= site_url('registro/') ?><?= $evento['token'] ?>">
-                    <a class="ui icon button" id="btn_clipboard"> <i class="clipboard outline icon"></i> </a> 
-                </div>
-            </div>
-        </form>
+        <div class="ui segment">
+            <h5 class="ui header">Asistentes externos</h5>
 
-        <p></p>
-
-        <form class="ui tiny form" method="post" action="/evento/actualizar_codigo">
-            <div class="field">
-                <label>Código de autorización de externos</label>
-                <div class="ui action input">
-                    <input type="text" name="codigo" id="codigo" value="<?= $evento['codigo'] ?>">
-                    <button class="ui icon button" id="btn_clipboard"> <i class="check icon"></i> </button> 
+            <form class="ui tiny form" method="post" action="/evento/actualizar_registrar_externos" name="frm_externos">
+                <div class="ui toggle checkbox">
+                    <input type="checkbox" name="registrar_externos" id="registrar_externos" value="1" <?= ($evento['registrar_externos'] == '1') ? 'checked' : '' ?> onchange="this.form.submit()">
+                    <label>Permitir registro</label>
                 </div>
                 <input type="hidden" name="id_evento" id="id_evento" value="<?=$evento['id_evento']?>">
+            </form>
+
+            <p></p>
+
+            <div class="ui form">
+                <a href="<?= site_url('registro/') ?><?= $evento['token'] ?>" target="_blank">Enlace para registro</a>
+                <div class="ui right floated icon buttons">
+                    <a class="ui icon button" id="btn_clipboard" title="Copiar al portapapeles"> <i class="clipboard outline icon"></i> </a> 
+                    <a class="ui icon button" id="btn_qr" title="Mostrar código QR"><i class="qrcode icon"></i></a>
+                </div>
             </div>
-        </form>
 
-        <p></p>
+            <p></p>
 
-        <form class="ui tiny form" method="post" action="/evento/actualizar_registrar_externos" name="frm_externos">
-            <div class="ui toggle checkbox">
-                <input type="checkbox" name="registrar_externos" id="registrar_externos" value="1" <?= ($evento['registrar_externos'] == '1') ? 'checked' : '' ?> onchange="this.form.submit()">
-                <label>Permitir registro de externos</label>
-            </div>
-            <input type="hidden" name="id_evento" id="id_evento" value="<?=$evento['id_evento']?>">
-        </form>
+            <form class="ui tiny form" method="post" action="/evento/actualizar_codigo">
+                <div class="field">
+                    <label>Código de autorización</label>
+                    <div class="ui action input">
+                        <input type="text" name="codigo" id="codigo" value="<?= $evento['codigo'] ?>">
+                        <button class="ui icon button" id="btn_clipboard"> <i class="check icon"></i> </button> 
+                    </div>
+                    <input type="hidden" name="id_evento" id="id_evento" value="<?=$evento['id_evento']?>">
+                </div>
+            </form>
 
-        <p></p>
+            <p></p>
 
-        <div class="item"><a href="<?= site_url('externo/aprobar/')?><?=$evento['id_evento']?>">Aprobar asistentes externos</a></div>
+            <div class="item"><a href="<?= site_url('externo/aprobar/')?><?=$evento['id_evento']?>">Aprobar asistentes externos</a></div>
+        </div>
 
         <div class="ui section divider"></div>
 
@@ -92,6 +94,16 @@
         </div>
     </div>
 </div>
+
+<div class="ui mini modal">
+    <i class="close icon"></i>
+    <div class="image content">
+        <div class="ui large image">
+            <img class="ui bordered medium image" src="data:image/png;base64, <?= base64_encode($qr) ?>">
+        </div>
+    </div>
+</div>
+
 <script>
     $('#btn_clipboard').click( function() {
         $('#url_registro').select();
@@ -99,8 +111,12 @@
         $('#url_registro').blur();
 
         $.toast({
-            message: 'Se copió el enlace para registro.'
+            message: 'Se copió el enlace para registro.',
+            class: 'inverted teal',
         });
     });
 
+    $('#btn_qr').click( function() {
+        $('.ui.modal').modal('show');
+    });
 </script>

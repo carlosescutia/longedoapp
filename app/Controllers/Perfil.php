@@ -10,6 +10,7 @@ class Perfil extends BaseController
         $this->perfil_model = model('Perfil_model');
         $this->talla_model = model('Talla_model');
         $this->evaluacion_usuario_model = model('Evaluacion_usuario_model');
+        $this->parametro_sistema_model = model('Parametro_sistema_model');
     }
 
     public function detalle()
@@ -31,6 +32,7 @@ class Perfil extends BaseController
             $data['tallas_adulto_mayor'] = $this->talla_model->get_tallas_edad_drop('adulto');
             $data['grados'] = $this->evaluacion_usuario_model->get_grados_usuario($id_usuario);
             $data['evaluacion_pendiente'] = $this->evaluacion_usuario_model->get_evaluacion_pendiente($id_usuario);
+            $data['aviso_privacidad'] = $this->parametro_sistema_model->get_parametro_sistema_nom('aviso_privacidad');
 
             return view('templates/header', $data)
                 .view('catalogos/perfil/detalle', $data)
@@ -76,6 +78,11 @@ class Perfil extends BaseController
                     'edad' => $perfil['edad'],
                     'id_talla' => empty($perfil['id_talla']) ? null : $perfil['id_talla'],
                 );
+                if (array_key_exists('chk_aviso_privacidad', $perfil)) {
+                    $data += array(
+                        'fech_acept_priv' => date("Y-m-d"),
+                    );
+                }
                 // guardar
                 $this->perfil_model->save($data);
 

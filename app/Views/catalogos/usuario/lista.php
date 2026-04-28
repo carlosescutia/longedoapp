@@ -20,6 +20,7 @@
                         <tr>
                             <th>Nombre / login</th>
                             <th>Comunidad / rol</th>
+                            <th>Perfil</th>
                             <th>Activo</th>
                             <th></th>
                         </tr>
@@ -42,6 +43,9 @@
                                         <div class="sub header"><?=$usuarios_item['id_rol']?></div>
                                     </div>
                                 </h4>
+                            </td>
+                            <td>
+                                <?= $usuarios_item['id_perfil'] ? 'Si' : 'No' ?>
                             </td>
                             <td>
                                 <form class="ui form" method="post" action="/usuario/guardar_activo" name="frm_usr<?=$usuarios_item['id_usuario']?>">

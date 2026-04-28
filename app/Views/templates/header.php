@@ -145,7 +145,7 @@
                 <a class="item" href="<?=site_url('catalogos')?>">Catálogos</a>
             <?php endif ?>
             <div class="right menu">
-                <a class="item usuario-menu" href="<?=site_url('perfil')?>"><i class="circular user icon"></i><?=$userdata['nom_usuario']?></a>
+                <a class="item usuario-menu" href="<?=site_url('perfil')?>"><i class="circular user icon"></i><?=$userdata['nom_capoeira'] ? $userdata['nom_capoeira'] : $userdata['nom_usuario']?></a>
                 <a class="item" href="<?=site_url('logout')?>">Salir</a>
             </div>
         </div>
