@@ -23,7 +23,7 @@ class Usuario_model extends Model
     {
         $sql = ""
             ."select "
-            ."u.*, c.nom_comunidad, p.id_perfil "
+            ."u.*, c.nom_comunidad, p.id_perfil, p.fech_acept_priv "
             ."from "
             ."usuario u "
             ."left join comunidad c on c.id_comunidad = u.id_comunidad "

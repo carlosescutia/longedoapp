@@ -45,7 +45,7 @@
                                 </h4>
                             </td>
                             <td>
-                                <?= $usuarios_item['id_perfil'] ? 'Si' : 'No' ?>
+                                <?= $usuarios_item['fech_acept_priv'] ? 'Si' : 'No' ?>
                             </td>
                             <td>
                                 <form class="ui form" method="post" action="/usuario/guardar_activo" name="frm_usr<?=$usuarios_item['id_usuario']?>">
