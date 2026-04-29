@@ -28,7 +28,7 @@
                                         $res_y = '300';
                                     ?>
                                     <div class="image">
-                                        <?php if ( file_exists($nombre_archivo_fs) ): ?>
+                                        <?php if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ): ?>
                                             <img class="ui image" src="<?= $nombre_archivo_url ?>">
                                             <?php $borrado = 'habilitado' ?>
                                         <?php else: ?>

@@ -115,7 +115,7 @@ class Archivo extends BaseController
 
                     // eliminar archivo de foto anterior
                     $archivo_anterior = $up_dir . $archivo_actual;
-                    if ( file_exists($archivo_anterior) ) {
+                    if ( file_exists($archivo_anterior) and $archivo_anterior !== $up_dir ) {
                         $status = unlink($archivo_anterior) ? 'Se eliminó el archivo '.$archivo_anterior : 'Error al eliminar el archivo '.$archivo_anterior;
                     }
 
