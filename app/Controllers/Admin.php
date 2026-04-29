@@ -28,7 +28,9 @@ class Admin extends BaseController
             $data['eventos'] = $this->evento_model->get_eventos();
             $data['asistencias'] = $this->evento_usuario_model->get_asistencias_usuario($data['userdata']['id_usuario']);
             $data['evaluaciones'] = $this->evaluacion_usuario_model->get_evaluaciones_usuario($data['userdata']['id_usuario']);
-            $data['qr'] = $qrcode->size(450)->format('png')->generate(site_url('registro_alumno/' . $comunidad['token']));
+            if ($comunidad) {
+                $data['qr'] = $qrcode->size(450)->format('png')->generate(site_url('registro_alumno/' . $comunidad['token']));
+            }
 
             return view('templates/header', $data)
                 .view('admin/index', $data)
