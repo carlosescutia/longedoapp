@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use SimpleSoftwareIO\QrCode\Generator;
+
 class Admin extends BaseController
 {
     public function __construct()
@@ -10,6 +12,7 @@ class Admin extends BaseController
         $this->evento_model = model('Evento_model');
         $this->evento_usuario_model = model('Evento_usuario_model');
         $this->evaluacion_usuario_model = model('Evaluacion_usuario_model');
+        $this->comunidad_model = model('Comunidad_model');
     }
 
     public function index()
@@ -17,10 +20,15 @@ class Admin extends BaseController
         if ($this->session->logueado) {
             $data = [];
             $data += $this->fn_sis->get_userdata();
+            $data['error'] = $this->session->getFlashdata('error');
+            $qrcode = new Generator;
 
+            $comunidad = $this->comunidad_model->get_comunidad($data['userdata']['id_comunidad']);
+            $data['comunidad'] = $comunidad;
             $data['eventos'] = $this->evento_model->get_eventos();
             $data['asistencias'] = $this->evento_usuario_model->get_asistencias_usuario($data['userdata']['id_usuario']);
             $data['evaluaciones'] = $this->evaluacion_usuario_model->get_evaluaciones_usuario($data['userdata']['id_usuario']);
+            $data['qr'] = $qrcode->size(450)->format('png')->generate(site_url('registro_alumno/' . $comunidad['token']));
 
             return view('templates/header', $data)
                 .view('admin/index', $data)

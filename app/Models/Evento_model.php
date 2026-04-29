@@ -21,6 +21,7 @@ class Evento_model extends Model
         'token',
         'codigo',
         'registrar_externos',
+        'cartel',
     ];
 
     public function get_eventos()

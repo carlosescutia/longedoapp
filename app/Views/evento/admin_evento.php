@@ -57,9 +57,12 @@
 
             <div class="ui form">
                 <a href="<?= site_url('registro/') ?><?= $evento['token'] ?>" target="_blank">Enlace para registro</a>
-                <div class="ui right floated icon buttons">
-                    <a class="ui icon button" id="btn_clipboard" title="Copiar al portapapeles"> <i class="clipboard outline icon"></i> </a> 
-                    <a class="ui icon button" id="btn_qr" title="Mostrar código QR"><i class="qrcode icon"></i></a>
+                <div class="ui action input">
+                    <input type="text" name="url_registro" id="url_registro" value="<?= site_url('registro/') ?><?= $evento['token'] ?>" >
+                    <div class="ui icon buttons">
+                        <a class="ui icon button" id="btn_clipboard" title="Copiar al portapapeles"> <i class="clipboard outline icon"></i> </a> 
+                        <a class="ui icon button" id="btn_qr" title="Mostrar código QR"><i class="qrcode icon"></i></a>
+                    </div>
                 </div>
             </div>
 
@@ -70,7 +73,7 @@
                     <label>Código de autorización</label>
                     <div class="ui action input">
                         <input type="text" name="codigo" id="codigo" value="<?= $evento['codigo'] ?>">
-                        <button class="ui icon button" id="btn_clipboard"> <i class="check icon"></i> </button> 
+                        <button class="ui icon button"><i class="check icon"></i> </button> 
                     </div>
                     <input type="hidden" name="id_evento" id="id_evento" value="<?=$evento['id_evento']?>">
                 </div>

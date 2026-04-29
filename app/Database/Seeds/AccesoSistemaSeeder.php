@@ -86,6 +86,10 @@ class AccesoSistemaSeeder extends Seeder
                 'cod_opcion_sistema' => 'evento.can_edit',
             ],
             [
+                'id_rol' => 'mentor',
+                'cod_opcion_sistema' => 'admin_comunidad.can_edit',
+            ],
+            [
                 'id_rol' => 'alumno',
                 'cod_opcion_sistema' => 'reporte.can_view',
             ],

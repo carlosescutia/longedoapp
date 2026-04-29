@@ -1,6 +1,6 @@
 <div class="ui stackable grid container">
     <div class="row">
-        <div class="twelve wide column">
+        <div class="eleven wide column">
             <div class="ui green segment">
                 <div class="ui grid">
                     <div class="row">
@@ -24,14 +24,13 @@
 
                 <div class="ui hidden divider"></div>
 
-                <div class="ui three stackable link cards">
+                <div class="ui stackable link cards">
                     <?php foreach ($eventos as $eventos_item): ?>
                         <a class="ui card" href="<?= site_url('evento/detalle/') ?><?= $eventos_item['id_evento'] ?>">
+
                             <?php
-                                $nombre = 'evento_' . $eventos_item['id_evento'] ;
-                                $tipo_archivo = 'png';
-                                $nombre_archivo = $nombre . '.' . $tipo_archivo;
-                                $up_dir = 'imgs/';
+                                $nombre_archivo = $eventos_item['cartel'];
+                                $up_dir = 'imgs/evento/';
                                 $nombre_archivo_fs = $up_dir . $nombre_archivo;
                                 $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
                             ?>
@@ -50,7 +49,7 @@
                                 <div class="ui teal left ribbon label">
                                     <?= datefmt_format($fmt, $fech_ini) ?>
                                 </div>
-                                <?php if ( file_exists($nombre_archivo_fs) ): ?>
+                                <?php if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ): ?>
                                     <img src="<?= $nombre_archivo_url ?>">
                                 <?php else: ?>
                                     <img src="<?= base_url('assets/img/image.png') ?>">
@@ -87,5 +86,18 @@
                 </div>
             </div>
         </div>
+
+        <!-- Administración de la comunidad -->
+            <?php
+                $permisos_requeridos = array(
+                    'admin_comunidad.can_edit',
+                );
+            ?>
+            <?php if (has_permission_and($permisos_requeridos, $permisos_usuario)): ?>
+                <div class="five wide column">
+                    <?php include "admin_comunidad.php" ?>
+                </div>
+            <?php endif ?>
+
     </div>
 </div>

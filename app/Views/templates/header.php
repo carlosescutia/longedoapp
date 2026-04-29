@@ -98,7 +98,7 @@
     <?php endif ?>
     <a class="item" href="<?=site_url('perfil')?>">
       <i class="user icon"></i>
-      <?= $userdata['nom_usuario'] ?>
+        <?=$userdata['nom_capoeira'] ? $userdata['nom_capoeira'] : $userdata['nom_usuario']?>
     </a>
     <a class="item" href="<?=site_url('logout')?>">
         <i class="sign out alternate icon"></i>

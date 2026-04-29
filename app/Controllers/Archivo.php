@@ -9,6 +9,7 @@ class Archivo extends BaseController
     public function __construct()
     {
         $this->perfil_model = model('Perfil_model');
+        $this->evento_model = model('Evento_model');
     }
 
     public function subir()
@@ -114,6 +115,81 @@ class Archivo extends BaseController
                     $this->perfil_model->save($data);
 
                     // eliminar archivo de foto anterior
+                    $archivo_anterior = $up_dir . $archivo_actual;
+                    if ( file_exists($archivo_anterior) and $archivo_anterior !== $up_dir ) {
+                        $status = unlink($archivo_anterior) ? 'Se eliminó el archivo '.$archivo_anterior : 'Error al eliminar el archivo '.$archivo_anterior;
+                    }
+
+                    // registro en bitacora
+                    $accion = 'agregó';
+                    $entidad = 'archivo';
+                    $valor = $nombre_archivo;
+                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+
+                    return redirect()->to($url_actual);
+                }
+                $this->session->setFlashdata('error', 'El archivo se ha movido');
+
+                return redirect()->to($url_actual);
+            }
+        } else {
+            return redirect()->to(site_url());
+        }
+    }
+
+    public function subir_evento()
+    {
+        if ($this->session->logueado) {
+
+            $archivo = $this->request->getPost();
+            if ($archivo) {
+
+                $up_dir = $archivo['up_dir'];
+                $url_actual = $archivo['url_actual'];
+                $id_evento = $archivo['id_evento'];
+                $archivo_actual = $archivo['archivo_actual'];
+                $res_x = $archivo['res_x'];
+                $res_y = $archivo['res_y'];
+
+                $validationRule = [
+                    'userfile' => [
+                        'label' => 'Archivo de imagen',
+                        'rules' => [
+                            'uploaded[userfile]',
+                            'is_image[userfile]',
+                            'mime_in[userfile,image/jpg,image/jpeg,image/png,image/webp]',
+                        ],
+                    ],
+                ];
+                if (! $this->validateData([], $validationRule)) {
+                    $this->session->setFlashdata('error', $this->validator->getErrors()['userfile']);
+
+                    return redirect()->to($url_actual);
+                }
+
+                $img = $this->request->getFile('userfile');
+
+                if (! $img->hasMoved()) {
+                    // move(destination_path, filename, overwrite)
+                    $extension = $img->guessExtension();
+                    $nombre_archivo = $this->fn_sis->create_uuid() . '.' . $extension;
+                    $img->move(ROOTPATH.'public/'.$up_dir, $nombre_archivo, true);
+
+                    // cambiar tamaño de imagen
+                    $image = service('image','imagick');
+                    $image->withFile(ROOTPATH.'public/'.$up_dir.$nombre_archivo)
+                            ->fit($res_x,$res_y, 'center')
+                            ->save(ROOTPATH.'public/'.$up_dir.$nombre_archivo);
+
+                    // actualizar cartel en evento
+                    $data = array(
+                        'id_evento' => $id_evento,
+                        'cartel' => $nombre_archivo
+                    );
+                    // guardar
+                    $this->evento_model->save($data);
+
+                    // eliminar archivo de cartel anterior
                     $archivo_anterior = $up_dir . $archivo_actual;
                     if ( file_exists($archivo_anterior) and $archivo_anterior !== $up_dir ) {
                         $status = unlink($archivo_anterior) ? 'Se eliminó el archivo '.$archivo_anterior : 'Error al eliminar el archivo '.$archivo_anterior;

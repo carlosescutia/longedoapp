@@ -65,7 +65,14 @@ class Comunidad extends BaseController
                     $data += array(
                         'id_comunidad' => $comunidad['id_comunidad'],
                     );
+                } else {
+                    // generar token y codigo solamente en nuevos eventos
+                    $data += array(
+                        'token' => $this->fn_sis->create_uuid(),
+                        'codigo' => $this->fn_sis->create_random_string(6),
+                    );
                 }
+
                 $data += array(
                     'nom_comunidad' => $comunidad['nom_comunidad'],
                     'ciudad' => $comunidad['ciudad'],
@@ -110,6 +117,56 @@ class Comunidad extends BaseController
             return redirect()->to(site_url("comunidad"));
         } else {
             return redirect()->to(site_url("login"));
+        }
+    }
+
+    public function actualizar_codigo()
+    {
+        if ($this->session->logueado) {
+            $comunidad = $this->request->getPost();
+            if ($comunidad) {
+
+                $data = array(
+                    'id_comunidad' => $comunidad['id_comunidad'],
+                    'codigo' => $comunidad['codigo'],
+                );
+                // guardar
+                $this->comunidad_model->save($data);
+
+                // registro en bitacora
+                $accion = 'modificó';
+                $entidad = 'comunidad';
+                $valor = $comunidad['id_comunidad'] . " codigo " . $comunidad['codigo'];
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            }
+            return redirect()->to(site_url());
+        } else {
+            return redirect()->to(site_url('login'));
+        }
+    }
+    public function actualizar_registrar_alumnos()
+    {
+        if ($this->session->logueado) {
+            $comunidad = $this->request->getPost();
+            if ($comunidad) {
+
+                $data = array(
+                    'id_comunidad' => $comunidad['id_comunidad'],
+                    'registrar_alumnos' => array_key_exists('registrar_alumnos', $comunidad) ? 1 : 0,
+                );
+                // guardar
+                $this->comunidad_model->save($data);
+
+                // registro en bitacora
+                $registrar = array_key_exists('registrar_alumnos', $comunidad) ? 'registrar' : 'no registrar';
+                $accion = 'modificó';
+                $entidad = 'comunidad';
+                $valor = $comunidad['id_comunidad'] . " registrar_alumnos " . $registrar;
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            }
+            return redirect()->to(site_url());
+        } else {
+            return redirect()->to(site_url('login'));
         }
     }
 

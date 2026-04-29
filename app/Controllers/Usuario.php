@@ -12,6 +12,9 @@ class Usuario extends BaseController
         $this->acceso_sistema_model = model('Acceso_sistema_model');
         $this->acceso_sistema_usuario_model = model('Acceso_sistema_usuario_model');
         $this->opcion_sistema_model = model('Opcion_sistema_model');
+        $this->talla_model = model('Talla_model');
+        $this->parametro_sistema_model = model('Parametro_sistema_model');
+        $this->perfil_model = model('Perfil_model');
     }
 
     public function index()
@@ -197,6 +200,91 @@ class Usuario extends BaseController
         } else {
             return redirect()->to(site_url("login"));
         }
+    }
+
+    public function nuevo_por_url($token)
+    {
+        $comunidad = $this->comunidad_model->get_comunidad_token($token);
+        if ( $comunidad ) {
+            if ( $comunidad['activo'] and $comunidad['registrar_alumnos'] ) {
+                $data['comunidad'] = $comunidad;
+                $data['tallas_niño'] = $this->talla_model->get_tallas_edad_drop('niño');
+                $data['tallas_adulto'] = $this->talla_model->get_tallas_edad_drop('adulto');
+                $data['tallas_adulto_mayor'] = $this->talla_model->get_tallas_edad_drop('adulto');
+                $data['aviso_privacidad'] = $this->parametro_sistema_model->get_parametro_sistema_nom('aviso_privacidad');
+
+                return view('templates/header_pub')
+                    .view('catalogos/usuario/nuevo_por_url', $data)
+                    .view('templates/footer');
+            } else {
+                $data['error'] = 'El registro para la comunidad ha sido desactivado.';
+            }
+        } else {
+            $data['error'] = 'El enlace proporcionado no es válido. Solicita otro e intenta de nuevo.';
+        }
+        return view('templates/header_pub')
+            .view('catalogos/usuario/error', $data)
+            .view('templates/footer');
+    }
+
+    public function guardar_por_url()
+    {
+        $usuario = $this->request->getPost();
+        if ($usuario) {
+
+            // comprobar que se tenga un código válido
+            $id_comunidad = $usuario['id_comunidad'];
+            $comunidad = $this->comunidad_model->get_comunidad($id_comunidad);
+            if ($usuario['codigo'] == $comunidad['codigo']) {
+
+                $data = array(
+                    'id_rol' => 'alumno',
+                    'id_comunidad' => $usuario['id_comunidad'],
+                    'nom_usuario' => $usuario['nom_completo'],
+                    'nom_login' => $usuario['nom_login'],
+                    'password' => $usuario['password'],
+                    'activo' => null,
+                );
+                // guardar
+                $this->usuario_model->save($data);
+                $id_usuario = $this->usuario_model->getInsertID();
+
+                $data = array(
+                    'id_usuario' => $id_usuario,
+                    'nom_capoeira' => $usuario['nom_capoeira'],
+                    'fecha_ingreso' => empty($usuario['fecha_ingreso']) ? null : $usuario['fecha_ingreso'],
+                    'sexo' => $usuario['sexo'],
+                    'edad' => $usuario['edad'],
+                    'id_talla' => empty($usuario['id_talla']) ? null : $usuario['id_talla'],
+                    'fech_acept_priv' => date("Y-m-d"),
+
+                );
+                $this->perfil_model->save($data);
+
+                // registro en bitacora
+                $accion = 'agregó';
+                $entidad = 'usuario';
+                $valor = $id_usuario . " " .$usuario['nom_completo'];
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+
+                $data['comunidad'] = $comunidad;
+                $data['nom_usuario'] = $usuario['nom_completo'];
+                return view('templates/header_pub')
+                    .view('catalogos/usuario/completado', $data)
+                    .view('templates/footer');
+            } else {
+                $data['comunidad'] = $comunidad;
+                $data['error'] = 'El código proporcionado no es válido. Solicita otro e intenta de nuevo.';
+                return view('templates/header_pub')
+                    .view('catalogos/usuario/error', $data)
+                    .view('templates/footer');
+            }
+        }
+        $data['comunidad'] = $comunidad;
+        $data['error'] = 'No se pudo completar el registro. Intenta de nuevo.';
+        return view('templates/header_pub')
+            .view('catalogos/usuario/error', $data)
+            .view('templates/footer');
     }
 
 }

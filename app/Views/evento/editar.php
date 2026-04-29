@@ -15,17 +15,19 @@
             <div class="ui stackable grid">
                 <div class="eight wide column">
                     <div class="ui centered card">
+
                         <?php
-                            $nombre = 'evento_' . $evento['id_evento'] ;
-                            $tipo_archivo = 'png';
-                            $nombre_archivo = $nombre . '.' . $tipo_archivo;
-                            $up_dir = 'imgs/';
+                            $nombre_archivo = $evento['cartel'];
+                            $up_dir = 'imgs/evento/';
                             $url_actual = site_url('evento/editar/') . $evento['id_evento'] ;
                             $nombre_archivo_fs = $up_dir . $nombre_archivo;
                             $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
+
+                            $res_x = '500';
+                            $res_y = '500';
                         ?>
                         <div class="image">
-                            <?php if ( file_exists($nombre_archivo_fs) ): ?>
+                            <?php if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ): ?>
                                 <img class="ui image" src="<?= $nombre_archivo_url ?>">
                                 <?php $borrado = 'habilitado' ?>
                             <?php else: ?>
@@ -33,13 +35,17 @@
                                 <?php $borrado = '' ?>
                             <?php endif ?>
                         </div>
-                        <form method="post" enctype="multipart/form-data" action="<?=site_url('archivo/subir')?>" id="frm_subir">
-                            <input type="file" class="ui invisible file input" id="invisibleupload1" name="userfile">
-                            <input type="hidden" name="nombre_archivo" value="<?=$nombre_archivo?>">
+
+                        <form method="post" enctype="multipart/form-data" action="<?=site_url('archivo/subir_evento')?>" id="frm_subir">
+                            <input type="file" class="ui invisible file input" id="invisibleupload1" name="userfile" accept="image/*" capture="user">
                             <input type="hidden" name="up_dir" value="<?=$up_dir?>">
-                            <input type="hidden" name="tipo_archivo" value="<?=$tipo_archivo?>">
+                            <input type="hidden" name="id_evento" value="<?=$evento['id_evento']?>">
+                            <input type="hidden" name="archivo_actual" value="<?=$nombre_archivo?>">
                             <input type="hidden" name="url_actual" value="<?=$url_actual?>">
+                            <input type="hidden" name="res_x" value="<?=$res_x?>">
+                            <input type="hidden" name="res_y" value="<?=$res_y?>">
                         </form>
+
                         <form method="post" enctype="multipart/form-data" action="<?=site_url('archivo/eliminar')?>" id="frm_eliminar">
                             <input type="hidden" name="nombre_archivo" value="<?=$nombre_archivo?>">
                             <input type="hidden" name="up_dir" value="<?=$up_dir?>">

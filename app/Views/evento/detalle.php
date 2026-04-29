@@ -8,14 +8,12 @@
                 <div class="sixteen wide column">
                     <div class="ui medium left floated stackable image">
                         <?php
-                            $nombre = 'evento_' . $evento['id_evento'] ;
-                            $tipo_archivo = 'png';
-                            $nombre_archivo = $nombre . '.' . $tipo_archivo;
-                            $up_dir = 'imgs/';
+                            $nombre_archivo = $evento['cartel'];
+                            $up_dir = 'imgs/evento/';
                             $nombre_archivo_fs = $up_dir . $nombre_archivo;
                             $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
                         ?>
-                        <?php if ( file_exists($nombre_archivo_fs) ): ?>
+                        <?php if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ): ?>
                             <img class="ui bordered image" src="<?= $nombre_archivo_url ?>">
                         <?php else: ?>
                             <img class="ui bordered image" src="<?= base_url('assets/img/image.png') ?>">

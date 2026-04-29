@@ -89,6 +89,11 @@ class OpcionSistemaSeeder extends Seeder
                 'nom_opcion_sistema' => 'Editar grados',
                 'otorgable' => null
             ],
+            [
+                'cod_opcion_sistema' => 'admin_comunidad.can_edit',
+                'nom_opcion_sistema' => 'Editar administración de la comunidad',
+                'otorgable' => null
+            ],
         ];
 
         $this->db->table('opcion_sistema')->insertBatch($data);

@@ -46,5 +46,5 @@
 
 <!-- Page Contents -->
 <div class="pusher">
-<div class="ui hidden section divider"></div>
+<div class="ui hidden divider"></div>
 

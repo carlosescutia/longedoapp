@@ -44,6 +44,7 @@ $routes->get('acceso_sistema_usuario/eliminar/(:num)', 'Acceso_sistema_usuario::
 
 $routes->post('archivo/subir', 'Archivo::subir');
 $routes->post('archivo/subir_perfil', 'Archivo::subir_perfil');
+$routes->post('archivo/subir_evento', 'Archivo::subir_evento');
 $routes->post('archivo/eliminar', 'Archivo::eliminar');
 
 $routes->get('proceso/', 'Proceso::index');
@@ -79,6 +80,8 @@ $routes->get('comunidad/detalle/(:num)', 'Comunidad::detalle/$1');
 $routes->post('comunidad/nuevo', 'Comunidad::nuevo');
 $routes->post('comunidad/guardar', 'Comunidad::guardar');
 $routes->get('comunidad/eliminar/(:num)', 'Comunidad::eliminar/$1');
+$routes->post('comunidad/actualizar_registrar_alumnos', 'Comunidad::actualizar_registrar_alumnos');
+$routes->post('comunidad/actualizar_codigo', 'Comunidad::actualizar_codigo');
 
 $routes->get('evaluacion/detalle/(:num)', 'Evaluacion::detalle/$1');
 $routes->post('evaluacion/nuevo', 'Evaluacion::nuevo');
@@ -114,3 +117,6 @@ $routes->get('registro/(:segment)', 'Externo::nuevo/$1');
 $routes->post('registro/guardar', 'Externo::guardar');
 $routes->get('externo/aprobar/(:num)', 'Externo::aprobar/$1');
 $routes->post('externo/guardar_activo', 'Externo::guardar_activo');
+
+$routes->get('registro_alumno/(:segment)', 'Usuario::nuevo_por_url/$1');
+$routes->post('registro_alumno/guardar', 'Usuario::guardar_por_url');

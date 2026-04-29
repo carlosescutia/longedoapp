@@ -11,6 +11,9 @@ class Comunidad_model extends Model
     protected $allowedFields = [
         'nom_comunidad',
         'ciudad',
+        'token',
+        'codigo',
+        'registrar_alumnos',
         'activo',
     ];
 
@@ -29,6 +32,20 @@ class Comunidad_model extends Model
     public function get_comunidad($id_comunidad) {
         $sql = 'select * from comunidad where id_comunidad = ?;';
         $query = $this->db->query($sql, array($id_comunidad));
+        return $query->getRowArray();
+    }
+
+    public function get_comunidad_token($token)
+    {
+        $sql = ""
+            ."select "
+            ."c.* "
+            ."from "
+            ."comunidad c "
+            ."where "
+            ."c.token = ? "
+            ."";
+        $query = $this->db->query($sql, array($token));
         return $query->getRowArray();
     }
 
