@@ -261,12 +261,6 @@ class Usuario extends BaseController
                 );
                 $this->perfil_model->save($data);
 
-                // registro en bitacora
-                $accion = 'agregó';
-                $entidad = 'usuario';
-                $valor = $id_usuario . " " .$usuario['nom_completo'];
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
-
                 $data['comunidad'] = $comunidad;
                 $data['nom_usuario'] = $usuario['nom_completo'];
                 return view('templates/header_pub')
