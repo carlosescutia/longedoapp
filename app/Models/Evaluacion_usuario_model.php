@@ -120,4 +120,21 @@ class Evaluacion_usuario_model extends Model
         return $query->getRowArray()['evaluacion_pendiente'] ?? null ;
     }
 
+    public function get_info_evaluacion_usuario($id_usuario)
+    {
+        $sql = ""
+            ."select "
+            ."evt.nom_evento, evl.fecha, g.nom_grado, g.musica, g.cultura, g.jogo "
+            ."from "
+            ."evaluacion evl "
+            ."left join evaluacion_usuario evu on evu.id_evaluacion = evl.id_evaluacion "
+            ."left join evento evt on evt.id_evento = evl.id_evento "
+            ."left join grado g on evu.id_grado = g.id_grado "
+            ."where evl.id_evento is not null "
+            ."and evu.id_usuario = ? "
+            ."";
+        $query = $this->db->query($sql, array($id_usuario));
+        return $query->getRowArray() ;
+    }
+
 }

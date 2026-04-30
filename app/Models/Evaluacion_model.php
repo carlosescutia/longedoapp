@@ -144,5 +144,22 @@ class Evaluacion_model extends Model
         return $query->getResultArray();
     }
 
+    public function get_evaluacion_pendiente($id_usuario)
+    {
+        $sql = ""
+            ."select "
+            ."1 as evaluacion_pendiente "
+            ."from "
+            ."evaluacion_usuario evu "
+            ."left join evaluacion evl on evl.id_evaluacion = evu.id_evaluacion "
+            ."where "
+            ."evl.id_evento is not null "
+            ."and evl.status != 'cerrado' "
+            ."and evu.id_usuario = ? "
+            ."";
+        $query = $this->db->query($sql, array($id_usuario));
+        return $query->getRowArray()['evaluacion_pendiente'] ?? null ;
+    }
+
 }
 

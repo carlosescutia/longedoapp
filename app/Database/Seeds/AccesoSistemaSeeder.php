@@ -8,6 +8,8 @@ class AccesoSistemaSeeder extends Seeder
 {
     public function run()
     {
+        $this->db->query('truncate acceso_sistema restart identity');
+
         $data = [
             [
                 'id_rol' => 'admin',

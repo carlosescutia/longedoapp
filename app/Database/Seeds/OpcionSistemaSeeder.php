@@ -8,6 +8,8 @@ class OpcionSistemaSeeder extends Seeder
 {
     public function run()
     {
+        $this->db->query('truncate opcion_sistema restart identity');
+
         $data = [
             [
                 'cod_opcion_sistema' => 'reporte.can_view',

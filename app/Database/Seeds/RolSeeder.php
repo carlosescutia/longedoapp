@@ -8,6 +8,8 @@ class RolSeeder extends Seeder
 {
     public function run()
     {
+        $this->db->query('truncate rol restart identity');
+
         $data = [
             [
                 'id_rol' => 'admin',

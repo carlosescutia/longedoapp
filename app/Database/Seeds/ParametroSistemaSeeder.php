@@ -8,6 +8,8 @@ class ParametroSistemaSeeder extends Seeder
 {
     public function run()
     {
+        $this->db->query('truncate parametro_sistema restart identity');
+
         $data = [
             [
                 'nom_parametro_sistema' => 'anio',

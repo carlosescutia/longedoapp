@@ -23,14 +23,16 @@ class Admin extends BaseController
             $data['error'] = $this->session->getFlashdata('error');
             $qrcode = new Generator;
 
+            $id_usuario = $data['userdata']['id_usuario'];
             $comunidad = $this->comunidad_model->get_comunidad($data['userdata']['id_comunidad']);
             $data['comunidad'] = $comunidad;
             $data['eventos'] = $this->evento_model->get_eventos();
-            $data['asistencias'] = $this->evento_usuario_model->get_asistencias_usuario($data['userdata']['id_usuario']);
-            $data['evaluaciones'] = $this->evaluacion_usuario_model->get_evaluaciones_usuario($data['userdata']['id_usuario']);
+            $data['asistencias'] = $this->evento_usuario_model->get_asistencias_usuario($id_usuario);
+            $data['evaluaciones'] = $this->evaluacion_usuario_model->get_evaluaciones_usuario($id_usuario);
             if ($comunidad) {
                 $data['qr'] = $qrcode->size(450)->format('png')->generate(site_url('registro_alumno/' . $comunidad['token']));
             }
+            $data['info_evaluacion'] = $this->evaluacion_usuario_model->get_info_evaluacion_usuario($id_usuario);
 
             return view('templates/header', $data)
                 .view('admin/index', $data)

@@ -8,6 +8,8 @@ class TallaSeeder extends Seeder
 {
     public function run()
     {
+        $this->db->query('truncate talla restart identity');
+
         $data = [
             [
                 'nom_talla' => 'Extra chica',

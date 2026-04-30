@@ -31,6 +31,7 @@ class Evento extends BaseController
             $data['usuario_asiste'] = $this->evento_usuario_model->get_usuario_asiste($id_evento, $id_usuario);
             $data['perfil_completo'] = $this->perfil_model->get_perfil_completo($id_usuario);
             $data['evaluacion_disponible'] = $this->evaluacion_model->get_evaluacion_disponible($id_evento, $edad);
+            $data['evaluacion_pendiente'] = $this->evaluacion_model->get_evaluacion_pendiente($id_usuario);
             $data['evaluaciones'] = $this->evaluacion_model->get_evaluaciones($id_evento);
             $data['usuario_evalua'] = $this->evaluacion_usuario_model->get_usuario_evalua($id_evento, $id_usuario);
             $data['evaluadores_evento'] = $this->evaluacion_model->get_evaluadores_evento($id_evento);

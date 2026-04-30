@@ -59,7 +59,7 @@
                             </div>
                         <?php endif ?>
                     <?php else: ?>
-                        <?php if ( $evaluacion_disponible ): ?>
+                        <?php if ( $evaluacion_disponible and ! $evaluacion_pendiente ): ?>
                             <div class="item">
                                 <form class="ui form" method="post" action="/evaluacion/asistir" id="frm_evaluacion_asistir">
                                     <input type="hidden" name="id_evento" id="id_evento" value="<?= $evento['id_evento'] ?>">

@@ -88,16 +88,23 @@
         </div>
 
         <!-- Administración de la comunidad -->
-            <?php
-                $permisos_requeridos = array(
-                    'admin_comunidad.can_edit',
-                );
-            ?>
-            <?php if (has_permission_and($permisos_requeridos, $permisos_usuario)): ?>
-                <div class="five wide column">
-                    <?php include "admin_comunidad.php" ?>
-                </div>
-            <?php endif ?>
+        <?php
+            $permisos_requeridos = array(
+                'admin_comunidad.can_edit',
+            );
+        ?>
+        <?php if (has_permission_and($permisos_requeridos, $permisos_usuario)): ?>
+            <div class="five wide column">
+                <?php include "admin_comunidad.php" ?>
+            </div>
+        <?php endif ?>
+
+        <!-- Próxima evaluación -->
+        <?php if ($info_evaluacion): ?>
+            <div class="five wide column">
+                <?php include 'evaluacion.php' ?>
+            </div>
+        <?php endif ?>
 
     </div>
 </div>

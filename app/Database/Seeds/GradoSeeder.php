@@ -8,6 +8,8 @@ class GradoSeeder extends Seeder
 {
     public function run()
     {
+        $this->db->query('truncate grado restart identity');
+
         $data = [
             [
                 'nom_grado' => 'Verde',
@@ -58,8 +60,7 @@ class GradoSeeder extends Seeder
                 'edad' => 'adulto',
                 'color' => 'amarillo',
                 'iniciales' => '',
-                'musica' => 'Toques básicos atabaque, agogo, reco-reco y toque redondo de pandero. Chamados de entrada y salida en berimbau. Toques de berimbau São Bento pequeno, Banguela, São Bento Grande de Regional y Miudinho. Cantar una Ladainha, Quadra y Corrido tocando berimbau. Toques de Berimbau del libro de Ramiro
-Mussoto.',
+                'musica' => 'Toques básicos atabaque, agogo, reco-reco y toque redondo de pandero. Chamados de entrada y salida en berimbau. Toques de berimbau São Bento pequeno, Banguela, São Bento Grande de Regional y Miudinho. Cantar una Ladainha, Quadra y Corrido tocando berimbau. Toques de Berimbau del libro de Ramiro Mussoto.',
                 'cultura' => 'Leer capitulos 17,18,19 libro "Capoeira: pasado, presente y futuro de una práctica afrobrasileña", respondiendo: ¿Qué parte me impactó más? ¿Qué emoción me provocó? ¿Qué relación tiene con mi vida?',
                 'jogo' => 'Secuencias de Cinturas desprezadas en un jogo (coreografía).',
                 'orden' => 5,
