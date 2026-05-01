@@ -94,8 +94,8 @@ class GradoSeeder extends Seeder
                 'color' => '',
                 'iniciales' => 'In',
                 'musica' => 'Toques de berimbau: São Bento Grande de Regional, Jogo de Dentro, Cavalaria, Miudinho, Santa Maria, Samba de Roda, Iuna, Amazonas, Idalina. En agogô: Jogo de dentro, Miudinho, Samba de roda y Maculelê. En pandeiro: Toque redondo, São Bento Grande de Regional, Miudinho, Samba de Roda. En atabaque: Ijexá, Maculelê, Puxada de Rede, Samba de Roda. En reco-reco: Miudinho y Samba de Roda. Armar berimbau. Cantar y tocar con todos los instrumentos. Toques para ensamble de tres berimbaus con chamados de entrada y salida. Reconocer la estructura de una cantiga, una ladainha, una quadra, una chula o un corrido. Leer y escribir notación para berimbau.',
-                'cultura' => 'Mapa mental de forma individual o grupal durante el día de evaluación sobre "Bimba, Perfil do Mestre" de Mestre Itapoan y "Capoeira Angola" de Mestre Pastinha (pp. 1-30). Ensayo libre sobre tu historia o experiencia dentro de la capoeira. Conocer el comportamiento en caso de accidentes, visitas, exhibiciones y jogo con principiantes.',
-                'jogo' => 'Dos secuencias de primer y cuarto grado, tres de tercer grado y una de cinturas desprezadas.',
+                'cultura' => 'Mapa mental de forma individual o grupal durante el día de evaluación sobre "Bimba, Perfil do Mestre" de Mestre Itapoan y "Capoeira Angola" de Mestre Pastinha (pp 1-30). Ensayo libre sobre tu historia o experiencia dentro de la capoeira. Conocer el comportamiento en caso de accidentes, visitas, exhibiciones y jogo con principiantes.',
+                'jogo' => 'Dos secuencias de primer y cuarto grado. Tres de tercer grado. Una de cinturas desprezadas.',
                 'orden' => 8,
                 'activo' => 1
             ],
@@ -138,7 +138,7 @@ class GradoSeeder extends Seeder
                 'color' => 'verde',
                 'iniciales' => '',
                 'musica' => 'Cantar y tocar palmas al mismo tiempo. Cantar algún corrido tradicional de capoeira.',
-                'cultura' => 'Comprensión básica de los orígenes de la Capoeira y sus figuras más relevantes. Escribir versos sobre un personaje del texto en modo "paranaue" (pueden ser en español).',
+                'cultura' => 'Comprensión básica de los orígenes de la Capoeira y sus figuras más relevantes. Escribir versos sobre un personaje del texto en modo "Paranaue" (pueden ser en español).',
                 'jogo' => 'Pasos basicos de ginga, desplazamientos y patadas básicas. Participación activa en roda, demostrando respeto y comprensión de las reglas básicas.',
                 'orden' => 1,
                 'activo' => 1
@@ -149,7 +149,7 @@ class GradoSeeder extends Seeder
                 'color' => '3verde_1amarillo',
                 'iniciales' => '',
                 'musica' => 'Seguir ritmos básicos con palmas instrumentos de percusión ligera. Cantar dos canciones.',
-                'cultura' => 'Escojer uno de los dos textos y crear un cartel: 1. "Mitos, controversias y hechos: construyendo la historia de la capoeira - Mestre Luiz Renato Vieira (p. 5-16). 2. "Sobre el estatus de los mitos y leyendas en la Capoeira", "De los abejorros, Héroes y zombies" - revista IE Proyecto Patuá.',
+                'cultura' => 'Escojer uno de los dos textos siguientes y crear un cartel:. "Mitos, controversias y hechos: construyendo la historia de la capoeira - Mestre Luiz Renato Vieira (p 5-16). "Sobre el estatus de los mitos y leyendas en la Capoeira", "De los abejorros, Héroes y zombies" - revista IE Proyecto Patuá.',
                 'jogo' => 'Secuencias simples de movimiento adaptadas. Chamados de Angola. Participar en una roda con acompañamiento.',
                 'orden' => 2,
                 'activo' => 1
