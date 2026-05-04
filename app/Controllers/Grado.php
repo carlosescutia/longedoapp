@@ -8,6 +8,8 @@ class Grado extends BaseController
     {
         $this->grado_model = model('Grado_model');
         $this->evaluacion_model = model('Evaluacion_model');
+        $this->recurso_entidad_model = model('Recurso_entidad_model');
+        $this->recurso_model = model('Recurso_model');
     }
 
     public function index()
@@ -33,6 +35,12 @@ class Grado extends BaseController
             $data += $this->fn_sis->get_userdata();
 
             $data['grado'] = $this->grado_model->get_grado($id_grado);
+            $id_entidad = $id_grado;
+            $entidad = 'grado';
+            $data['recursos_entidad'] = $this->recurso_entidad_model->get_recursos_entidad_entidad($id_entidad, $entidad);
+            $data['recursos'] = $this->recurso_model->get_recursos_activos();
+            $data['entidad'] = $entidad;
+            $data['id_entidad'] = $id_entidad;
 
             return view('templates/header', $data)
                 .view('catalogos/grado/detalle', $data)

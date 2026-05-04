@@ -53,7 +53,6 @@ $('.ui.form')
     .form({
         fields: {
             nom_opcion_sistema: {
-                identifier: 'nom_opcion_sistema',
                 rules: [
                     {
                         type   : 'notEmpty',

@@ -5,33 +5,34 @@
                 <div class="ui grid">
                     <div class="row">
                         <div class="eight wide column">
-                            <h1 class="ui header">Agregar comunidad</h1>
+                            <h1 class="ui header">Editar recurso</h1>
                         </div>
                         <div class="eight wide right aligned column">
-                            <button class="ui primary button" type="submit" form="frm_comunidad">Guardar</button>
+                            <button class="ui primary button" type="submit" form="frm_recurso">Guardar</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="ui basic segment">
-                    <form class="ui form" method="post" action="/comunidad/guardar" id="frm_comunidad">
+                    <form class="ui form" method="post" action="/recurso/guardar" id="frm_recurso">
                         <div class="fields">
                             <div class="eight wide field">
                                 <label>Nombre</label>
-                                <input type="text" name="nom_comunidad" id="nom_comunidad">
+                                <input type="text" name="nom_recurso" id="nom_recurso" value="<?=$recurso['nom_recurso']?>">
                             </div>
                             <div class="four wide field">
-                                <label>Ciudad</label>
-                                <input type="text" name="ciudad" id="ciudad">
+                                <label>Url</label>
+                                <input type="text" name="url" id="url" value="<?=$recurso['url']?>">
                             </div>
                             <div class="four wide field">
                                 <label>Activo</label>
                                 <div class="ui toggle checkbox">
-                                    <input type="checkbox" name="activo" id="activo" value="1">
+                                    <input type="checkbox" name="activo" id="activo" value="1" <?= ($recurso['activo'] == '1') ? 'checked' : '' ?> >
                                     <label></label>
                                 </div>
                             </div>
                         </div>
+                        <input type="hidden" name="id_recurso" id="id_recurso" value="<?=$recurso['id_recurso']?>">
 
                         <div class="ui error message"></div>
                     </form>
@@ -41,7 +42,7 @@
 
         <div class="row">
             <div class="ui basic segment">
-                <a class="ui basic button" href="<?= site_url('comunidad') ?>">Volver</a>
+                <a class="ui basic button" href="<?= site_url('recurso') ?>">Volver</a>
             </div>
         </div>
     </div>
@@ -51,7 +52,7 @@
 $('.ui.form')
     .form({
         fields: {
-            nom_comunidad: {
+            nom_recurso: {
                 rules: [
                     {
                         type   : 'notEmpty',
@@ -59,11 +60,11 @@ $('.ui.form')
                     }
                 ]
             },
-            valor: {
+            url: {
                 rules: [
                     {
                         type   : 'notEmpty',
-                        prompt : 'Valor no puede estar vacio'
+                        prompt : 'url no puede estar vacio'
                     }
                 ]
             },
@@ -71,3 +72,4 @@ $('.ui.form')
     })
 ;
 </script>
+

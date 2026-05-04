@@ -74,6 +74,7 @@
                         <div class="ui error message"></div>
                     </form>
                 </div>
+                <?php include 'recursos.php' ?>
             </div>
         </div>
 
@@ -86,11 +87,10 @@
 </div>
 
 <script>
-$('.ui.form')
+$('#frm_grado')
     .form({
         fields: {
             nom_grado: {
-                identifier: 'nom_grado',
                 rules: [
                     {
                         type   : 'notEmpty',
@@ -99,7 +99,6 @@ $('.ui.form')
                 ]
             },
             edad: {
-                identifier: 'edad',
                 rules: [
                     {
                         type   : 'notEmpty',
@@ -108,7 +107,6 @@ $('.ui.form')
                 ]
             },
             orden: {
-                identifier: 'orden',
                 rules: [
                     {
                         type   : 'notEmpty',

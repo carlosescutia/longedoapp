@@ -141,7 +141,6 @@
         .form({
             fields: {
                 id_evaluador: {
-                    identifier: 'id_evaluador',
                     rules: [
                         {
                             type   : 'notEmpty',
@@ -150,7 +149,6 @@
                     ]
                 },
                 edad: {
-                    identifier: 'edad',
                     rules: [
                         {
                             type   : 'notEmpty',
@@ -159,7 +157,6 @@
                     ]
                 },
                 fecha: {
-                    identifier: 'fecha',
                     rules: [
                         {
                             type   : 'notEmpty',

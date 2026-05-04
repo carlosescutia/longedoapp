@@ -53,7 +53,6 @@ $('.ui.form')
     .form({
         fields: {
             nom_comunidad: {
-                identifier: 'nom_comunidad',
                 rules: [
                     {
                         type   : 'notEmpty',
@@ -62,7 +61,6 @@ $('.ui.form')
                 ]
             },
             ciudad: {
-                identifier: 'ciudad',
                 rules: [
                     {
                         type   : 'notEmpty',

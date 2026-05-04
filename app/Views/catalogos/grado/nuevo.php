@@ -89,7 +89,6 @@ $('.ui.form')
     .form({
         fields: {
             nom_grado: {
-                identifier: 'nom_grado',
                 rules: [
                     {
                         type   : 'notEmpty',
@@ -98,7 +97,6 @@ $('.ui.form')
                 ]
             },
             edad: {
-                identifier: 'edad',
                 rules: [
                     {
                         type   : 'notEmpty',
@@ -107,7 +105,6 @@ $('.ui.form')
                 ]
             },
             orden: {
-                identifier: 'orden',
                 rules: [
                     {
                         type   : 'notEmpty',

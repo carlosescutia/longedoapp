@@ -13,6 +13,7 @@ class Admin extends BaseController
         $this->evento_usuario_model = model('Evento_usuario_model');
         $this->evaluacion_usuario_model = model('Evaluacion_usuario_model');
         $this->comunidad_model = model('Comunidad_model');
+        $this->recurso_entidad_model = model('Recurso_entidad_model');
     }
 
     public function index()
@@ -33,6 +34,11 @@ class Admin extends BaseController
                 $data['qr'] = $qrcode->size(450)->format('png')->generate(site_url('registro_alumno/' . $comunidad['token']));
             }
             $data['info_evaluacion'] = $this->evaluacion_usuario_model->get_info_evaluacion_usuario($id_usuario);
+            if ($data['info_evaluacion']) {
+                $id_entidad = $data['info_evaluacion']['id_grado'];
+                $entidad = 'grado';
+                $data['recursos_entidad'] = $this->recurso_entidad_model->get_recursos_entidad_entidad($id_entidad, $entidad);
+            }
 
             return view('templates/header', $data)
                 .view('admin/index', $data)

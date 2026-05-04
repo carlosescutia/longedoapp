@@ -124,7 +124,7 @@ class Evaluacion_usuario_model extends Model
     {
         $sql = ""
             ."select "
-            ."evt.nom_evento, evl.fecha, g.nom_grado, g.musica, g.cultura, g.jogo "
+            ."evt.nom_evento, evl.fecha, g.id_grado, g.nom_grado, g.musica, g.cultura, g.jogo "
             ."from "
             ."evaluacion evl "
             ."left join evaluacion_usuario evu on evu.id_evaluacion = evl.id_evaluacion "

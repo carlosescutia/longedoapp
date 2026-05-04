@@ -64,7 +64,6 @@ $('.ui.form')
     .form({
         fields: {
             nom_talla: {
-                identifier: 'nom_talla',
                 rules: [
                     {
                         type   : 'notEmpty',
@@ -73,7 +72,6 @@ $('.ui.form')
                 ]
             },
             valor: {
-                identifier: 'valor',
                 rules: [
                     {
                         type   : 'notEmpty',

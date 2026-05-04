@@ -34,7 +34,7 @@
     </div>
     <div class="ui brown segment">
         <h5 class="ui header">
-            <i class="glasses icon"></i>
+            <i class="open book icon"></i>
             <div class="content">
                 Cultura
             </div>
@@ -68,4 +68,24 @@
             <?php endforeach ?>
         </div>
     </div>
+    <?php if ($recursos_entidad): ?>
+        <div class="ui divider"></div>
+        <div class="ui segment">
+            <h5 class="ui header">
+                <i class="glasses icon"></i>
+                <div class="content">
+                    Recursos de consulta
+                </div>
+            </h5>
+            <div class='ui bulleted list'>
+                <?php foreach ($recursos_entidad as $recursos_entidad_item): ?>
+                    <div class="item">
+                        <a href="<?= $recursos_entidad_item['url'] ?>" target="_blank">
+                            <?= $recursos_entidad_item['nom_recurso'] ?>
+                        </a>
+                    </div>
+                <?php endforeach ?>
+            </div>
+        </div>
+    <?php endif ?>
 </div>

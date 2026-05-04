@@ -63,7 +63,6 @@ $('.ui.form')
     .form({
         fields: {
             id_rol: {
-                identifier: 'id_rol',
                 rules: [
                     {
                         type   : 'notEmpty',
@@ -72,7 +71,6 @@ $('.ui.form')
                 ]
             },
             cod_opcion_sistema: {
-                identifier: 'cod_opcion_sistema',
                 rules: [
                     {
                         type   : 'notEmpty',
