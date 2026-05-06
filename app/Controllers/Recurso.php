@@ -106,6 +106,16 @@ class Recurso extends BaseController
             $valor = $recurso['id_recurso'] . " " . $recurso['nom_recurso'];
             $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
 
+            // eliminar archivo adjunto
+            if ($recurso['archivo']) {
+                $nombre_archivo = $recurso['archivo'];
+                $up_dir = 'recs/';
+                $nombre_archivo_fs = $up_dir . $nombre_archivo;
+                if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ) {
+                    $status = unlink($nombre_archivo_fs) ? 'Se eliminó el archivo '.$nombre_archivo : 'Error al eliminar el archivo '.$nombre_archivo;
+                }
+            }
+            
             // eliminado
             $this->recurso_model->delete($id_recurso);
 
