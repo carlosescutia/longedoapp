@@ -1,7 +1,7 @@
 <div class="ui container">
     <div class="ui stackable grid">
         <div class="row">
-            <div class="twelve wide column">
+            <div class="fifteen wide column">
                 <div class="ui grid">
                     <div class="row">
                         <div class="eight wide column">
@@ -20,6 +20,7 @@
                         <tr>
                             <th>Nombre</th>
                             <th>Url</th>
+                            <th>Archivo</th>
                             <th>Activo</th>
                             <th></th>
                         </tr>
@@ -37,7 +38,14 @@
                             <td>
                                 <h4 class="ui image header">
                                     <div class="content">
-                                        <?= $recursos_item['url'] ?>
+                                        <a href="<?= $recursos_item['url'] ?>" target="_blank"><?= $recursos_item['url'] ?></a>
+                                    </div>
+                                </h4>
+                            </td>
+                            <td>
+                                <h4 class="ui image header">
+                                    <div class="content">
+                                        <?= $recursos_item['archivo'] ?>
                                     </div>
                                 </h4>
                             </td>

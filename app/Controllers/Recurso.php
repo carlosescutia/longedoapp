@@ -30,6 +30,7 @@ class Recurso extends BaseController
         if ($this->session->logueado) {
             $data = [];
             $data += $this->fn_sis->get_userdata();
+            $data['error'] = $this->session->getFlashdata('error');
 
             $data['recurso'] = $this->recurso_model->get_recurso($id_recurso);
 

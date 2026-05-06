@@ -45,6 +45,8 @@ $routes->get('acceso_sistema_usuario/eliminar/(:num)', 'Acceso_sistema_usuario::
 $routes->post('archivo/subir', 'Archivo::subir');
 $routes->post('archivo/subir_perfil', 'Archivo::subir_perfil');
 $routes->post('archivo/subir_evento', 'Archivo::subir_evento');
+$routes->post('archivo/subir_recurso', 'Archivo::subir_recurso');
+$routes->post('archivo/eliminar_recurso', 'Archivo::eliminar_recurso');
 $routes->post('archivo/eliminar', 'Archivo::eliminar');
 
 $routes->get('proceso/', 'Proceso::index');
@@ -125,7 +127,6 @@ $routes->get('recurso/', 'Recurso::index');
 $routes->get('recurso/detalle/(:num)', 'Recurso::detalle/$1');
 $routes->post('recurso/nuevo', 'Recurso::nuevo');
 $routes->post('recurso/guardar', 'Recurso::guardar');
-$routes->get('recurso/eliminar/(:num)', 'Recurso::eliminar/$1');
 
 $routes->post('recurso_entidad/nuevo', 'Recurso_entidad::nuevo');
 $routes->post('recurso_entidad/actualizar_recurso', 'Recurso_entidad::actualizar_recurso');
