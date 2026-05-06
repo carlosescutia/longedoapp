@@ -119,6 +119,7 @@ $routes->get('registro/(:segment)', 'Externo::nuevo/$1');
 $routes->post('registro/guardar', 'Externo::guardar');
 $routes->get('externo/aprobar/(:num)', 'Externo::aprobar/$1');
 $routes->post('externo/guardar_activo', 'Externo::guardar_activo');
+$routes->post('externo/eliminar', 'Externo::eliminar');
 
 $routes->get('registro_alumno/(:segment)', 'Usuario::nuevo_por_url/$1');
 $routes->post('registro_alumno/guardar', 'Usuario::guardar_por_url');

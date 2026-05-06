@@ -47,9 +47,10 @@
                                 </form>
                             </td>
                             <td>
-                                <form class="ui form" method="post" action="/externo/actualizar_status" id="frm_elim<?=$externos_item['id_externo']?>">
+                                <form class="ui form" method="post" action="/externo/eliminar" id="frm_elim<?=$externos_item['id_externo']?>">
                                     <input type="hidden" name="id_externo" id="id_externo" value="<?= $externos_item['id_externo'] ?>" >
-                                    <input type="hidden" name="status" id="status" value="cerrado">
+                                    <input type="hidden" name="url_actual" id="url_actual" value="<?= site_url('externo/aprobar/' . $externos_item['id_evento']) ?>">
+                                    <input type="hidden" name="id_evento" id="id_evento" value="<?= $externos_item['id_evento'] ?>" >
                                     <?php
                                         $mensaje = '¿Eliminar al asistente externo ' . $externos_item['nom_capoeira'] . ' ' .$externos_item['nom_capoeira'] ;
                                         $forma = '#frm_elim' . $externos_item['id_externo'] ;

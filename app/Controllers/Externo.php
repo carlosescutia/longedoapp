@@ -13,9 +13,6 @@ class Externo extends BaseController
 
     public function nuevo($token)
     {
-        $data = [];
-        $data += $this->fn_sis->get_userdata();
-
         $evento = $this->evento_model->get_evento_token($token);
 
         if ( $evento ) {
@@ -66,11 +63,6 @@ class Externo extends BaseController
 
                 $accion = 'agregó';
                 $id_externo = $this->externo_model->getInsertID();
-
-                // registro en bitacora
-                $entidad = 'externo';
-                $valor = $id_externo . " " .$externo['nom_completo'];
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
 
                 $data['evento'] = $this->evento_model->get_evento($id_evento);
                 return view('templates/header_pub')
@@ -131,6 +123,31 @@ class Externo extends BaseController
             return redirect()->to(site_url('externo/aprobar/' . $externo['id_evento']));
         } else {
             return redirect()->to(site_url('login'));
+        }
+    }
+
+    public function eliminar()
+    {
+        if ($this->session->logueado) {
+            $externo = $this->request->getPost();
+            if ($externo) {
+
+                $id_externo = $externo['id_externo'];
+                $url_actual = $externo['url_actual'];
+
+                // registro en bitacora
+                $accion = "eliminó";
+                $entidad = 'externo';
+                $valor = $externo['id_externo'];
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+
+                // eliminado
+                $this->externo_model->delete($id_externo);
+            }
+
+            return redirect()->to($url_actual);
+        } else {
+            return redirect()->to(site_url("login"));
         }
     }
 
