@@ -49,7 +49,7 @@
             <div class="field">
                 <label></label>
                 <div class="ui fluid search selection dropdown">
-                    <input type="hidden" name="id_recurso" id="id_recurso" value="<?=$recursos_entidad_item['id_recurso']?>">
+                    <input type="hidden" name="id_recurso" id="id_recurso">
                     <i class="dropdown icon"></i>
                     <div class="default text">Recurso</div>
                     <div class="menu">
