@@ -131,5 +131,4 @@ $routes->post('recurso/guardar', 'Recurso::guardar');
 $routes->get('recurso/eliminar/(:num)', 'Recurso::eliminar/$1');
 
 $routes->post('recurso_entidad/nuevo', 'Recurso_entidad::nuevo');
-$routes->post('recurso_entidad/actualizar_recurso', 'Recurso_entidad::actualizar_recurso');
 $routes->post('recurso_entidad/eliminar', 'Recurso_entidad::eliminar');
