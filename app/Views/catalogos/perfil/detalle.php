@@ -16,7 +16,30 @@
                 <div class="ui green segment">
                     <div class="ui centered grid">
                         <div class="row">
-                            <div class="eight wide centered column">
+                            <div class="eight wide column">
+                                <div class="ui basic segment">
+                                    <?php
+                                        //$nombre_archivo = 'mujer_niño_3aqua_1limon.png';
+                                        if ($grado) {
+                                            $color = $grado['color'] ;
+                                        } else {
+                                            $color = 'gris' ;
+                                        }
+                                        $nombre_archivo = $perfil['sexo'] . '_' . $perfil['edad'] . '_' . $color . '.png';
+                                        $up_dir = 'assets/img/grado/';
+                                        $nombre_archivo_fs = $up_dir . $nombre_archivo;
+                                        $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
+                                    ?>
+                                    <div class="image">
+                                        <?php if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ): ?>
+                                            <img class="ui circular bordered image" src="<?= $nombre_archivo_url ?>">
+                                        <?php else: ?>
+                                            <img class="ui circular bordered image" src="<?= base_url('assets/img/image.png') ?>">
+                                        <?php endif ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="eight wide right aligned column">
                                 <div class="ui card">
                                     <?php
                                         $nombre_archivo = $perfil['foto'];

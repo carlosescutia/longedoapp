@@ -32,6 +32,10 @@
             display: none;
         }
 
+        .secondary.pointing.menu .visible {
+            display: block;
+        }
+
         @media only screen and (max-width: 700px) {
             .secondary.pointing.menu .item,
             .secondary.pointing.menu .menu {
@@ -98,7 +102,7 @@
     <?php endif ?>
     <a class="item" href="<?=site_url('perfil')?>">
       <i class="user icon"></i>
-        <?=$userdata['nom_capoeira'] ? $userdata['nom_capoeira'] : $userdata['nom_usuario']?>
+        Perfil
     </a>
     <a class="item" href="<?=site_url('logout')?>">
         <i class="sign out alternate icon"></i>
@@ -110,6 +114,18 @@
 <div class="pusher">
 <div class="ui vertical center aligned segment">
 
+    <?php
+        $color = 'gris' ;
+        if ($userdata['color']) {
+            $color = $userdata['color'] ;
+        }
+        $sexo = $userdata['sexo'] ;
+        $edad = $userdata['edad'] ;
+        $nombre_archivo = $sexo . '_' . $edad . '_' . $color . '.png';
+        $up_dir = 'assets/img/grado/';
+        $nombre_archivo_fs = $up_dir . $nombre_archivo;
+        $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
+    ?>
     <div class="ui container barra">
         <div class="ui large secondary pointing menu">
             <a class="toc item">
@@ -118,7 +134,21 @@
             <div class="header item">
                 Longe do App
             </div>
-            <div class="ui header toc item">Longe do App</div>
+            <div class="ui toc item"><h3>Longe do App</h3></div>
+            <div class="ui toc item">
+                <div class="ui horizontal list">
+                    <div class="item">
+                        <?php if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ): ?>
+                            <img class="ui bordered image" src="<?= $nombre_archivo_url ?>" style="height:30px; width:30px">
+                        <?php else: ?>
+                            <img class="ui bordered image" src="<?= base_url('assets/img/image.png') ?>" style="height:30px; width:30px">
+                        <?php endif ?>
+                        <div class="content">
+                            <?=$userdata['nom_capoeira'] ? $userdata['nom_capoeira'] : $userdata['nom_usuario']?>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <a class="item" href="<?=site_url()?>">Inicio</a>
             <?php
                 $permisos_requeridos = array(
@@ -145,7 +175,18 @@
                 <a class="item" href="<?=site_url('catalogos')?>">Catálogos</a>
             <?php endif ?>
             <div class="right menu">
-                <a class="item usuario-menu" href="<?=site_url('perfil')?>"><i class="circular user icon"></i><?=$userdata['nom_capoeira'] ? $userdata['nom_capoeira'] : $userdata['nom_usuario']?></a>
+                <div class="item" style="height: 40px;">
+                    <a href="<?=site_url('perfil')?>">
+                        <?php if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ): ?>
+                            <img class="ui bordered image" src="<?= $nombre_archivo_url ?>" style="height:30px; width:30px">
+                        <?php else: ?>
+                            <img class="ui bordered image" src="<?= base_url('assets/img/image.png') ?>" style="height:30px; width:30px">
+                        <?php endif ?>
+                    </a>
+                    <span>
+                        <a class="item usuario-menu" href="<?=site_url('perfil')?>"><?=$userdata['nom_capoeira'] ? $userdata['nom_capoeira'] : $userdata['nom_usuario']?></a>
+                    </span>
+                </div>
                 <a class="item" href="<?=site_url('logout')?>">Salir</a>
             </div>
         </div>

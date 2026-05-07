@@ -32,3 +32,8 @@ body .pusher {
 .open_image { 
     cursor: pointer;
 }
+
+.grado-color {
+    height: 30px;
+    width: 30px;
+}

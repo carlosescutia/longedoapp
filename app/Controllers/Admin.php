@@ -14,6 +14,7 @@ class Admin extends BaseController
         $this->evaluacion_usuario_model = model('Evaluacion_usuario_model');
         $this->comunidad_model = model('Comunidad_model');
         $this->recurso_entidad_model = model('Recurso_entidad_model');
+        $this->perfil_model = model('Perfil_model');
     }
 
     public function index()
@@ -25,6 +26,8 @@ class Admin extends BaseController
             $qrcode = new Generator;
 
             $id_usuario = $data['userdata']['id_usuario'];
+            $perfil = $this->perfil_model->get_perfil_usuario($id_usuario);
+            $data['perfil'] = $perfil;
             $comunidad = $this->comunidad_model->get_comunidad($data['userdata']['id_comunidad']);
             $data['comunidad'] = $comunidad;
             $data['eventos'] = $this->evento_model->get_eventos();
@@ -83,6 +86,10 @@ class Admin extends BaseController
                     'id_comunidad' => $usuario['id_comunidad'],
                     'nom_usuario' => $usuario['nom_usuario'],
                     'nom_capoeira' => $usuario['nom_capoeira'],
+                    'nom_grado' => $usuario['nom_grado'],
+                    'color' => $usuario['color'],
+                    'sexo' => $usuario['sexo'],
+                    'edad' => $usuario['edad'],
                     'nom_login' => $usuario['nom_login'],
                     'logueado' => TRUE,
                 );

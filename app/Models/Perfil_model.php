@@ -79,5 +79,17 @@ class Perfil_model extends Model
         return $query->getRowArray()['grado_proximo'] ?? null;
     }
 
+    public function get_grado_actual($id_usuario, $edad)
+    {
+        $sql = ""
+            ."select "
+            ."grado_actual "
+            ."from "
+            ."grado_actual(?,?) "
+            ."";
+        $query = $this->db->query($sql, array($id_usuario, $edad));
+        return $query->getRowArray()['grado_actual'] ?? null;
+    }
+
 }
 

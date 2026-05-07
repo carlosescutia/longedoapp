@@ -11,6 +11,7 @@ class Perfil extends BaseController
         $this->talla_model = model('Talla_model');
         $this->evaluacion_usuario_model = model('Evaluacion_usuario_model');
         $this->parametro_sistema_model = model('Parametro_sistema_model');
+        $this->grado_model = model('Grado_model');
     }
 
     public function detalle()
@@ -33,6 +34,8 @@ class Perfil extends BaseController
             $data['grados'] = $this->evaluacion_usuario_model->get_grados_usuario($id_usuario);
             $data['evaluacion_pendiente'] = $this->evaluacion_usuario_model->get_evaluacion_pendiente($id_usuario);
             $data['aviso_privacidad'] = $this->parametro_sistema_model->get_parametro_sistema_nom('aviso_privacidad');
+            $id_grado = $this->perfil_model->get_grado_actual($id_usuario, $data['perfil']['edad']);
+            $data['grado'] = $this->grado_model->get_grado($id_grado);
 
             return view('templates/header', $data)
                 .view('catalogos/perfil/detalle', $data)

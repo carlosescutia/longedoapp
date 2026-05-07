@@ -18,8 +18,9 @@
                 <table class="ui very basic striped unstackable table">
                     <thead>
                         <tr>
-                            <th>Nombre / login</th>
+                            <th>Nombre capoeira / completo</th>
                             <th>Comunidad / rol</th>
+                            <th>Grado</th>
                             <th>Perfil</th>
                             <th>Activo</th>
                             <th></th>
@@ -31,8 +32,8 @@
                             <td>
                                 <h4 class="ui image header">
                                     <div class="content">
-                                        <a href="<?=site_url('usuario/detalle/')?><?=$usuarios_item['id_usuario']?>"><?= $usuarios_item['nom_usuario'] ?></a>
-                                        <div class="sub header"><?=$usuarios_item['nom_login']?></div>
+                                        <a href="<?=site_url('usuario/detalle/')?><?=$usuarios_item['id_usuario']?>"><?= $usuarios_item['nom_capoeira'] ? $usuarios_item['nom_capoeira'] : $usuarios_item['nom_usuario'] ?></a>
+                                        <div class="sub header"><?=$usuarios_item['nom_usuario']?></div>
                                     </div>
                                 </h4>
                             </td>
@@ -43,6 +44,9 @@
                                         <div class="sub header"><?=$usuarios_item['id_rol']?></div>
                                     </div>
                                 </h4>
+                            </td>
+                            <td>
+                                <?= $usuarios_item['nom_grado'] ?>
                             </td>
                             <td>
                                 <?= $usuarios_item['fech_acept_priv'] ? 'Si' : 'No' ?>

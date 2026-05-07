@@ -91,7 +91,7 @@ class GradoSeeder extends Seeder
             [
                 'nom_grado' => 'Instructor',
                 'edad' => 'adulto',
-                'color' => '',
+                'color' => 'azul',
                 'iniciales' => 'In',
                 'musica' => 'Toques de berimbau: São Bento Grande de Regional, Jogo de Dentro, Cavalaria, Miudinho, Santa Maria, Samba de Roda, Iuna, Amazonas, Idalina. En agogô: Jogo de dentro, Miudinho, Samba de roda y Maculelê. En pandeiro: Toque redondo, São Bento Grande de Regional, Miudinho, Samba de Roda. En atabaque: Ijexá, Maculelê, Puxada de Rede, Samba de Roda. En reco-reco: Miudinho y Samba de Roda. Armar berimbau. Cantar y tocar con todos los instrumentos. Toques para ensamble de tres berimbaus con chamados de entrada y salida. Reconocer la estructura de una cantiga, una ladainha, una quadra, una chula o un corrido. Leer y escribir notación para berimbau.',
                 'cultura' => 'Mapa mental de forma individual o grupal durante el día de evaluación sobre "Bimba, Perfil do Mestre" de Mestre Itapoan y "Capoeira Angola" de Mestre Pastinha (pp 1-30). Ensayo libre sobre tu historia o experiencia dentro de la capoeira. Conocer el comportamiento en caso de accidentes, visitas, exhibiciones y jogo con principiantes.',
@@ -102,7 +102,7 @@ class GradoSeeder extends Seeder
             [
                 'nom_grado' => 'Profesor',
                 'edad' => 'adulto',
-                'color' => '',
+                'color' => '1verde_1amarillo_2azul',
                 'iniciales' => 'Pf',
                 'musica' => '',
                 'cultura' => '',
@@ -113,7 +113,7 @@ class GradoSeeder extends Seeder
             [
                 'nom_grado' => 'Contramestre',
                 'edad' => 'adulto',
-                'color' => '',
+                'color' => 'verde_amarillo_azul_blanco',
                 'iniciales' => 'Cm',
                 'musica' => '',
                 'cultura' => '',
@@ -124,7 +124,7 @@ class GradoSeeder extends Seeder
             [
                 'nom_grado' => 'Mestre',
                 'edad' => 'adulto',
-                'color' => '',
+                'color' => 'verde_blanco',
                 'iniciales' => 'M',
                 'musica' => '',
                 'cultura' => '',
@@ -168,7 +168,7 @@ class GradoSeeder extends Seeder
             [
                 'nom_grado' => 'Primer grado',
                 'edad' => 'niño',
-                'color' => '',
+                'color' => 'aqua',
                 'iniciales' => '',
                 'musica' => 'Saber el nombre de los instrumentos. Cantar una canción (opcional).',
                 'cultura' => 'Saber de dónde viene la capoeira.',
@@ -179,7 +179,7 @@ class GradoSeeder extends Seeder
             [
                 'nom_grado' => 'Segundo grado',
                 'edad' => 'niño',
-                'color' => '',
+                'color' => '3aqua_1limon',
                 'iniciales' => '',
                 'musica' => 'Saber el nombre de los instrumentos. Cantar una canción (opcional).',
                 'cultura' => 'Saber de dónde viene la capoeira.',
@@ -190,7 +190,7 @@ class GradoSeeder extends Seeder
             [
                 'nom_grado' => 'Tercer grado',
                 'edad' => 'niño',
-                'color' => '',
+                'color' => 'aqua_limon',
                 'iniciales' => '',
                 'musica' => 'Saber el nombre de los instrumentos. Cantar una canción (opcional).',
                 'cultura' => 'Saber de dónde viene la capoeira.',
@@ -201,7 +201,7 @@ class GradoSeeder extends Seeder
             [
                 'nom_grado' => 'Cuarto grado',
                 'edad' => 'niño',
-                'color' => '',
+                'color' => '1aqua_3limon',
                 'iniciales' => '',
                 'musica' => 'Saber el nombre de los instrumentos. Cantar una canción (opcional).',
                 'cultura' => 'Saber de dónde viene la capoeira.',
@@ -212,7 +212,7 @@ class GradoSeeder extends Seeder
             [
                 'nom_grado' => 'Quinto grado',
                 'edad' => 'niño',
-                'color' => '',
+                'color' => 'limon',
                 'iniciales' => '',
                 'musica' => 'Saber el nombre de los instrumentos. Cantar una canción (opcional).',
                 'cultura' => 'Saber de dónde viene la capoeira.',
@@ -223,7 +223,7 @@ class GradoSeeder extends Seeder
             [
                 'nom_grado' => 'Sexto grado',
                 'edad' => 'niño',
-                'color' => '',
+                'color' => '3limon_1opalo',
                 'iniciales' => '',
                 'musica' => 'Saber el nombre de los instrumentos. Cantar una canción (opcional).',
                 'cultura' => 'Saber de dónde viene la capoeira.',
@@ -234,7 +234,7 @@ class GradoSeeder extends Seeder
             [
                 'nom_grado' => 'Séptimo grado',
                 'edad' => 'niño',
-                'color' => '',
+                'color' => 'limon_opalo',
                 'iniciales' => '',
                 'musica' => 'Saber el nombre de los instrumentos. Cantar una canción. Ejecutar la base de cualquier instrumento mientras responde los coros de alguna canción.',
                 'cultura' => 'Saber quiénes fueron Mestre Bimba y Mestre Pastinha',
@@ -245,7 +245,7 @@ class GradoSeeder extends Seeder
             [
                 'nom_grado' => 'Octavo grado',
                 'edad' => 'niño',
-                'color' => '',
+                'color' => '1limon_3opalo',
                 'iniciales' => '',
                 'musica' => 'Saber el nombre de los instrumentos. Cantar una canción. Ejecutar la base de cualquier instrumento mientras responde los coros de alguna canción.',
                 'cultura' => 'Saber quiénes fueron Mestre Bimba y Mestre Pastinha',
@@ -256,7 +256,7 @@ class GradoSeeder extends Seeder
             [
                 'nom_grado' => 'Noveno grado',
                 'edad' => 'niño',
-                'color' => '',
+                'color' => 'opalo',
                 'iniciales' => '',
                 'musica' => 'Saber el nombre de los instrumentos. Cantar una canción. Ejecutar la base de cualquier instrumento mientras responde los coros de alguna canción.',
                 'cultura' => 'Saber quiénes fueron Mestre Bimba y Mestre Pastinha',
@@ -267,7 +267,7 @@ class GradoSeeder extends Seeder
             [
                 'nom_grado' => 'Décimo grado',
                 'edad' => 'niño',
-                'color' => '',
+                'color' => '1aqua_1limon_2opalo',
                 'iniciales' => '',
                 'musica' => 'Saber el nombre de los instrumentos. Cantar una canción. Ejecutar la base de cualquier instrumento mientras responde los coros de alguna canción.',
                 'cultura' => 'Saber quiénes fueron Mestre Bimba y Mestre Pastinha',

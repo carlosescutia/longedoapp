@@ -23,11 +23,13 @@ class Usuario_model extends Model
     {
         $sql = ""
             ."select "
-            ."u.*, c.nom_comunidad, p.id_perfil, p.fech_acept_priv "
+            ."u.*, c.nom_comunidad, p.id_perfil, p.nom_capoeira, p.fech_acept_priv, "
+            .'g.nom_grado, g.color '
             ."from "
             ."usuario u "
             ."left join comunidad c on c.id_comunidad = u.id_comunidad "
             ."left join perfil p on p.id_usuario = u.id_usuario "
+            .'left join grado g on g.id_grado = (select * from grado_actual(u.id_usuario, p.edad)) '
             ."";
 
         $parametros = [];
@@ -62,11 +64,13 @@ class Usuario_model extends Model
             .'select '
             .'u.*, '
             .'r.nom_rol, '
-            .'p.nom_capoeira '
+            .'p.nom_capoeira, p.sexo, p.edad, '
+            .'g.nom_grado, g.color '
             .'from '
             .'usuario u '
             .'left join rol r on u.id_rol = r.id_rol '
             .'left join perfil p on p.id_usuario = u.id_usuario '
+            .'left join grado g on g.id_grado = (select * from grado_actual(u.id_usuario, p.edad)) '
             .'where '
             .'u.nom_login = ? '
             .'and u.password = ? '
