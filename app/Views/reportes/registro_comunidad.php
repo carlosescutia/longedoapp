@@ -1,4 +1,4 @@
-<div class="ui container texto-18">
+<div class="ui container">
     <div class="row">
         <div class="ui center aligned container">
             <div class="row no-print">
@@ -7,9 +7,9 @@
                 </div>
             </div>
             <div class="row">
-                <h3 class="ui header"><div class="ui massive header">Registro de alumno a la comunidad <?= $comunidad['nom_comunidad'] ?></div></h3>
+                <h1 class="ui header">Registro de alumno a la comunidad <?= $comunidad['nom_comunidad'] ?></h1>
             </div>
-            <div class="ui hidden section divider"></div>
+            <div class="ui hidden divider"></div>
             <div class="row">
                 <div class="ui centered grid">
                     <div class="ten wide column">
@@ -21,10 +21,9 @@
                     </div>
                 </div>
             </div>
-            <div class="ui hidden divider"></div>
             <p><?= site_url() ?></p>
 
-            <div class="ui hidden divider"></div>
+            <div class="ui hidden section divider"></div>
 
             <div class="row">
                 <div class="ui centered grid">
@@ -37,7 +36,7 @@
                 </div>
             </div>
 
-            <div class="ui hidden section divider"></div>
+            <div class="ui hidden section  divider"></div>
 
             <div class="row">
                 <h2 class="ui header">Código de autorización:</h2>
