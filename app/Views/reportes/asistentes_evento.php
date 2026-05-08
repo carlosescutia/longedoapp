@@ -63,7 +63,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row no-print">
         <div class="ui basic segment">
             <a class="ui basic button" href="<?= site_url('evento/detalle/' . $id_evento) ?>">Volver</a>
         </div>

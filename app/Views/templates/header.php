@@ -126,7 +126,7 @@
         $nombre_archivo_fs = $up_dir . $nombre_archivo;
         $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
     ?>
-    <div class="ui container barra">
+    <div class="ui container barra no-print">
         <div class="ui large secondary pointing menu">
             <a class="toc item">
                 <i class="sidebar icon"></i>

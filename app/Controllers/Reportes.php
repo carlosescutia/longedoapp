@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use SimpleSoftwareIO\QrCode\Generator;
+
 class Reportes extends BaseController
 {
     public function __construct()
@@ -9,6 +11,7 @@ class Reportes extends BaseController
         $this->bitacora_model = model('Bitacora_model');
         $this->evento_model = model('Evento_model');
         $this->evento_usuario_model = model('Evento_usuario_model');
+        $this->comunidad_model = model('Comunidad_model');
     }
 
     public function index()
@@ -81,6 +84,24 @@ class Reportes extends BaseController
             } else {
                 return redirect()->to(site_url());
             }
+        } else {
+            return redirect()->to(site_url("login"));
+        }
+    }
+
+    public function registro_comunidad()
+    {
+        if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
+            $qrcode = new Generator;
+
+            $data['comunidad'] = $this->comunidad_model->get_comunidad($data['userdata']['id_comunidad']);
+            $data['qr'] = $qrcode->size(900)->format('png')->generate(site_url('registro_alumno/' . $data['comunidad']['token']));
+
+            return view('templates/header', $data)
+                .view('reportes/registro_comunidad', $data)
+                .view('templates/footer');
         } else {
             return redirect()->to(site_url("login"));
         }

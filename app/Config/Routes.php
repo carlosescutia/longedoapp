@@ -58,6 +58,7 @@ $routes->get('reportes/asistentes_evento/(:segment)', 'Reportes::asistentes_even
 $routes->get('reportes/asistentes_evento/(:segment)/(:segment)', 'Reportes::asistentes_evento/$1/$2');
 $routes->get('reportes/playeras_evento/(:segment)', 'Reportes::playeras_evento/$1');
 $routes->get('reportes/playeras_evento/(:segment)/(:segment)', 'Reportes::playeras_evento/$1/$2');
+$routes->get('reportes/registro_comunidad', 'Reportes::registro_comunidad');
 
 
 
