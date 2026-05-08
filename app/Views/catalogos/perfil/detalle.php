@@ -37,13 +37,13 @@
                                             <img class="ui centered circular bordered image" src="<?= base_url('assets/img/image.png') ?>">
                                         <?php endif ?>
                                     </div>
-                                        <div class="ui segment">
-                                            <div class="content">
-                                                <div class="ui header">
-                                                    <?=$grado['nom_grado']?>
-                                                </div>
+                                    <div class="ui segment">
+                                        <div class="content">
+                                            <div class="ui header">
+                                                <?= $grado ? $grado['nom_grado'] : null ?>
                                             </div>
                                         </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="eight wide right aligned column">
