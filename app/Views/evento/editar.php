@@ -37,7 +37,7 @@
                         </div>
 
                         <form method="post" enctype="multipart/form-data" action="<?=site_url('archivo/subir_evento')?>" id="frm_subir">
-                            <input type="file" class="ui invisible file input" id="invisibleupload1" name="userfile" accept="image/*" capture="user">
+                            <input type="file" class="ui invisible file input" id="invisibleupload1" name="userfile">
                             <input type="hidden" name="up_dir" value="<?=$up_dir?>">
                             <input type="hidden" name="id_evento" value="<?=$evento['id_evento']?>">
                             <input type="hidden" name="archivo_actual" value="<?=$nombre_archivo?>">

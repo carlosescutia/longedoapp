@@ -17,7 +17,7 @@
                     <div class="ui centered grid">
                         <div class="row">
                             <div class="eight wide column">
-                                <div class="ui basic segment">
+                                <div class="ui basic center aligned segment">
                                     <?php
                                         //$nombre_archivo = 'mujer_niño_3aqua_1limon.png';
                                         if ($grado) {
@@ -32,11 +32,18 @@
                                     ?>
                                     <div class="image">
                                         <?php if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ): ?>
-                                            <img class="ui circular bordered image" src="<?= $nombre_archivo_url ?>">
+                                            <img class="ui centered circular bordered image" src="<?= $nombre_archivo_url ?>">
                                         <?php else: ?>
-                                            <img class="ui circular bordered image" src="<?= base_url('assets/img/image.png') ?>">
+                                            <img class="ui centered circular bordered image" src="<?= base_url('assets/img/image.png') ?>">
                                         <?php endif ?>
                                     </div>
+                                        <div class="ui segment">
+                                            <div class="content">
+                                                <div class="ui header">
+                                                    <?=$grado['nom_grado']?>
+                                                </div>
+                                            </div>
+                                        </div>
                                 </div>
                             </div>
                             <div class="eight wide right aligned column">
@@ -60,7 +67,7 @@
                                         <?php endif ?>
                                     </div>
                                     <form method="post" enctype="multipart/form-data" action="<?=site_url('archivo/subir_perfil')?>" id="frm_subir">
-                                        <input type="file" class="ui invisible file input" id="invisibleupload1" name="userfile" accept="image/*" capture="user">
+                                        <input type="file" class="ui invisible file input" id="invisibleupload1" name="userfile">
                                         <input type="hidden" name="up_dir" value="<?=$up_dir?>">
                                         <input type="hidden" name="id_perfil" value="<?=$perfil['id_perfil']?>">
                                         <input type="hidden" name="archivo_actual" value="<?=$nombre_archivo?>">

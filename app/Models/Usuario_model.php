@@ -132,4 +132,22 @@ class Usuario_model extends Model
         return $query->getResultArray();
     }
 
+    public function get_mentores_evaluar_carga_grado($id_evaluacion)
+    {
+        $sql = ""
+            ."select "
+            ."u.id_usuario, ? as id_evaluacion, "
+            ."(select * from grado_proximo(u.id_usuario, p.edad)) as id_grado "
+            ."from "
+            ."usuario u "
+            ."left join perfil p on p.id_usuario = u.id_usuario "
+            ."where "
+            ."u.activo = 1 "
+            ."and u.id_rol = 'mentor' "
+            ."";
+
+        $query = $this->db->query($sql, array($id_evaluacion));
+        return $query->getResultArray();
+    }
+
 }

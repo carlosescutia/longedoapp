@@ -47,8 +47,14 @@ class Carga_grado extends BaseController
             $id_evaluacion = $this->evaluacion_model->getInsertID();
 
             // guardar usuarios de la evaluacion
-            $id_comunidad = $data['userdata']['id_comunidad'] ;
-            $evaluados = $this->usuario_model->get_alumnos_evaluar_carga_grado($id_comunidad, $id_evaluacion);
+            if ( $data['userdata']['id_rol'] == 'admin' ) {
+                // evaluados = mentores
+                $evaluados = $this->usuario_model->get_mentores_evaluar_carga_grado($id_evaluacion);
+            } else {
+                // evaluados = usuarios de la comunidad
+                $id_comunidad = $data['userdata']['id_comunidad'] ;
+                $evaluados = $this->usuario_model->get_alumnos_evaluar_carga_grado($id_comunidad, $id_evaluacion);
+            }
             $db->table('evaluacion_usuario')->insertBatch($evaluados);
 
 
