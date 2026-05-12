@@ -38,7 +38,7 @@ class Perfil_model extends Model
     {
         $sql = ""
             ."select "
-            ."p.*, u.password "
+            ."p.*, u.password, u.token_cambio_pwd "
             ."from "
             ."perfil p "
             ."left join usuario u on p.id_usuario = u.id_usuario "

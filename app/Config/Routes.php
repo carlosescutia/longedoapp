@@ -18,6 +18,13 @@ $routes->post('usuario/nuevo', 'Usuario::nuevo');
 $routes->post('usuario/guardar', 'Usuario::guardar');
 $routes->post('usuario/guardar_activo', 'Usuario::guardar_activo');
 $routes->get('usuario/eliminar/(:num)', 'Usuario::eliminar/$1');
+$routes->get('usuario/lista_evaluadores', 'Usuario::lista_evaluadores');
+$routes->post('usuario/guardar_evaluador', 'Usuario::guardar_evaluador');
+$routes->post('usuario/generar_token_cambio_pwd', 'Usuario::generar_token_cambio_pwd');
+$routes->post('usuario/eliminar_token_cambio_pwd', 'Usuario::eliminar_token_cambio_pwd');
+$routes->get('usuario/nuevo_pwd/(:segment)', 'Usuario::nuevo_pwd/$1');
+$routes->post('usuario/actualizar_password', 'Usuario::actualizar_password');
+
 
 $routes->get('rol/', 'Rol::index');
 
@@ -64,9 +71,6 @@ $routes->get('reportes/registro_comunidad', 'Reportes::registro_comunidad');
 
 $routes->get('perfil/', 'Perfil::detalle');
 $routes->post('perfil/guardar', 'Perfil::guardar');
-
-$routes->get('usuario/lista_evaluadores', 'Usuario::lista_evaluadores');
-$routes->post('usuario/guardar_evaluador', 'Usuario::guardar_evaluador');
 
 $routes->get('evento/detalle/(:num)', 'Evento::detalle/$1');
 $routes->post('evento/nuevo', 'Evento::nuevo');

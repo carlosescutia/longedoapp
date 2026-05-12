@@ -17,6 +17,7 @@ class Usuario_model extends Model
         'activo',
         'evaluador',
         'id_comunidad',
+        'token_cambio_pwd',
     ];
 
     public function get_usuarios($id_rol, $id_comunidad)
@@ -43,6 +44,18 @@ class Usuario_model extends Model
         return $query->getResultArray();
     }
 
+    public function get_usuarios_todos()
+    {
+        $sql = ""
+            ."select "
+            ."u.* "
+            ."from "
+            ."usuario u "
+            ."";
+        $query = $this->db->query($sql);
+        return $query->getResultArray();
+    }
+
     public function get_usuario($id_usuario)
     {
         $sql = ""
@@ -58,7 +71,7 @@ class Usuario_model extends Model
         return $query->getRowArray();
     }
 
-    public function get_usuario_credenciales($nom_login, $password)
+    public function get_usuario_login($nom_login)
     {
         $sql = ''
             .'select '
@@ -73,10 +86,9 @@ class Usuario_model extends Model
             .'left join grado g on g.id_grado = (select * from grado_actual(u.id_usuario, p.edad)) '
             .'where '
             .'u.nom_login = ? '
-            .'and u.password = ? '
             .'and u.activo = 1 '
             .'';
-        $query = $this->db->query($sql, array($nom_login, $password));
+        $query = $this->db->query($sql, array($nom_login));
         return $query->getRowArray();
     }
 
@@ -148,6 +160,20 @@ class Usuario_model extends Model
 
         $query = $this->db->query($sql, array($id_evaluacion));
         return $query->getResultArray();
+    }
+
+    public function get_usuario_token_cambio_pwd($token)
+    {
+        $sql = ''
+            .'select '
+            .'u.* '
+            .'from '
+            .'usuario u '
+            .'where '
+            .'u.token_cambio_pwd = ? '
+            .'';
+        $query = $this->db->query($sql, array($token));
+        return $query->getRowArray();
     }
 
 }

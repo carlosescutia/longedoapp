@@ -88,6 +88,14 @@
                                 </div>
                             </div>
                         </div>
+                        <form class="ui form" method="post" action="/usuario/generar_token_cambio_pwd" id="frm_nuevo_token">
+                            <input type="hidden" name="id_usuario" id="id_usuario" value="<?=$perfil['id_usuario']?>">
+                            <input type="hidden" name="url_actual" id="url_actual" value="<?= site_url('perfil') ?>">
+                        </form>
+                        <form class="ui form" method="post" action="/usuario/eliminar_token_cambio_pwd" id="frm_eliminar_token">
+                            <input type="hidden" name="id_usuario" id="id_usuario" value="<?=$perfil['id_usuario']?>">
+                            <input type="hidden" name="url_actual" id="url_actual" value="<?= site_url('perfil') ?>">
+                        </form>
                         <div class="row">
                             <div class="fourteen wide column">
                                 <form class="ui form" method="post" action="/perfil/guardar" id="frm_perfil">
@@ -100,10 +108,30 @@
                                             <label>Fecha de ingreso</label>
                                             <input type="date" name="fecha_ingreso" id="fecha_ingreso" value="<?=$perfil['fecha_ingreso']?>">
                                         </div>
-                                        <div class="eight wide field">
-                                            <label>Contraseña</label>
-                                            <input type="text" name="password" id="password" value="<?=$perfil['password']?>">
-                                        </div>
+                                        <?php if ($perfil['token_cambio_pwd']): ?>
+                                            <div class="field">
+                                                <label>Link para cambiar contraseña</label>
+                                                <div class="field">
+                                                    <label></label>
+                                                    <p></p>
+                                                    <a href="<?=site_url('usuario/nuevo_pwd/' . $perfil['token_cambio_pwd'])?>">Cambiar contraseña</a>
+                                                </div>
+                                            </div>
+                                            <div class="field">
+                                                <label></label>
+                                                <p></p>
+                                                <?php
+                                                    $mensaje = 'Se eliminará el link para cambiar contraseña' ;
+                                                    $forma = '#frm_eliminar_token';
+                                                ?>
+                                                <a href="#" onclick="confirm_action('<?=$mensaje?>','<?=$forma?>')" ><span class="ui red text"><i class="icon times circle outline"></span></i></a>
+                                            </div>
+                                        <?php else: ?>
+                                            <div class="field">
+                                                <label>Contraseña</label>
+                                                <a class="ui button" onclick="frm_nuevo_token.submit()">Cambiar</a>
+                                            </div>
+                                        <?php endif ?>
                                     </div>
                                     <div class="fields">
                                         <div class="five wide field">
@@ -278,4 +306,18 @@
         })
     ;
 
+    $('#btn_clipboard').click( function() {
+        $('#url_registro').select();
+        document.execCommand('copy');
+        $('#url_registro').blur();
+
+        $.toast({
+            message: 'Se copió el enlace para cambiar contraseña.',
+            class: 'inverted teal',
+        });
+    });
+
+    $('#btn_qr').click( function() {
+        $('.ui.modal').modal('show');
+    });
 </script>

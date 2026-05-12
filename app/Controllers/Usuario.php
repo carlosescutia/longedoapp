@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use SimpleSoftwareIO\QrCode\Generator;
+
 class Usuario extends BaseController
 {
     public function __construct()
@@ -40,6 +42,7 @@ class Usuario extends BaseController
         if ($this->session->logueado) {
             $data = [];
             $data += $this->fn_sis->get_userdata();
+            $qrcode = new Generator;
 
             $data['usuario'] = $this->usuario_model->get_usuario($id_usuario);
             $data['roles'] = $this->rol_model->get_roles();
@@ -47,6 +50,7 @@ class Usuario extends BaseController
             $data['accesos_sistema_rol'] = $this->acceso_sistema_model->get_accesos_sistema_rol_usuario($id_usuario);
             $data['accesos_sistema_usuario'] = $this->acceso_sistema_usuario_model->get_accesos_sistema_usuario($id_usuario);
             $data['opciones_sistema_otorgables'] = $this->opcion_sistema_model->get_opciones_sistema_otorgables();
+            $data['qr'] = $qrcode->size(450)->format('png')->generate(site_url('usuario/nuevo_pwd/' . $data['usuario']['token_cambio_pwd']));
 
             return view('templates/header', $data)
                 .view('catalogos/usuario/detalle', $data)
@@ -88,7 +92,7 @@ class Usuario extends BaseController
                     'id_rol' => $usuario['id_rol'],
                     'nom_usuario' => $usuario['nom_usuario'],
                     'nom_login' => $usuario['nom_login'],
-                    'password' => $usuario['password'],
+                    'password' => password_hash($usuario['password'], PASSWORD_DEFAULT),
                     'activo' => array_key_exists('activo', $usuario) ? 1 : 0,
                     'id_comunidad' => empty($usuario['id_comunidad']) ? null : $usuario['id_comunidad'],
                 );
@@ -242,7 +246,7 @@ class Usuario extends BaseController
                     'id_comunidad' => $usuario['id_comunidad'],
                     'nom_usuario' => $usuario['nom_completo'],
                     'nom_login' => $usuario['nom_login'],
-                    'password' => $usuario['password'],
+                    'password' => password_hash($usuario['password'], PASSWORD_DEFAULT),
                     'activo' => null,
                 );
                 // guardar
@@ -280,6 +284,93 @@ class Usuario extends BaseController
             .view('catalogos/usuario/error', $data)
             .view('templates/footer');
     }
+
+    public function nuevo_pwd($token)
+    {
+        $usuario = $this->usuario_model->get_usuario_token_cambio_pwd($token);
+        if ( $usuario ) {
+            $data['usuario'] = $usuario;
+
+            return view('templates/header_pub')
+                .view('catalogos/usuario/nuevo_pwd', $data)
+                .view('templates/footer');
+        } else {
+            $data['error'] = 'El enlace proporcionado no es válido. Solicita otro e intenta de nuevo.';
+        }
+        return view('templates/header_pub')
+            .view('catalogos/usuario/error', $data)
+            .view('templates/footer');
+    }
+
+    public function actualizar_password()
+    {
+        $usuario = $this->request->getPost();
+        if ($usuario) {
+            $accion = 'modificó';
+
+            $id_usuario = $usuario['id_usuario'];
+            $password = $usuario['password'];
+            $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+            // eliminar token para cambio de pwd
+            $data = array(
+                'id_usuario' => $id_usuario,
+                'token_cambio_pwd' => null,
+            );
+            $this->usuario_model->save($data);
+
+            // guardado de nuevo pwd
+            $data = array(
+                'id_usuario' => $id_usuario,
+                'password' => $password_hash,
+            );
+            $this->usuario_model->save($data);
+        }
+        return redirect()->to(site_url("login"));
+    }
+
+    public function generar_token_cambio_pwd()
+    {
+        if ($this->session->logueado) {
+            $usuario = $this->request->getPost();
+            if ($usuario) {
+                // guardado
+                $data = array(
+                    'id_usuario' => $usuario['id_usuario'],
+                    'token_cambio_pwd' => $this->fn_sis->create_uuid(),
+                );
+                $this->usuario_model->save($data);
+
+                // registro en bitacora
+                $accion = 'modificó';
+                $entidad = 'usuario';
+                $valor = 'cambio de pwd: ' . $usuario['id_usuario'] ;
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            }
+            return redirect()->to($usuario['url_actual']);
+        } else {
+            return redirect()->to(site_url("login"));
+        }
+    }
+
+    public function eliminar_token_cambio_pwd()
+    {
+        $usuario = $this->request->getPost();
+        if ($usuario) {
+            $accion = 'modificó';
+
+            $id_usuario = $usuario['id_usuario'];
+
+            // eliminar token para cambio de pwd
+            $data = array(
+                'id_usuario' => $id_usuario,
+                'token_cambio_pwd' => null,
+            );
+            $this->usuario_model->save($data);
+        }
+        return redirect()->to($usuario['url_actual']);
+    }
+
 
 }
 
