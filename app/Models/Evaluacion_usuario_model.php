@@ -53,7 +53,7 @@ class Evaluacion_usuario_model extends Model
     {
         $sql = ""
             ."select "
-            ."elu.*, u.nom_usuario, p.id_perfil, p.nom_capoeira, g.nom_grado, g.musica as req_musica, g.cultura as req_cultura, g.jogo as req_jogo "
+            ."elu.*, u.nom_usuario, p.id_perfil, p.nom_capoeira, p.foto, g.nom_grado, g.musica as req_musica, g.cultura as req_cultura, g.jogo as req_jogo "
             ."from "
             ."evaluacion_usuario elu "
             ."left join usuario u on u.id_usuario = elu.id_usuario "

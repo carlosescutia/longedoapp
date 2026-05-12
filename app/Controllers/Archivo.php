@@ -296,7 +296,7 @@ class Archivo extends BaseController
                 $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
 
                 // Eliminar archivo
-                if ( file_exists($nombre_archivo_fs) ) {
+                if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ) {
                     $status = unlink($nombre_archivo_fs) ? 'Se eliminó el archivo '.$nombre_archivo_fs : 'Error al eliminar el archivo '.$nombre_archivo_fs;
 
                     // registro en bitacora
@@ -344,7 +344,7 @@ class Archivo extends BaseController
                 $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
 
                 // Eliminar archivo
-                if ( file_exists($nombre_archivo_fs) ) {
+                if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ) {
                     $status = unlink($nombre_archivo_fs) ? 'Se eliminó el archivo '.$nombre_archivo_fs : 'Error al eliminar el archivo '.$nombre_archivo_fs;
 
                     // registro en bitacora

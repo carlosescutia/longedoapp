@@ -95,19 +95,17 @@
                                     <td>
                                         <h4 class="ui header">
                                             <?php
-                                                $nombre = 'perfil_' . $evaluados_item['id_perfil'] ;
-                                                $tipo_archivo = 'jpg';
-                                                $nombre_archivo = $nombre . '.' . $tipo_archivo;
-                                                $up_dir = 'imgs/';
+                                                $nombre_archivo = $evaluados_item['foto'];
+                                                $up_dir = 'imgs/perfil/';
                                                 $nombre_archivo_fs = $up_dir . $nombre_archivo;
                                                 $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
                                             ?>
-                                            <?php if ( file_exists($nombre_archivo_fs) ): ?>
+                                            <?php if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ): ?>
                                                 <img class="ui medium circular image open_image" src="<?= $nombre_archivo_url ?>">
                                             <?php endif ?>
                                             <div class="content">
                                                 <?= $evaluados_item['nom_capoeira'] ?>
-                                                <div class="sub header"><?=$evaluados_item['nom_usuario']?></div>
+                                                <div class="sub header"><?= substr($evaluados_item['nom_usuario'], 0, 15) ?></div>
                                             </div>
                                         </h4>
                                     </td>
