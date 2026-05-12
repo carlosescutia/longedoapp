@@ -105,7 +105,8 @@
                                             <?php endif ?>
                                             <div class="content">
                                                 <?= $evaluados_item['nom_capoeira'] ?>
-                                                <div class="sub header"><?= substr($evaluados_item['nom_usuario'], 0, 15) ?></div>
+                                                <div class="sub header"><?= substr($evaluados_item['nom_usuario'], 0, 14) ?></div>
+                                                <div class="sub header"><?= substr($evaluados_item['nom_comunidad'], 0, 14) ?></div>
                                             </div>
                                         </h4>
                                     </td>

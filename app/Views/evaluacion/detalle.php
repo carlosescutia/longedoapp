@@ -9,7 +9,7 @@
                             <div class="eight wide column">
                                 <h1 class="ui header">Evaluación</h1>
                             </div>
-                            <div class="eight wide right aligned column">
+                            <div class="eight wide right aligned column no-print">
                                 <button class="ui right floated primary button" type="submit" form="frm_evaluacion">Guardar</button>
                             </div>
                         </div>
@@ -77,7 +77,7 @@
                     <table id="tbl_evaluados" class="ui very basic striped unstackable table">
                         <thead>
                             <tr>
-                                <th data-priority="1">Nombre capoeira / usuario</th>
+                                <th data-priority="1">Nombre capoeira / completo </th>
                                 <th data-priority="1">Grado a evaluar</th>
                                 <th data-priority="1">Música</th>
                                 <th data-priority="1">Cultura</th>
@@ -91,10 +91,20 @@
                             <?php foreach ($evaluados as $evaluados_item): ?>
                                 <tr>
                                     <td>
-                                        <h4 class="ui image header">
+                                        <h4 class="ui header">
+                                            <?php
+                                                $nombre_archivo = $evaluados_item['foto'];
+                                                $up_dir = 'imgs/perfil/';
+                                                $nombre_archivo_fs = $up_dir . $nombre_archivo;
+                                                $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
+                                            ?>
+                                            <?php if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ): ?>
+                                                <img class="ui medium circular image open_image" src="<?= $nombre_archivo_url ?>">
+                                            <?php endif ?>
                                             <div class="content">
                                                 <?= $evaluados_item['nom_capoeira'] ?>
-                                                <div class="sub header"><?=$evaluados_item['nom_usuario']?></div>
+                                                <div class="sub header"><?= substr($evaluados_item['nom_usuario'], 0, 15) ?></div>
+                                                <div class="sub header"><?= substr($evaluados_item['nom_comunidad'], 0, 15) ?></div>
                                             </div>
                                         </h4>
                                     </td>
@@ -127,13 +137,22 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row no-print">
             <div class="ui basic segment">
                 <a class="ui basic button" href="<?= site_url('evento/detalle/') ?><?= $evaluacion['id_evento'] ?>">Volver</a>
             </div>
         </div>
     </div>
 
+</div>
+
+<div class="ui mini modal">
+    <i class="close icon"></i>
+    <div class="image content">
+        <div class="ui medium image">
+            <img id="foto" src="">
+        </div>
+    </div>
 </div>
 
 <script>
@@ -167,5 +186,10 @@
             }
         })
     ;
-</script>
 
+    $('.open_image').click( function() {
+        foto = $(this).attr('src');
+        $('#foto').attr('src', foto);
+        $('.ui.modal').modal('show');
+    });
+</script>

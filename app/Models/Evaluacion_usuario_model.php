@@ -53,10 +53,11 @@ class Evaluacion_usuario_model extends Model
     {
         $sql = ""
             ."select "
-            ."elu.*, u.nom_usuario, p.id_perfil, p.nom_capoeira, p.foto, g.nom_grado, g.musica as req_musica, g.cultura as req_cultura, g.jogo as req_jogo "
+            ."elu.*, u.nom_usuario, c.nom_comunidad, p.id_perfil, p.nom_capoeira, p.foto, g.nom_grado, g.musica as req_musica, g.cultura as req_cultura, g.jogo as req_jogo "
             ."from "
             ."evaluacion_usuario elu "
             ."left join usuario u on u.id_usuario = elu.id_usuario "
+            ."left join comunidad c on c.id_comunidad = u.id_comunidad "
             ."left join perfil p on p.id_usuario = elu.id_usuario "
             ."left join grado g on g.id_grado = elu.id_grado "
             ."where "
@@ -132,6 +133,7 @@ class Evaluacion_usuario_model extends Model
             ."left join grado g on evu.id_grado = g.id_grado "
             ."where evl.id_evento is not null "
             ."and evu.id_usuario = ? "
+            ."and evl.status != 'cerrado' "
             ."";
         $query = $this->db->query($sql, array($id_usuario));
         return $query->getRowArray() ;
