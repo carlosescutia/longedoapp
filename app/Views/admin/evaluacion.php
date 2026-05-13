@@ -13,6 +13,26 @@
     ?>
 
     <p>Tienes una evaluación registrada en el <strong><?= $info_evaluacion['nom_evento'] ?></strong> el próximo <strong><?= datefmt_format($fmt, $fecha) ?></strong> para el grado <strong><?= $info_evaluacion['nom_grado'] ?></strong></p>
+    <div class="ui accordion">
+        <div class="title">
+            <i class="dropdown icon"></i>
+            Requisitos
+        </div>
+        <div class="content">
+            <div class="transition hidden">
+                <div class="ui bulleted list">
+                    <?php
+                        $requisitos_renglones = explode('.', $info_evaluacion['requisitos']);
+                    ?>
+                    <?php foreach ($requisitos_renglones as $requisitos_renglon): ?>
+                        <?php if ($requisitos_renglon): ?>
+                            <div class="item"><?= trim($requisitos_renglon) . '.' ?></div>
+                        <?php endif ?>
+                    <?php endforeach ?>
+                </div>
+            </div>
+        </div>
+    </div>
     <h4 class="ui header">Aspectos a evaluar:</h4>
     <div class="ui yellow segment">
         <h5 class="ui header">
@@ -89,3 +109,11 @@
         </div>
     <?php endif ?>
 </div>
+
+<script>
+$(document).ready( function() {
+    $('.ui.accordion')
+        .accordion()
+    ;
+});
+</script>

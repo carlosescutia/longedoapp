@@ -12,6 +12,7 @@ class Grado_model extends Model
         'nom_grado',
         'edad',
         'iniciales',
+        'requisitos',
         'musica',
         'cultura',
         'jogo',
