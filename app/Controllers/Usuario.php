@@ -88,11 +88,15 @@ class Usuario extends BaseController
                         'id_usuario' => $usuario['id_usuario'],
                     );
                 }
+                if (array_key_exists('password', $usuario)) {
+                    $data += array(
+                        'password' => password_hash($usuario['password'], PASSWORD_DEFAULT),
+                    );
+                }
                 $data += array(
                     'id_rol' => $usuario['id_rol'],
                     'nom_usuario' => $usuario['nom_usuario'],
                     'nom_login' => $usuario['nom_login'],
-                    'password' => password_hash($usuario['password'], PASSWORD_DEFAULT),
                     'activo' => array_key_exists('activo', $usuario) ? 1 : 0,
                     'id_comunidad' => empty($usuario['id_comunidad']) ? null : $usuario['id_comunidad'],
                 );
@@ -257,6 +261,13 @@ class Usuario extends BaseController
                     'id_usuario' => $id_usuario,
                     'nom_capoeira' => $usuario['nom_capoeira'],
                     'fecha_ingreso' => empty($usuario['fecha_ingreso']) ? null : $usuario['fecha_ingreso'],
+                    'sexo_diverso' => $usuario['sexo_diverso'],
+                    'whatsapp_usuario' => $usuario['whatsapp_usuario'],
+                    'correo_usuario' => $usuario['correo_usuario'],
+                    'contacto_emergencia' => $usuario['contacto_emergencia'],
+                    'whatsapp_emergencia' => $usuario['whatsapp_emergencia'],
+                    'contacto_responsable' => $usuario['contacto_responsable'],
+                    'whatsapp_responsable' => $usuario['whatsapp_responsable'],
                     'sexo' => $usuario['sexo'],
                     'edad' => $usuario['edad'],
                     'id_talla' => empty($usuario['id_talla']) ? null : $usuario['id_talla'],

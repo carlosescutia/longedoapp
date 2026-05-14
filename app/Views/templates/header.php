@@ -115,14 +115,25 @@
 <div class="ui vertical center aligned segment">
 
     <?php
+        switch ($userdata['edad']) {
+            case 'niño':
+                $instrumento = 'pandero';
+                break;
+            case 'adulto':
+                $instrumento = 'berimbau';
+                break;
+            case 'adulto_mayor':
+                $instrumento = 'atabaque';
+                break;
+            default:
+                $instrumento = '';
+        }
         $color = 'gris' ;
         if ($userdata['color']) {
             $color = $userdata['color'] ;
         }
-        $sexo = $userdata['sexo'] ;
-        $edad = $userdata['edad'] ;
-        $nombre_archivo = $sexo . '_' . $edad . '_' . $color . '.png';
-        $up_dir = 'assets/img/grado/';
+        $nombre_archivo = $instrumento . '_' . $color . '.png';
+        $up_dir = 'assets/img/avatar/';
         $nombre_archivo_fs = $up_dir . $nombre_archivo;
         $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
     ?>

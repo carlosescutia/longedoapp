@@ -1,4 +1,4 @@
-<h1 class="ui header right aligned">Grados</h1>
+<h1 class="ui header">Historial de grados</h1>
 
 <div class="ui green segment">
     <table class="ui celled unstackable tiny table">
