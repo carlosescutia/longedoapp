@@ -45,12 +45,11 @@
             </form>
 
             <p></p>
-
             <div class="item"><a href="<?= site_url('reportes/registro_comunidad')?>">Impresión de código de registro</a></div>
-
             <p></p>
-
             <div class="item"><a href="<?= site_url('usuario')?>">Activar alumnos</a></div>
+            <p></p>
+            <div class="item"><a href="<?= site_url('reportes/directorio')?>">Directorio</a></div>
         </div>
     </div>
 </div>

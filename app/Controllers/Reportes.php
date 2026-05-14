@@ -12,6 +12,7 @@ class Reportes extends BaseController
         $this->evento_model = model('Evento_model');
         $this->evento_usuario_model = model('Evento_usuario_model');
         $this->comunidad_model = model('Comunidad_model');
+        $this->usuario_model = model('Usuario_model');
     }
 
     public function index()
@@ -134,6 +135,38 @@ class Reportes extends BaseController
                     }
                 } else {
                     return redirect()->to(site_url());
+                }
+            } else {
+                return redirect()->to(site_url());
+            }
+        } else {
+            return redirect()->to(site_url("login"));
+        }
+    }
+
+    public function directorio($salida='')
+    {
+        if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
+            $data['error'] = $this->session->getFlashdata('error');
+
+
+            $permisos_requeridos = array(
+                'rol_mentor',
+            );
+
+            if (has_permission_and($permisos_requeridos, $data['permisos_usuario'])) {
+
+                $data['comunidad'] = $this->comunidad_model->get_comunidad($data['userdata']['id_comunidad']);
+                $data['alumnos'] = $this->usuario_model->get_usuarios_directorio($data['userdata']['id_comunidad'], $salida);
+
+                if ($salida == 'csv') {
+                    return $this->response->download("directorio" . $data['comunidad']['nom_comunidad'] . '.csv', $data['alumnos']);
+                } else {
+                    return view('templates/header', $data)
+                        .view('reportes/directorio', $data)
+                        .view('templates/footer');
                 }
             } else {
                 return redirect()->to(site_url());

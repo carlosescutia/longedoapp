@@ -24,8 +24,8 @@ class Usuario_model extends Model
     {
         $sql = ""
             ."select "
-            ."u.*, c.nom_comunidad, p.id_perfil, p.nom_capoeira, p.fech_acept_priv, "
-            .'g.nom_grado, g.color '
+            ."u.*, c.nom_comunidad, p.*, "
+            .'g.nom_grado, g.color, '
             ."from "
             ."usuario u "
             ."left join comunidad c on c.id_comunidad = u.id_comunidad "
@@ -174,6 +174,38 @@ class Usuario_model extends Model
             .'';
         $query = $this->db->query($sql, array($token));
         return $query->getRowArray();
+    }
+
+    public function get_usuarios_directorio($id_comunidad, $salida='')
+    {
+        $dbutil = \Config\Database::utils();
+
+        $sql = ""
+            ."select "
+            ."p.nom_capoeira, u.nom_usuario, g.nom_grado, p.sexo_diverso, p.foto, "
+            ."p.edad, p.sexo, t.nom_talla, p.whatsapp_usuario, p.correo_usuario, "
+            ."p.contacto_emergencia, p.whatsapp_emergencia, p.contacto_responsable, "
+            ."p.whatsapp_responsable "
+            ."from "
+            ."usuario u "
+            ."left join comunidad c on c.id_comunidad = u.id_comunidad "
+            ."left join perfil p on p.id_usuario = u.id_usuario "
+            .'left join grado g on g.id_grado = (select * from grado_actual(u.id_usuario, p.edad)) '
+            .'left join talla t on t.id_talla = p.id_talla '
+            ."where u.id_comunidad = ? "
+            ."order by u.nom_usuario "
+            ."";
+
+        $query = $this->db->query($sql, $id_comunidad);
+
+        if ($salida == 'csv') {
+            $delimiter = ",";
+            $newline = "\r\n";
+            $enclosure = '"';
+            return $dbutil->getCSVFromResult($query, $delimiter, $newline, $enclosure);
+        } else {
+            return $query->getResultArray();
+        }
     }
 
 }
