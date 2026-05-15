@@ -19,9 +19,8 @@
                     <thead>
                         <tr>
                             <th>Nombre capoeira / completo</th>
-                            <th>Comunidad / rol</th>
-                            <th>Grado</th>
-                            <th>Perfil</th>
+                            <th>Usuario</th>
+                            <th>Rol / comunidad</th>
                             <th>Activo</th>
                             <th></th>
                         </tr>
@@ -38,18 +37,15 @@
                                 </h4>
                             </td>
                             <td>
+                                <?= $usuarios_item['nom_login'] ?>
+                            </td>
+                            <td>
                                 <h4 class="ui image header">
                                     <div class="content">
-                                        <?= $usuarios_item['nom_comunidad'] ?>
-                                        <div class="sub header"><?=$usuarios_item['id_rol']?></div>
+                                        <?= $usuarios_item['id_rol'] ?>
+                                        <div class="sub header"><?=$usuarios_item['nom_comunidad']?></div>
                                     </div>
                                 </h4>
-                            </td>
-                            <td>
-                                <?= $usuarios_item['nom_grado'] ?>
-                            </td>
-                            <td>
-                                <?= $usuarios_item['fech_acept_priv'] ? 'Si' : 'No' ?>
                             </td>
                             <td>
                                 <form class="ui form" method="post" action="/usuario/guardar_activo" name="frm_usr<?=$usuarios_item['id_usuario']?>">

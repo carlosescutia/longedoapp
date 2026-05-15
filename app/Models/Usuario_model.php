@@ -25,7 +25,7 @@ class Usuario_model extends Model
         $sql = ""
             ."select "
             ."u.*, c.nom_comunidad, p.*, "
-            .'g.nom_grado, g.color, '
+            .'g.nom_grado, g.color '
             ."from "
             ."usuario u "
             ."left join comunidad c on c.id_comunidad = u.id_comunidad "
@@ -193,6 +193,7 @@ class Usuario_model extends Model
             .'left join grado g on g.id_grado = (select * from grado_actual(u.id_usuario, p.edad)) '
             .'left join talla t on t.id_talla = p.id_talla '
             ."where u.id_comunidad = ? "
+            ."and u.activo = 1 "
             ."order by u.nom_usuario "
             ."";
 

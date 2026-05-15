@@ -2,13 +2,18 @@
     <div class="row">
         <div class="ui container">
             <div class="row">
-                <h1 class="ui header">Asistentes al evento <?=$evento['nom_evento']?></h1>
+                <h1 class="ui header">
+                    <img class="ui large image" src="/assets/img/logotipo.png">
+                    <div class="content">
+                        Asistentes al evento <?=$evento['nom_evento']?>
+                    </div>
+                </h1>
             </div>
             <div class="row no-print">
                 <div class="ui right aligned basic segment">
                     <?php $id_evento = $evento['id_evento'] ?>
                     <a class="ui mini button" href="<?= site_url('reportes/asistentes_evento/' . $id_evento . '/csv') ?>">Exportar</a>
-                    <a class="ui mini button" href="javascript:window.print()">Generar pdf</a>
+                    <a class="ui mini button" href="javascript:window.print()">Imprimir</a>
                 </div>
             </div>
 
@@ -19,7 +24,7 @@
                             <tr>
                                 <th data-priority="1">Nombre capoeira / usuario</th>
                                 <th data-priority="1">Tipo</th>
-                                <th data-priority="1">Sexo</th>
+                                <th data-priority="1">Corte</th>
                                 <th data-priority="1">Edad</th>
                                 <th data-priority="1">Talla</th>
                                 <th data-priority="1">Nota</th>

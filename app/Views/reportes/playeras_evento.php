@@ -2,7 +2,12 @@
     <div class="row">
         <div class="ui container">
             <div class="row">
-                <h1 class="ui header">Playeras del evento <?=$evento['nom_evento']?></h1>
+                <h1 class="ui header">
+                    <img class="ui large image" src="/assets/img/logotipo.png">
+                    <div class="content">
+                        Playeras del evento <?=$evento['nom_evento']?>
+                    </div>
+                </h1>
             </div>
             <div class="row no-print">
                 <div class="ui right aligned basic segment">
@@ -20,8 +25,9 @@
                         <table class="ui very basic striped unstackable big table">
                             <thead>
                                 <tr>
+                                    <th data-priority="1">Corte</th>
                                     <th data-priority="1">Edad</th>
-                                    <th data-priority="1">Tamaño</th>
+                                    <th data-priority="1">Talla</th>
                                     <th data-priority="1">Cantidad</th>
                                 </tr>
                             </thead>
@@ -29,13 +35,16 @@
                                 <?php foreach ($playeras_evento as $playeras_evento_item): ?>
                                     <tr>
                                         <td>
-                                            <?=$playeras_evento_item['edad']?>
+                                            <?= ucfirst($playeras_evento_item['sexo']) ?>
                                         </td>
                                         <td>
-                                            <?=$playeras_evento_item['nom_talla']?>
+                                            <?= ucfirst($playeras_evento_item['edad']) ?>
                                         </td>
                                         <td>
-                                            <?=$playeras_evento_item['cantidad']?>
+                                            <?= ucfirst($playeras_evento_item['nom_talla']) ?>
+                                        </td>
+                                        <td>
+                                            <?= ucfirst($playeras_evento_item['cantidad']) ?>
                                         </td>
                                     </tr>
                                 <?php endforeach ?>

@@ -12,7 +12,7 @@
             <div class="row no-print">
                 <div class="ui right aligned basic segment">
                     <a class="ui mini button" href="<?= site_url('reportes/directorio/csv') ?>">Exportar</a>
-                    <a class="ui mini button" href="javascript:window.print()">Generar pdf</a>
+                    <a class="ui mini button" href="javascript:window.print()">Imprimir</a>
                 </div>
             </div>
 

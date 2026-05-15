@@ -7,6 +7,26 @@
                     <div class="ui stackable grid container">
                         <?php
                             $permisos_requeridos = array(
+                                'reporte_mentor.can_view',
+                            );
+                            if (has_permission_or($permisos_requeridos, $permisos_usuario)) { ?>
+                                <div class="eight wide column">
+                                    <?php include "btn_directorio.php" ?>
+                                </div>
+                            <?php }
+                        ?>
+                        <?php
+                            $permisos_requeridos = array(
+                                'reporte_mentor.can_view',
+                            );
+                            if (has_permission_or($permisos_requeridos, $permisos_usuario)) { ?>
+                                <div class="eight wide column">
+                                    <?php include "btn_registro.php" ?>
+                                </div>
+                            <?php }
+                        ?>
+                        <?php
+                            $permisos_requeridos = array(
                                 'reporte_alumno.can_view',
                                 'reporte_mentor.can_view',
                                 'reporte_admin.can_view',
