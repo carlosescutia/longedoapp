@@ -29,6 +29,7 @@
                                 <input type="text" name="password" id="password">
                             </div>
                         </div>
+                        <input type="hidden" id="nom_existente" value="inexistente">
                         <div class="fields">
                             <?php
                                 $permisos_requeridos = array(
@@ -98,6 +99,16 @@
 </div>
 
 <script>
+    $('#nom_login').change ( function () {
+        nom_login = $('#nom_login').val();
+        test_url = "<?= site_url('usuario/existe/') ?>" + nom_login ;
+        $.get(test_url, function(data, status) {
+            if (data) {
+                $('#nom_existente').val(nom_login);
+            }
+        });
+    });
+
 $('.ui.form')
     .form({
         fields: {
@@ -114,7 +125,11 @@ $('.ui.form')
                     {
                         type   : 'notEmpty',
                         prompt : 'Login no puede estar vacio'
-                    }
+                    },
+                    {
+                        type   : 'different[nom_existente]',
+                        prompt : 'Ya existe el nombre de usuario, selecciona otro'
+                    },
                 ]
             },
             password: {

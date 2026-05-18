@@ -115,6 +115,7 @@ class Evaluacion_usuario_model extends Model
             ."left join evaluacion evl on evl.id_evaluacion = evu.id_evaluacion "
             ."where "
             ."evu.id_usuario = ? "
+            ."and id_evento is not null "
             ."and status <> 'cerrado' "
             ."";
         $query = $this->db->query($sql, array($id_usuario));

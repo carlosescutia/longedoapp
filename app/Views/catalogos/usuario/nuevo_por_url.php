@@ -4,7 +4,6 @@
             <h1 class="ui center aligned header">Registro a <?= $comunidad['nom_comunidad'] ?></h1>
             <img class="ui centered tiny image" src="/assets/img/logotipo.png">
 
-
             <form class="ui form"  method="post" action="/registro_alumno/guardar" id="frm_alumno">
                 <input type="hidden" name="id_comunidad" id="id_comunidad" value="<?= $comunidad['id_comunidad'] ?>">
                 <div class="ui green segment">
@@ -26,6 +25,7 @@
                             </div>
 
                             <div class="ui hidden divider"></div>
+                            <input type="hidden" id="nom_existente" value="inexistente">
 
                             <div class="fields">
                                 <div class="field">
@@ -158,7 +158,7 @@
                             </div>
                         </div>
                     </div>
-                                <div class="ui error message"></div>
+                    <div class="ui error message"></div>
                 </div>
             </form>
         </div>
@@ -166,6 +166,16 @@
 </div>
 
 <script>
+    $('#nom_login').change ( function () {
+        nom_login = $('#nom_login').val();
+        test_url = "<?= site_url('usuario/existe/') ?>" + nom_login ;
+        $.get(test_url, function(data, status) {
+            if (data) {
+                $('#nom_existente').val(nom_login);
+            }
+        });
+    });
+
     $(document).ready( function() {
         $('#dv_responsable').hide();
     });
@@ -198,7 +208,12 @@
                         {
                             type   : 'notEmpty',
                             prompt : 'Nombre de usuario (login) no puede estar vacio'
-                        }
+                        },
+                        {
+                            type   : 'different[nom_existente]',
+                            prompt : 'Ya existe el nombre de usuario, selecciona otro'
+                        },
+
                     ]
                 },
                 password: {

@@ -382,6 +382,10 @@ class Usuario extends BaseController
         return redirect()->to($usuario['url_actual']);
     }
 
+    public function existe($nom_login)
+    {
+        $existe = $this->usuario_model->get_existe($nom_login);
+        return $existe;
+    }
 
 }
-

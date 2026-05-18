@@ -29,7 +29,7 @@
                             </div>
                             <div class="four wide field">
                                 <label>Login</label>
-                                <input type="text" name="nom_login" id="nom_login" value="<?=$usuario['nom_login']?>">
+                                <input type="text" name="nom_login" id="nom_login" value="<?=$usuario['nom_login']?>" readonly>
                             </div>
                             <?php if ($usuario['token_cambio_pwd']): ?>
                                 <div class="field">

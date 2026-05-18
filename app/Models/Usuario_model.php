@@ -209,4 +209,11 @@ class Usuario_model extends Model
         }
     }
 
+    public function get_existe($nom_login)
+    {
+        $sql = 'select 1 as existe from usuario where nom_login = ? ';
+        $query = $this->db->query($sql, array($nom_login));
+        return $query->getRowArray()['existe'] ?? null ;
+    }
+
 }

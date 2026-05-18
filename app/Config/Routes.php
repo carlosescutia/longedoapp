@@ -24,6 +24,7 @@ $routes->post('usuario/generar_token_cambio_pwd', 'Usuario::generar_token_cambio
 $routes->post('usuario/eliminar_token_cambio_pwd', 'Usuario::eliminar_token_cambio_pwd');
 $routes->get('usuario/nuevo_pwd/(:segment)', 'Usuario::nuevo_pwd/$1');
 $routes->post('usuario/actualizar_password', 'Usuario::actualizar_password');
+$routes->get('usuario/existe/(:segment)', 'Usuario::existe/$1');
 
 
 $routes->get('rol/', 'Rol::index');
