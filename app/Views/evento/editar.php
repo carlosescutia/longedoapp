@@ -130,7 +130,7 @@
 
     $('#btn_eliminar').click( function() {
         if ('<?= $borrado ?>' == 'habilitado') {
-            confirm_file_delete('<?=$nombre_archivo?>', '#frm_eliminar');
+            confirm_action('Se eliminará el archivo <?=$nombre_archivo?>', '#frm_eliminar');
         }
     });
 

@@ -183,21 +183,28 @@ class Evento extends BaseController
     }
 
 
-    public function eliminar($id_evento)
+    public function eliminar()
     {
         if ($this->session->logueado) {
 
-            // registro en bitacora
-            $evento = $this->evento_model->get_evento($id_evento);
-            $accion = "eliminó";
-            $entidad = 'evento';
-            $valor = $evento['id_evento'] . " " . $evento['nom_evento'];
-            $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            $evento = $this->request->getPost();
+            if ($evento) {
+                $id_evento = $evento['id_evento'];
+                $url_actual = $evento['url_actual'];
 
-            // eliminado
-            $this->evento_model->delete($id_evento);
+                // registro en bitacora
+                $evento = $this->evento_model->get_evento($id_evento);
+                $accion = "eliminó";
+                $entidad = 'evento';
+                $valor = $evento['id_evento'] . " " . $evento['nom_evento'];
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
 
+                // eliminado
+                $this->evento_model->delete($id_evento);
+
+            }
             return redirect()->to(site_url());
+
         } else {
             return redirect()->to(site_url("login"));
         }

@@ -119,21 +119,30 @@ class Opcion_sistema extends BaseController
         }
     }
 
-    public function eliminar($id_opcion_sistema)
+    public function eliminar()
     {
         if ($this->session->logueado) {
 
-            // registro en bitacora
-            $opcion_sistema = $this->opcion_sistema_model->get_opcion_sistema($id_opcion_sistema);
-            $accion = "eliminó";
-            $entidad = 'opcion_sistema';
-            $valor = $opcion_sistema['id_opcion_sistema'] . " " . $opcion_sistema['nom_opcion_sistema'];
-            $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            $opcion_sistema = $this->request->getPost();
+            if ($opcion_sistema) {
+                $id_opcion_sistema = $opcion_sistema['id_opcion_sistema'];
+                $url_actual = $opcion_sistema['url_actual'];
 
-            // eliminado
-            $this->opcion_sistema_model->delete($id_opcion_sistema);
+                // registro en bitacora
+                $opcion_sistema = $this->opcion_sistema_model->get_opcion_sistema($id_opcion_sistema);
+                $accion = "eliminó";
+                $entidad = 'opcion_sistema';
+                $valor = $opcion_sistema['id_opcion_sistema'] . " " . $opcion_sistema['nom_opcion_sistema'];
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
 
-            return redirect()->to(site_url("opcion_sistema"));
+                // eliminado
+                $this->opcion_sistema_model->delete($id_opcion_sistema);
+
+                return redirect()->to($url_actual);
+
+            } else {
+                return redirect()->to(site_url("opcion_sistema"));
+            }
         } else {
             return redirect()->to(site_url("login"));
         }

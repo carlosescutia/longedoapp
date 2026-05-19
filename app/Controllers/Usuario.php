@@ -148,21 +148,29 @@ class Usuario extends BaseController
         }
     }
 
-    public function eliminar($id_usuario)
+    public function eliminar()
     {
         if ($this->session->logueado) {
 
-            // registro en bitacora
-            $usuario = $this->usuario_model->get_usuario($id_usuario);
-            $accion = "eliminó";
-            $entidad = 'usuario';
-            $valor = $usuario['id_usuario'] . " " . $usuario['nom_login'];
-            $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            $usuario = $this->request->getPost();
+            if ($usuario) {
+                $id_usuario = $usuario['id_usuario'];
+                $url_actual = $usuario['url_actual'];
 
-            // eliminado
-            $this->usuario_model->delete($id_usuario);
+                // registro en bitacora
+                $usuario = $this->usuario_model->get_usuario($id_usuario);
+                $accion = "eliminó";
+                $entidad = 'usuario';
+                $valor = $usuario['id_usuario'] . " " . $usuario['nom_login'];
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
 
-            return redirect()->to(site_url("usuario"));
+                // eliminado
+                $this->usuario_model->delete($id_usuario);
+
+                return redirect()->to($url_actual);
+            } else {
+                return redirect()->to(site_url("usuario"));
+            }
         } else {
             return redirect()->to(site_url("login"));
         }

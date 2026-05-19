@@ -2,26 +2,19 @@
     <div class="ui stackable grid">
         <div class="row">
             <div class="sixteen wide column">
-
+                <form method="post" action="/carga_grado/actualizar_status" id="frm_evaluacion">
+                    <input type="hidden" name="id_evaluacion" id="id_evaluacion" value="<?= $evaluacion['id_evaluacion'] ?>" >
+                    <input type="hidden" name="status" id="status" value="cerrado">
+                </form>
                 <div class="row">
-                    <div class="ui grid">
-                        <div class="row">
-                            <div class="eight wide column">
-                                <h1 class="ui header">Carga de grados</h1>
-                            </div>
-                            <div class="eight wide right aligned column">
-                                <form class="ui form" method="post" action="/carga_grado/actualizar_status" id="frm_evaluacion">
-                                    <input type="hidden" name="id_evaluacion" id="id_evaluacion" value="<?= $evaluacion['id_evaluacion'] ?>" >
-                                    <input type="hidden" name="status" id="status" value="cerrado">
-                                    <?php
-                                        $mensaje = '¿Está seguro de finalizar la Carga de grados?<br>Ya no se podrá modificar' ;
-                                        $forma = '#frm_evaluacion';
-                                    ?>
-                                    <a class="field ui right floated orange button" href="#" onclick="confirm_action('<?=$mensaje?>','<?=$forma?>')" >Finalizar</a>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                    <h1 class="ui header">
+                        Carga de grados
+                        <?php
+                            $mensaje = '¿Está seguro de finalizar la Carga de grados?<br>Ya no se podrá modificar' ;
+                            $forma = '#frm_evaluacion';
+                        ?>
+                        <a class="ui right floated orange button" href="#" onclick="confirm_action('<?=$mensaje?>','<?=$forma?>')" >Finalizar</a>
+                    </h1>
                 </div>
 
                 <div class="ui hidden divider"></div>

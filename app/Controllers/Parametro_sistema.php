@@ -92,21 +92,30 @@ class Parametro_sistema extends BaseController
         }
     }
 
-    public function eliminar($id_parametro_sistema)
+    public function eliminar()
     {
         if ($this->session->logueado) {
 
-            // registro en bitacora
-            $parametro_sistema = $this->parametro_sistema_model->get_parametro_sistema($id_parametro_sistema);
-            $accion = "eliminó";
-            $entidad = 'parametro_sistema';
-            $valor = $parametro_sistema['id_parametro_sistema'] . " " . $parametro_sistema['nom_parametro_sistema'];
-            $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            $parametro_sistema = $this->request->getPost();
+            if ($parametro_sistema) {
+                $id_parametro_sistema = $parametro_sistema['id_parametro_sistema'];
+                $url_actual = $parametro_sistema['url_actual'];
 
-            // eliminado
-            $this->parametro_sistema_model->delete($id_parametro_sistema);
+                // registro en bitacora
+                $parametro_sistema = $this->parametro_sistema_model->get_parametro_sistema($id_parametro_sistema);
+                $accion = "eliminó";
+                $entidad = 'parametro_sistema';
+                $valor = $parametro_sistema['id_parametro_sistema'] . " " . $parametro_sistema['nom_parametro_sistema'];
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
 
-            return redirect()->to(site_url("parametro_sistema"));
+                // eliminado
+                $this->parametro_sistema_model->delete($id_parametro_sistema);
+
+                return redirect()->to($url_actual);
+
+            } else {
+                return redirect()->to(site_url("parametro_sistema"));
+            }
         } else {
             return redirect()->to(site_url("login"));
         }

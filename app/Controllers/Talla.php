@@ -15,11 +15,21 @@ class Talla extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $data['tallas'] = $this->talla_model->get_tallas_todas();
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'talla.can_edit',
+            );
+            if (has_permission_or($permisos_requeridos, $permisos_usuario)) {
 
-            return view('templates/header', $data)
-                .view('catalogos/talla/lista', $data)
-                .view('templates/footer');
+                $data['tallas'] = $this->talla_model->get_tallas_todas();
+
+                return view('templates/header', $data)
+                    .view('catalogos/talla/lista', $data)
+                    .view('templates/footer');
+
+            } else {
+                return redirect()->to(site_url());
+            }
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -31,11 +41,19 @@ class Talla extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $data['talla'] = $this->talla_model->get_talla($id_talla);
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'talla.can_edit',
+            );
+            if (has_permission_or($permisos_requeridos, $permisos_usuario)) {
+                $data['talla'] = $this->talla_model->get_talla($id_talla);
 
-            return view('templates/header', $data)
-                .view('catalogos/talla/detalle', $data)
-                .view('templates/footer');
+                return view('templates/header', $data)
+                    .view('catalogos/talla/detalle', $data)
+                    .view('templates/footer');
+            } else {
+                return redirect()->to(site_url());
+            }
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -94,21 +112,29 @@ class Talla extends BaseController
         }
     }
 
-    public function eliminar($id_talla)
+    public function eliminar()
     {
         if ($this->session->logueado) {
 
-            // registro en bitacora
-            $talla = $this->talla_model->get_talla($id_talla);
-            $accion = "eliminó";
-            $entidad = 'talla';
-            $valor = $talla['id_talla'] . " " . $talla['nom_talla'];
-            $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            $talla = $this->request->getPost();
+            if ($talla) {
+                $id_talla = $talla['id_talla'];
+                $url_actual = $talla['url_actual'];
 
-            // eliminado
-            $this->talla_model->delete($id_talla);
+                // registro en bitacora
+                $talla = $this->talla_model->get_talla($id_talla);
+                $accion = "eliminó";
+                $entidad = 'talla';
+                $valor = $talla['id_talla'] . " " . $talla['nom_talla'];
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
 
-            return redirect()->to(site_url("talla"));
+                // eliminado
+                $this->talla_model->delete($id_talla);
+                return redirect()->to($url_actual);
+
+            } else {
+                return redirect()->to(site_url("talla"));
+            }
         } else {
             return redirect()->to(site_url("login"));
         }

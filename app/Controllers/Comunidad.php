@@ -32,10 +32,13 @@ class Comunidad extends BaseController
             $data += $this->fn_sis->get_userdata();
 
             $data['comunidad'] = $this->comunidad_model->get_comunidad($id_comunidad);
-
-            return view('templates/header', $data)
-                .view('catalogos/comunidad/detalle', $data)
-                .view('templates/footer');
+            if ( ($data['userdata']['id_comunidad'] == $data['comunidad']['id_comunidad']) or $data['userdata']['id_rol'] == 'admin' ) {
+                return view('templates/header', $data)
+                    .view('catalogos/comunidad/detalle', $data)
+                    .view('templates/footer');
+            } else {
+                return redirect()->to(site_url());
+            }
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -100,21 +103,31 @@ class Comunidad extends BaseController
         }
     }
 
-    public function eliminar($id_comunidad)
+    public function eliminar()
     {
         if ($this->session->logueado) {
 
-            // registro en bitacora
-            $comunidad = $this->comunidad_model->get_comunidad($id_comunidad);
-            $accion = "eliminó";
-            $entidad = 'comunidad';
-            $valor = $comunidad['id_comunidad'] . " " . $comunidad['nom_comunidad'];
-            $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            $comunidad = $this->request->getPost();
+            if ($comunidad) {
+                $id_comunidad = $comunidad['id_comunidad'];
+                $url_actual = $comunidad['url_actual'];
 
-            // eliminado
-            $this->comunidad_model->delete($id_comunidad);
+                // registro en bitacora
+                $comunidad = $this->comunidad_model->get_comunidad($id_comunidad);
+                $accion = "eliminó";
+                $entidad = 'comunidad';
+                $valor = $comunidad['id_comunidad'] . " " . $comunidad['nom_comunidad'];
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
 
-            return redirect()->to(site_url("comunidad"));
+                // eliminado
+                $this->comunidad_model->delete($id_comunidad);
+
+                return redirect()->to($url_actual);
+
+            } else {
+                return redirect()->to(site_url("comunidad"));
+            }
+
         } else {
             return redirect()->to(site_url("login"));
         }

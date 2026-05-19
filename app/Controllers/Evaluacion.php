@@ -47,14 +47,13 @@ class Evaluacion extends BaseController
         }
     }
 
-    public function nuevo()
+    public function nuevo($id_evento)
     {
         if ($this->session->logueado) {
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $evento = $this->request->getPost();
-            $data['id_evento'] = $evento['id_evento'];
+            $data['id_evento'] = $id_evento;
             $data['evaluadores'] = $this->usuario_model->get_evaluadores();
 
             return view('templates/header', $data)
@@ -184,21 +183,29 @@ class Evaluacion extends BaseController
         }
     }
 
-    public function eliminar($id_evaluacion)
+    public function eliminar()
     {
         if ($this->session->logueado) {
 
-            // registro en bitacora
-            $evaluacion = $this->evaluacion_model->get_evaluacion($id_evaluacion);
-            $accion = "eliminó";
-            $entidad = 'evaluacion';
-            $valor = $id_evaluacion . " " . $evaluacion['id_evento'] . " " . $evaluacion['id_evaluador'];
-            $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            $evaluacion = $this->request->getPost();
+            if ($evaluacion) {
+                $id_evaluacion = $evaluacion['id_evaluacion'];
+                $url_actual = $evaluacion['url_actual'];
 
-            // eliminado
-            $this->evaluacion_model->delete($id_evaluacion);
+                // registro en bitacora
+                $evaluacion = $this->evaluacion_model->get_evaluacion($id_evaluacion);
+                $accion = "eliminó";
+                $entidad = 'evaluacion';
+                $valor = $id_evaluacion . " " . $evaluacion['id_evento'] . " " . $evaluacion['id_evaluador'];
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
 
-            return redirect()->to(site_url('evento/detalle/' . $evaluacion['id_evento']));
+                // eliminado
+                $this->evaluacion_model->delete($id_evaluacion);
+
+                return redirect()->to($url_actual);
+            } else {
+                return redirect()->to(site_url('evento/detalle/' . $evaluacion['id_evento']));
+            }
         } else {
             return redirect()->to(site_url("login"));
         }

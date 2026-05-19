@@ -108,21 +108,30 @@ class Grado extends BaseController
         }
     }
 
-    public function eliminar($id_grado)
+    public function eliminar()
     {
         if ($this->session->logueado) {
 
-            // registro en bitacora
-            $grado = $this->grado_model->get_grado($id_grado);
-            $accion = "eliminó";
-            $entidad = 'grado';
-            $valor = $grado['id_grado'] . " " . $grado['nom_grado'];
-            $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            $grado = $this->request->getPost();
+            if ($grado) {
+                $id_grado = $grado['id_grado'];
+                $url_actual = $grado['url_actual'];
 
-            // eliminado
-            $this->grado_model->delete($id_grado);
+                // registro en bitacora
+                $grado = $this->grado_model->get_grado($id_grado);
+                $accion = "eliminó";
+                $entidad = 'grado';
+                $valor = $grado['id_grado'] . " " . $grado['nom_grado'];
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
 
-            return redirect()->to(site_url("grado"));
+                // eliminado
+                $this->grado_model->delete($id_grado);
+
+                return redirect()->to($url_actual);
+
+            } else {
+                return redirect()->to(site_url("grado"));
+            }
         } else {
             return redirect()->to(site_url("login"));
         }

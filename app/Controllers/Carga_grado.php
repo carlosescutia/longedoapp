@@ -70,21 +70,30 @@ class Carga_grado extends BaseController
         }
     }
 
-    public function eliminar($id_evaluacion)
+    public function eliminar()
     {
         if ($this->session->logueado) {
 
-            // registro en bitacora
-            $evaluacion = $this->evaluacion_model->get_evaluacion($id_evaluacion);
-            $accion = "eliminó";
-            $entidad = 'evaluacion';
-            $valor = $id_evaluacion . " " . $evaluacion['id_evento'] . " " . $evaluacion['id_evaluador'];
-            $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            $carga_grado = $this->request->getPost();
+            if ($carga_grado) {
+                $id_evaluacion = $carga_grado['id_evaluacion'];
+                $url_actual = $carga_grado['url_actual'];
 
-            // eliminado
-            $this->evaluacion_model->delete($id_evaluacion);
+                // registro en bitacora
+                $evaluacion = $this->evaluacion_model->get_evaluacion($id_evaluacion);
+                $accion = "eliminó";
+                $entidad = 'evaluacion';
+                $valor = $id_evaluacion . " " . $evaluacion['id_evento'] . " " . $evaluacion['id_evaluador'];
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
 
-            return redirect()->to(site_url('carga_grado'));
+                // eliminado
+                $this->evaluacion_model->delete($id_evaluacion);
+
+                return redirect()->to($url_actual);
+
+            } else {
+                return redirect()->to(site_url('carga_grado'));
+            }
         } else {
             return redirect()->to(site_url("login"));
         }

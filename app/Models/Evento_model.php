@@ -39,6 +39,40 @@ class Evento_model extends Model
         return $query->getResultArray();
     }
 
+    public function get_eventos_actuales()
+    {
+        $sql = ""
+            ."select "
+            ."e.*, c.nom_comunidad, "
+            ."(select count(*) from evento_usuario etu where etu.id_evento = e.id_evento) as num_asistentes "
+            ."from "
+            ."evento e "
+            ."left join comunidad c on c.id_comunidad = e.id_comunidad "
+            ."where "
+            ."e.fech_fin +1 >= now() "
+            ."order by fech_ini "
+            ."";
+        $query = $this->db->query($sql);
+        return $query->getResultArray();
+    }
+
+    public function get_eventos_anteriores()
+    {
+        $sql = ""
+            ."select "
+            ."e.*, c.nom_comunidad, "
+            ."(select count(*) from evento_usuario etu where etu.id_evento = e.id_evento) as num_asistentes "
+            ."from "
+            ."evento e "
+            ."left join comunidad c on c.id_comunidad = e.id_comunidad "
+            ."where "
+            ."e.fech_fin +1 < now() "
+            ."order by fech_ini "
+            ."";
+        $query = $this->db->query($sql);
+        return $query->getResultArray();
+    }
+
     public function get_evento($id_evento)
     {
         $sql = ""

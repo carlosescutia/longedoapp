@@ -95,31 +95,40 @@ class Recurso extends BaseController
         }
     }
 
-    public function eliminar($id_recurso)
+    public function eliminar()
     {
         if ($this->session->logueado) {
 
-            // registro en bitacora
-            $recurso = $this->recurso_model->get_recurso($id_recurso);
-            $accion = "eliminó";
-            $entidad = 'recurso';
-            $valor = $recurso['id_recurso'] . " " . $recurso['nom_recurso'];
-            $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            $recurso = $this->request->getPost();
+            if ($recurso) {
+                $id_recurso = $recurso['id_recurso'];
+                $url_actual = $recurso['url_actual'];
 
-            // eliminar archivo adjunto
-            if ($recurso['archivo']) {
-                $nombre_archivo = $recurso['archivo'];
-                $up_dir = 'recs/';
-                $nombre_archivo_fs = $up_dir . $nombre_archivo;
-                if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ) {
-                    $status = unlink($nombre_archivo_fs) ? 'Se eliminó el archivo '.$nombre_archivo : 'Error al eliminar el archivo '.$nombre_archivo;
+                // registro en bitacora
+                $recurso = $this->recurso_model->get_recurso($id_recurso);
+                $accion = "eliminó";
+                $entidad = 'recurso';
+                $valor = $recurso['id_recurso'] . " " . $recurso['nom_recurso'];
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+
+                // eliminar archivo adjunto
+                if ($recurso['archivo']) {
+                    $nombre_archivo = $recurso['archivo'];
+                    $up_dir = 'recs/';
+                    $nombre_archivo_fs = $up_dir . $nombre_archivo;
+                    if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ) {
+                        $status = unlink($nombre_archivo_fs) ? 'Se eliminó el archivo '.$nombre_archivo : 'Error al eliminar el archivo '.$nombre_archivo;
+                    }
                 }
-            }
-            
-            // eliminado
-            $this->recurso_model->delete($id_recurso);
 
-            return redirect()->to(site_url("recurso"));
+                // eliminado
+                $this->recurso_model->delete($id_recurso);
+
+                return redirect()->to($url_actual);
+
+            } else {
+                return redirect()->to(site_url("recurso"));
+            }
         } else {
             return redirect()->to(site_url("login"));
         }

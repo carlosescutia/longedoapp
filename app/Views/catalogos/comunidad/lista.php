@@ -2,17 +2,11 @@
     <div class="ui stackable grid">
         <div class="row">
             <div class="twelve wide column">
-                <div class="ui grid">
-                    <div class="row">
-                        <div class="eight wide column">
-                            <h1 class="ui header">Comunidades</h1>
-                        </div>
-                        <div class="eight wide right aligned column">
-                            <form class="ui form" method="post" action="/comunidad/nuevo">
-                                <button class="ui primary button">Agregar</button>
-                            </form>
-                        </div>
-                    </div>
+                <div class="row">
+                    <h1 class="ui header">
+                        Comunidades
+                        <a class="ui right floated primary button" href="<?= site_url('comunidad/nuevo') ?>">Agregar</a>
+                    </h1>
                 </div>
 
                 <table class="ui very basic striped unstackable table">
@@ -48,11 +42,15 @@
                                 </div>
                             </td>
                             <td>
-                                <?php
-                                    $item_eliminar = 'Comunidad: ' . $comunidades_item['nom_comunidad'] ;
-                                    $action = site_url("comunidad/eliminar/") . $comunidades_item['id_comunidad'];
-                                ?>
-                                <a href="#" onclick="confirm_delete('<?=$item_eliminar?>','<?=$action?>')" ><span class="ui red text"><i class="icon times circle outline"></span></i></a>
+                                <form class="ui form" method="post" action="/comunidad/eliminar" id="frm_elim_comunidad<?=$comunidades_item['id_comunidad']?>">
+                                    <input type="hidden" name="id_comunidad" id="id_comunidad" value="<?= $comunidades_item['id_comunidad'] ?>" >
+                                    <input type="hidden" name="url_actual" id="url_actual" value="<?= site_url('comunidad') ?>">
+                                    <?php
+                                        $mensaje = 'Se eliminará la Comunidad: <strong>' . $comunidades_item['nom_comunidad'] . '</strong>.<br>¿Está seguro?' ;
+                                        $forma = '#frm_elim_comunidad' . $comunidades_item['id_comunidad'] ;
+                                    ?>
+                                    <a href="#" onclick="confirm_action('<?=$mensaje?>','<?=$forma?>')" ><span class="ui red text"><i class="icon times circle outline"></span></i></a>
+                                </form>
                             </td>
                         </tr>
                         <?php endforeach ?>

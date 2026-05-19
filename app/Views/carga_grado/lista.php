@@ -2,25 +2,15 @@
     <div class="ui stackable grid">
         <div class="row">
             <div class="twelve wide column">
-                <div class="ui grid">
-                    <div class="row">
-                        <div class="eight wide column">
-                            <h1 class="ui header">Carga de grados</h1>
-                        </div>
-                        <div class="eight wide right aligned column">
-                            <form class="ui form" method="post" action="/carga_grado/nuevo">
-                                <button class="ui primary button">Agregar</button>
-                            </form>
-                        </div>
-                    </div>
+                <div class="row">
+                    <h1 class="ui header">
+                        Carga de grados
+                        <a class="ui right floated primary button" href="<?= site_url('carga_grado/nuevo') ?>">Agregar</a>
+                    </h1>
                 </div>
-            </div>
-        </div>
 
-        <div class="ui hidden divider"></div>
+                <div class="ui hidden divider"></div>
 
-        <div class="row">
-            <div class="twelve wide column">
                 <table class="ui celled unstackable big table">
                     <thead>
                         <tr>
@@ -66,13 +56,15 @@
                                     <?php endif ?>
                                 </td>
                                 <td class="center aligned">
-                                    <?php
-                                        $item_eliminar = '¡Se eliminará la carga de grados!<br>¿Está seguro?' ;
-                                        $action = base_url("carga_grado/eliminar/") . $cargas_grado_item['id_evaluacion'];
-                                    ?>
-                                    <a href="#" onclick="confirm_delete('<?=$item_eliminar?>','<?=$action?>')" >
-                                        <span class="ui red text"><i class="icon times circle outline"></span></i>
-                                    </a>
+                                    <form class="ui form" method="post" action="/carga_grado/eliminar" id="frm_elim_carga_grado<?=$cargas_grado_item['id_evaluacion']?>">
+                                        <input type="hidden" name="id_evaluacion" id="id_evaluacion" value="<?= $cargas_grado_item['id_evaluacion'] ?>" >
+                                        <input type="hidden" name="url_actual" id="url_actual" value="<?= site_url('carga_grado') ?>">
+                                        <?php
+                                            $mensaje = '¡Se eliminará la carga de grados!<br>¿Está seguro?' ;
+                                            $forma = '#frm_elim_carga_grado' . $cargas_grado_item['id_evaluacion'] ;
+                                        ?>
+                                        <a href="#" onclick="confirm_action('<?=$mensaje?>','<?=$forma?>')" ><span class="ui red text"><i class="icon times circle outline"></span></i></a>
+                                    </form>
                                 </td>
                             </tr>
                         <?php endforeach ?>

@@ -2,17 +2,11 @@
     <div class="ui stackable grid">
         <div class="row">
             <div class="fifteen wide column">
-                <div class="ui grid">
-                    <div class="row">
-                        <div class="eight wide column">
-                            <h1 class="ui header">Recursos</h1>
-                        </div>
-                        <div class="eight wide right aligned column">
-                            <form class="ui form" method="post" action="/recurso/nuevo">
-                                <button class="ui primary button">Agregar</button>
-                            </form>
-                        </div>
-                    </div>
+                <div class="row">
+                    <h1 class="ui header">
+                        Recursos
+                        <a class="ui right floated primary button" href="<?= site_url('recurso/nuevo') ?>">Agregar</a>
+                    </h1>
                 </div>
 
                 <table class="ui very basic striped unstackable table">
@@ -56,11 +50,15 @@
                                 </div>
                             </td>
                             <td>
-                                <?php
-                                    $item_eliminar = 'recurso: ' . $recursos_item['nom_recurso'] ;
-                                    $action = site_url("recurso/eliminar/") . $recursos_item['id_recurso'];
-                                ?>
-                                <a href="#" onclick="confirm_delete('<?=$item_eliminar?>','<?=$action?>')" ><span class="ui red text"><i class="icon times circle outline"></span></i></a>
+                                <form class="ui form" method="post" action="/recurso/eliminar" id="frm_elim_recurso<?=$recursos_item['id_recurso']?>">
+                                    <input type="hidden" name="id_recurso" id="id_recurso" value="<?= $recursos_item['id_recurso'] ?>" >
+                                    <input type="hidden" name="url_actual" id="url_actual" value="<?= site_url('recurso') ?>">
+                                    <?php
+                                        $mensaje = 'Se eliminará el Recurso: <strong>' . $recursos_item['nom_recurso'] . '</strong>.<br>¿Está seguro?' ;
+                                        $forma = '#frm_elim_recurso' . $recursos_item['id_recurso'] ;
+                                    ?>
+                                    <a href="#" onclick="confirm_action('<?=$mensaje?>','<?=$forma?>')" ><span class="ui red text"><i class="icon times circle outline"></span></i></a>
+                                </form>
                             </td>
                         </tr>
                         <?php endforeach ?>

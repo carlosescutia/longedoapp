@@ -24,13 +24,14 @@ class Usuario_model extends Model
     {
         $sql = ""
             ."select "
-            ."u.*, c.nom_comunidad, p.*, "
-            .'g.nom_grado, g.color '
+            ."u.id_usuario, u.id_rol, u.nom_usuario, u.nom_login, u.activo, u.evaluador, u.id_comunidad, u.token_cambio_pwd, c.nom_comunidad,  "
+            ."p.id_perfil, p.nom_capoeira, p.fecha_ingreso, p.sexo, p.id_talla, p.edad, p.fech_acept_priv, p.foto, p.sexo_diverso, p.whatsapp_usuario, p.correo_usuario, p.contacto_emergencia, p.whatsapp_emergencia, p.contacto_responsable, p.whatsapp_responsable, "
+            ."g.nom_grado, g.color  "
             ."from "
             ."usuario u "
             ."left join comunidad c on c.id_comunidad = u.id_comunidad "
             ."left join perfil p on p.id_usuario = u.id_usuario "
-            .'left join grado g on g.id_grado = (select * from grado_actual(u.id_usuario, p.edad)) '
+            ."left join grado g on g.id_grado = (select * from grado_actual(u.id_usuario, p.edad)) "
             ."";
 
         $parametros = [];

@@ -2,17 +2,11 @@
     <div class="ui stackable grid">
         <div class="row">
             <div class="twelve wide column">
-                <div class="ui grid">
-                    <div class="row">
-                        <div class="eight wide column">
-                            <h1 class="ui header">Tallas</h1>
-                        </div>
-                        <div class="eight wide right aligned column">
-                            <form class="ui form" method="post" action="/talla/nuevo">
-                                <button class="ui primary button">Agregar</button>
-                            </form>
-                        </div>
-                    </div>
+                <div class="row">
+                    <h1 class="ui header">
+                        Tallas
+                        <a class="ui right floated primary button" href="<?= site_url('talla/nuevo') ?>">Agregar</a>
+                    </h1>
                 </div>
 
                 <table class="ui very basic striped unstackable table">
@@ -56,11 +50,15 @@
                                 </div>
                             </td>
                             <td>
-                                <?php
-                                    $item_eliminar = 'talla: ' . $tallas_item['nom_talla'] . ' ' . $tallas_item['edad'] ;
-                                    $action = site_url("talla/eliminar/") . $tallas_item['id_talla'];
-                                ?>
-                                <a href="#" onclick="confirm_delete('<?=$item_eliminar?>','<?=$action?>')" ><span class="ui red text"><i class="icon times circle outline"></span></i></a>
+                                <form class="ui form" method="post" action="/talla/eliminar" id="frm_elim_talla<?=$tallas_item['id_talla']?>">
+                                    <input type="hidden" name="id_talla" id="id_talla" value="<?= $tallas_item['id_talla'] ?>" >
+                                    <input type="hidden" name="url_actual" id="url_actual" value="<?= site_url('talla') ?>">
+                                    <?php
+                                        $mensaje = 'Se eliminará la talla <strong>' . $tallas_item['nom_talla'] . ' ' . $tallas_item['edad'] . '</strong>.<br>¿Está seguro?' ;
+                                        $forma = '#frm_elim_talla' . $tallas_item['id_talla'] ;
+                                    ?>
+                                    <a href="#" onclick="confirm_action('<?=$mensaje?>','<?=$forma?>')" ><span class="ui red text"><i class="icon times circle outline"></span></i></a>
+                                </form>
                             </td>
                         </tr>
                         <?php endforeach ?>

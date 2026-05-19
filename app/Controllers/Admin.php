@@ -30,7 +30,8 @@ class Admin extends BaseController
             $data['perfil'] = $perfil;
             $comunidad = $this->comunidad_model->get_comunidad($data['userdata']['id_comunidad']);
             $data['comunidad'] = $comunidad;
-            $data['eventos'] = $this->evento_model->get_eventos();
+            $data['eventos_actuales'] = $this->evento_model->get_eventos_actuales();
+            $data['eventos_anteriores'] = $this->evento_model->get_eventos_anteriores();
             $data['asistencias'] = $this->evento_usuario_model->get_asistencias_usuario($id_usuario);
             $data['evaluaciones'] = $this->evaluacion_usuario_model->get_evaluaciones_usuario($id_usuario);
             if ($comunidad) {

@@ -1,10 +1,16 @@
 <div class="ui segment">
-    <h4 class="ui header">Administración de la comunidad</h4>
+    <h3 class="ui header">
+        <?= $comunidad['nom_comunidad'] ?>
+        <div class="sub header">Gestión de la comunidad</div>
+    </h3>
     <div class="ui hidden divider"></div>
     <div class="ui list">
         <?php if ($error): ?>
             <p><span class="ui red text"><?= $error ?></span></p>
         <?php endif ?>
+
+        <div class="item"><a href="<?= site_url('comunidad/detalle/'. $comunidad['id_comunidad'])?>">Editar comunidad</a></div>
+        <div class="item"><a href="<?= site_url('reportes/directorio')?>">Directorio de alumnos</a></div>
 
         <div class="ui segment">
             <h5 class="ui header">Registro de alumnos</h5>
@@ -48,8 +54,6 @@
             <div class="item"><a href="<?= site_url('reportes/registro_comunidad')?>">Impresión de código de registro</a></div>
             <p></p>
             <div class="item"><a href="<?= site_url('usuario')?>">Activar alumnos</a></div>
-            <p></p>
-            <div class="item"><a href="<?= site_url('reportes/directorio')?>">Directorio</a></div>
         </div>
     </div>
 </div>
