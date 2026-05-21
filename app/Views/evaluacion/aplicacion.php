@@ -24,6 +24,16 @@
                     </div>
                 </div>
 
+                <?php if ($error): ?>
+                    <div class="ui negative mini message transition">
+                        <i class="close icon"></i>
+                        <div class="header">
+                            Error
+                        </div>
+                        <p><?= $error?></p>
+                    </div>
+                <?php endif ?>
+
                 <div class="ui hidden divider"></div>
 
                 <div class="row">
@@ -266,4 +276,13 @@
         $('#foto').attr('src', foto);
         $('.ui.modal').modal('show');
     });
+
+    $('.message .close')
+        .on('click', function() {
+            $(this)
+                .closest('.message')
+                .transition('fade')
+            ;
+        })
+    ;
 </script>

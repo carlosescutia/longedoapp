@@ -11,52 +11,64 @@ class Archivo extends BaseController
         $this->perfil_model = model('Perfil_model');
         $this->evento_model = model('Evento_model');
         $this->recurso_model = model('Recurso_model');
+        $this->comunidad_model = model('Comunidad_model');
     }
 
     public function subir()
     {
         if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-            $archivo = $this->request->getPost();
-            if ($archivo) {
-                $up_dir = $archivo['up_dir'];
-                $nombre_archivo = $archivo['nombre_archivo'];
-                $tipo_archivo = $archivo['tipo_archivo'];
-                $url_actual = $archivo['url_actual'];
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'archivo.can_upload',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
 
-                $validationRule = [
-                    'userfile' => [
-                        'label' => 'Archivo a subir',
-                        'rules' => [
-                            'uploaded[userfile]',
-                            'ext_in[userfile,' . $tipo_archivo . ']',
+                $archivo = $this->request->getPost();
+                if ($archivo) {
+                    $up_dir = $archivo['up_dir'];
+                    $nombre_archivo = $archivo['nombre_archivo'];
+                    $tipo_archivo = $archivo['tipo_archivo'];
+                    $url_actual = $archivo['url_actual'];
+
+                    $validationRule = [
+                        'userfile' => [
+                            'label' => 'Archivo a subir',
+                            'rules' => [
+                                'uploaded[userfile]',
+                                'ext_in[userfile,' . $tipo_archivo . ']',
+                            ],
                         ],
-                    ],
-                ];
-                if (! $this->validateData([], $validationRule)) {
-                    $this->session->setFlashdata('error', $this->validator->getErrors()['userfile']);
+                    ];
+                    if (! $this->validateData([], $validationRule)) {
+                        $this->session->setFlashdata('error', $this->validator->getErrors()['userfile']);
+
+                        return redirect()->to($url_actual);
+                    }
+
+                    $img = $this->request->getFile('userfile');
+
+
+                    if (! $img->hasMoved()) {
+                        // move(destination_path, filename, overwrite)
+                        $img->move(ROOTPATH.'public/'.$up_dir, $nombre_archivo, true);
+
+                        // registro en bitacora
+                        $accion = 'agregó';
+                        $entidad = 'archivo';
+                        $valor = $nombre_archivo;
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+
+                        return redirect()->to($url_actual);
+                    }
+                    $this->session->setFlashdata('error', 'El archivo se ha movido');
 
                     return redirect()->to($url_actual);
                 }
-
-                $img = $this->request->getFile('userfile');
-
-
-                if (! $img->hasMoved()) {
-                    // move(destination_path, filename, overwrite)
-                    $img->move(ROOTPATH.'public/'.$up_dir, $nombre_archivo, true);
-
-                    // registro en bitacora
-                    $accion = 'agregó';
-                    $entidad = 'archivo';
-                    $valor = $nombre_archivo;
-                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
-
-                    return redirect()->to($url_actual);
-                }
-                $this->session->setFlashdata('error', 'El archivo se ha movido');
-
-                return redirect()->to($url_actual);
+            } else {
+                return redirect()->to(site_url());
             }
         } else {
             return redirect()->to(site_url());
@@ -66,72 +78,168 @@ class Archivo extends BaseController
     public function subir_perfil()
     {
         if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-            $archivo = $this->request->getPost();
-            if ($archivo) {
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'perfil.can_edit',
+                'archivo.can_upload',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
 
-                $up_dir = $archivo['up_dir'];
-                $url_actual = $archivo['url_actual'];
-                $id_perfil = $archivo['id_perfil'];
-                $archivo_actual = $archivo['archivo_actual'];
-                $res_x = $archivo['res_x'];
-                $res_y = $archivo['res_y'];
+                $archivo = $this->request->getPost();
+                if ($archivo) {
 
-                $validationRule = [
-                    'userfile' => [
-                        'label' => 'Imagen a subir',
-                        'rules' => [
-                            'uploaded[userfile]',
-                            'is_image[userfile]',
-                            'mime_in[userfile,image/jpg,image/jpeg,image/png,image/webp]',
+                    $up_dir = $archivo['up_dir'];
+                    $url_actual = $archivo['url_actual'];
+                    $id_perfil = $archivo['id_perfil'];
+                    $archivo_actual = $archivo['archivo_actual'];
+                    $res_x = $archivo['res_x'];
+                    $res_y = $archivo['res_y'];
+
+                    $validationRule = [
+                        'userfile' => [
+                            'label' => 'Imagen a subir',
+                            'rules' => [
+                                'uploaded[userfile]',
+                                'is_image[userfile]',
+                                'mime_in[userfile,image/jpg,image/jpeg,image/png,image/webp]',
+                            ],
                         ],
-                    ],
-                ];
-                if (! $this->validateData([], $validationRule)) {
-                    $this->session->setFlashdata('error', $this->validator->getErrors()['userfile']);
+                    ];
+                    if (! $this->validateData([], $validationRule)) {
+                        $this->session->setFlashdata('error', $this->validator->getErrors()['userfile']);
 
-                    return redirect()->to($url_actual);
-                }
+                        return redirect()->to($url_actual);
+                    }
 
-                $img = $this->request->getFile('userfile');
+                    $img = $this->request->getFile('userfile');
 
-                if (! $img->hasMoved()) {
-                    // move(destination_path, filename, overwrite)
-                    $extension = $img->guessExtension();
-                    $nombre_archivo = $this->fn_sis->create_uuid() . '.' . $extension;
-                    $img->move(ROOTPATH.'public/'.$up_dir, $nombre_archivo, true);
+                    if (! $img->hasMoved()) {
+                        // move(destination_path, filename, overwrite)
+                        $extension = $img->guessExtension();
+                        $nombre_archivo = $this->fn_sis->create_uuid() . '.' . $extension;
+                        $img->move(ROOTPATH.'public/'.$up_dir, $nombre_archivo, true);
 
-                    // cambiar tamaño de imagen
-                    $image = service('image','imagick');
-                    $image->withFile(ROOTPATH.'public/'.$up_dir.$nombre_archivo)
+                        // cambiar tamaño de imagen
+                        $image = service('image','imagick');
+                        $image->withFile(ROOTPATH.'public/'.$up_dir.$nombre_archivo)
                             ->fit($res_x,$res_y, 'center')
                             ->save(ROOTPATH.'public/'.$up_dir.$nombre_archivo);
 
-                    // actualizar foto en perfil
-                    $data = array(
-                        'id_perfil' => $id_perfil,
-                        'foto' => $nombre_archivo
-                    );
-                    // guardar
-                    $this->perfil_model->save($data);
+                        // actualizar foto en perfil
+                        $data = array(
+                            'id_perfil' => $id_perfil,
+                            'foto' => $nombre_archivo
+                        );
+                        // guardar
+                        $this->perfil_model->save($data);
 
-                    // eliminar archivo de foto anterior
-                    $archivo_anterior = $up_dir . $archivo_actual;
-                    if ( file_exists($archivo_anterior) and $archivo_anterior !== $up_dir ) {
-                        $status = unlink($archivo_anterior) ? 'Se eliminó el archivo '.$archivo_anterior : 'Error al eliminar el archivo '.$archivo_anterior;
+                        // eliminar archivo de foto anterior
+                        $archivo_anterior = $up_dir . $archivo_actual;
+                        if ( file_exists($archivo_anterior) and $archivo_anterior !== $up_dir ) {
+                            $status = unlink($archivo_anterior) ? 'Se eliminó el archivo '.$archivo_anterior : 'Error al eliminar el archivo '.$archivo_anterior;
+                        }
+
+                        // registro en bitacora
+                        $accion = 'agregó';
+                        $entidad = 'archivo';
+                        $valor = $nombre_archivo;
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+
+                        return redirect()->to($url_actual);
                     }
-
-                    // registro en bitacora
-                    $accion = 'agregó';
-                    $entidad = 'archivo';
-                    $valor = $nombre_archivo;
-                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    $this->session->setFlashdata('error', 'El archivo se ha movido');
 
                     return redirect()->to($url_actual);
                 }
-                $this->session->setFlashdata('error', 'El archivo se ha movido');
+            } else {
+                return redirect()->to(site_url());
+            }
+        } else {
+            return redirect()->to(site_url());
+        }
+    }
 
-                return redirect()->to($url_actual);
+    public function subir_comunidad()
+    {
+        if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
+
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'admin_comunidad.can_edit',
+                'archivo.can_upload',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+
+                $archivo = $this->request->getPost();
+                if ($archivo) {
+
+                    $up_dir = $archivo['up_dir'];
+                    $url_actual = $archivo['url_actual'];
+                    $id_comunidad = $archivo['id_comunidad'];
+                    $archivo_actual = $archivo['archivo_actual'];
+
+                    $validationRule = [
+                        'userfile' => [
+                            'label' => 'Imagen a subir',
+                            'rules' => [
+                                'uploaded[userfile]',
+                                'is_image[userfile]',
+                                'mime_in[userfile,image/jpg,image/jpeg,image/png,image/webp]',
+                            ],
+                        ],
+                    ];
+                    if (! $this->validateData([], $validationRule)) {
+                        $this->session->setFlashdata('error', $this->validator->getErrors()['userfile']);
+
+                        return redirect()->to($url_actual);
+                    }
+
+                    $img = $this->request->getFile('userfile');
+
+                    if (! $img->hasMoved()) {
+                        // move(destination_path, filename, overwrite)
+                        $extension = $img->guessExtension();
+                        $nombre_archivo = $this->fn_sis->create_uuid() . '.' . $extension;
+                        $img->move(ROOTPATH.'public/'.$up_dir, $nombre_archivo, true);
+
+                        // cambiar tamaño de imagen
+                        $image = service('image','imagick');
+                        $image->withFile(ROOTPATH.'public/'.$up_dir.$nombre_archivo)
+                            ->save(ROOTPATH.'public/'.$up_dir.$nombre_archivo);
+
+                        // actualizar logo en comunidad
+                        $data = array(
+                            'id_comunidad' => $id_comunidad,
+                            'logo' => $nombre_archivo
+                        );
+                        // guardar
+                        $this->comunidad_model->save($data);
+
+                        // eliminar archivo de logo anterior
+                        $archivo_anterior = $up_dir . $archivo_actual;
+                        if ( file_exists($archivo_anterior) and $archivo_anterior !== $up_dir ) {
+                            $status = unlink($archivo_anterior) ? 'Se eliminó el archivo '.$archivo_anterior : 'Error al eliminar el archivo '.$archivo_anterior;
+                        }
+
+                        // registro en bitacora
+                        $accion = 'agregó';
+                        $entidad = 'archivo';
+                        $valor = $nombre_archivo;
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+
+                        return redirect()->to($url_actual);
+                    }
+                    $this->session->setFlashdata('error', 'El archivo se ha movido');
+
+                    return redirect()->to($url_actual);
+                }
+            } else {
+                return redirect()->to(site_url());
             }
         } else {
             return redirect()->to(site_url());
@@ -141,72 +249,84 @@ class Archivo extends BaseController
     public function subir_evento()
     {
         if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-            $archivo = $this->request->getPost();
-            if ($archivo) {
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evento.can_edit',
+                'archivo.can_upload',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
 
-                $up_dir = $archivo['up_dir'];
-                $url_actual = $archivo['url_actual'];
-                $id_evento = $archivo['id_evento'];
-                $archivo_actual = $archivo['archivo_actual'];
-                $res_x = $archivo['res_x'];
-                $res_y = $archivo['res_y'];
+                $archivo = $this->request->getPost();
+                if ($archivo) {
 
-                $validationRule = [
-                    'userfile' => [
-                        'label' => 'Imagen a subir',
-                        'rules' => [
-                            'uploaded[userfile]',
-                            'is_image[userfile]',
-                            'mime_in[userfile,image/jpg,image/jpeg,image/png,image/webp]',
+                    $up_dir = $archivo['up_dir'];
+                    $url_actual = $archivo['url_actual'];
+                    $id_evento = $archivo['id_evento'];
+                    $archivo_actual = $archivo['archivo_actual'];
+                    $res_x = $archivo['res_x'];
+                    $res_y = $archivo['res_y'];
+
+                    $validationRule = [
+                        'userfile' => [
+                            'label' => 'Imagen a subir',
+                            'rules' => [
+                                'uploaded[userfile]',
+                                'is_image[userfile]',
+                                'mime_in[userfile,image/jpg,image/jpeg,image/png,image/webp]',
+                            ],
                         ],
-                    ],
-                ];
-                if (! $this->validateData([], $validationRule)) {
-                    $this->session->setFlashdata('error', $this->validator->getErrors()['userfile']);
+                    ];
+                    if (! $this->validateData([], $validationRule)) {
+                        $this->session->setFlashdata('error', $this->validator->getErrors()['userfile']);
 
-                    return redirect()->to($url_actual);
-                }
+                        return redirect()->to($url_actual);
+                    }
 
-                $img = $this->request->getFile('userfile');
+                    $img = $this->request->getFile('userfile');
 
-                if (! $img->hasMoved()) {
-                    // move(destination_path, filename, overwrite)
-                    $extension = $img->guessExtension();
-                    $nombre_archivo = $this->fn_sis->create_uuid() . '.' . $extension;
-                    $img->move(ROOTPATH.'public/'.$up_dir, $nombre_archivo, true);
+                    if (! $img->hasMoved()) {
+                        // move(destination_path, filename, overwrite)
+                        $extension = $img->guessExtension();
+                        $nombre_archivo = $this->fn_sis->create_uuid() . '.' . $extension;
+                        $img->move(ROOTPATH.'public/'.$up_dir, $nombre_archivo, true);
 
-                    // cambiar tamaño de imagen
-                    $image = service('image','imagick');
-                    $image->withFile(ROOTPATH.'public/'.$up_dir.$nombre_archivo)
+                        // cambiar tamaño de imagen
+                        $image = service('image','imagick');
+                        $image->withFile(ROOTPATH.'public/'.$up_dir.$nombre_archivo)
                             ->fit($res_x,$res_y, 'center')
                             ->save(ROOTPATH.'public/'.$up_dir.$nombre_archivo);
 
-                    // actualizar cartel en evento
-                    $data = array(
-                        'id_evento' => $id_evento,
-                        'cartel' => $nombre_archivo
-                    );
-                    // guardar
-                    $this->evento_model->save($data);
+                        // actualizar cartel en evento
+                        $data = array(
+                            'id_evento' => $id_evento,
+                            'cartel' => $nombre_archivo
+                        );
+                        // guardar
+                        $this->evento_model->save($data);
 
-                    // eliminar archivo de cartel anterior
-                    $archivo_anterior = $up_dir . $archivo_actual;
-                    if ( file_exists($archivo_anterior) and $archivo_anterior !== $up_dir ) {
-                        $status = unlink($archivo_anterior) ? 'Se eliminó el archivo '.$archivo_anterior : 'Error al eliminar el archivo '.$archivo_anterior;
+                        // eliminar archivo de cartel anterior
+                        $archivo_anterior = $up_dir . $archivo_actual;
+                        if ( file_exists($archivo_anterior) and $archivo_anterior !== $up_dir ) {
+                            $status = unlink($archivo_anterior) ? 'Se eliminó el archivo '.$archivo_anterior : 'Error al eliminar el archivo '.$archivo_anterior;
+                        }
+
+                        // registro en bitacora
+                        $accion = 'agregó';
+                        $entidad = 'archivo';
+                        $valor = $nombre_archivo;
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+
+                        return redirect()->to($url_actual);
                     }
-
-                    // registro en bitacora
-                    $accion = 'agregó';
-                    $entidad = 'archivo';
-                    $valor = $nombre_archivo;
-                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    $this->session->setFlashdata('error', 'El archivo se ha movido');
 
                     return redirect()->to($url_actual);
                 }
-                $this->session->setFlashdata('error', 'El archivo se ha movido');
-
-                return redirect()->to($url_actual);
+            } else {
+                return redirect()->to(site_url());
             }
         } else {
             return redirect()->to(site_url());
@@ -216,65 +336,77 @@ class Archivo extends BaseController
     public function subir_recurso()
     {
         if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-            $archivo = $this->request->getPost();
-            if ($archivo) {
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'recurso.can_edit',
+                'archivo.can_upload',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
 
-                $up_dir = $archivo['up_dir'];
-                $url_actual = $archivo['url_actual'];
-                $id_recurso = $archivo['id_recurso'];
-                $archivo_actual = $archivo['archivo_actual'];
+                $archivo = $this->request->getPost();
+                if ($archivo) {
 
-                $validationRule = [
-                    'userfile' => [
-                        'label' => 'Archivo a subir',
-                        'rules' => [
-                            'uploaded[userfile]',
-                            'max_size[userfile, 30720]',
-                            'mime_in[userfile,application/pdf,application/zip,video/mpeg,video/mp4,image/jpg,image/jpeg,image/png,image/webp]',
+                    $up_dir = $archivo['up_dir'];
+                    $url_actual = $archivo['url_actual'];
+                    $id_recurso = $archivo['id_recurso'];
+                    $archivo_actual = $archivo['archivo_actual'];
+
+                    $validationRule = [
+                        'userfile' => [
+                            'label' => 'Archivo a subir',
+                            'rules' => [
+                                'uploaded[userfile]',
+                                'max_size[userfile, 30720]',
+                                'mime_in[userfile,application/pdf,application/zip,video/mpeg,video/mp4,image/jpg,image/jpeg,image/png,image/webp]',
+                            ],
                         ],
-                    ],
-                ];
-                if (! $this->validateData([], $validationRule)) {
-                    $this->session->setFlashdata('error', $this->validator->getErrors()['userfile']);
+                    ];
+                    if (! $this->validateData([], $validationRule)) {
+                        $this->session->setFlashdata('error', $this->validator->getErrors()['userfile']);
 
-                    return redirect()->to($url_actual);
-                }
-
-                $rec = $this->request->getFile('userfile');
-
-                if (! $rec->hasMoved()) {
-                    // move(destination_path, filename, overwrite)
-                    $extension = $rec->guessExtension();
-                    $nombre_archivo = $this->fn_sis->create_uuid() . '.' . $extension;
-                    $rec->move(ROOTPATH.'public/'.$up_dir, $nombre_archivo, true);
-
-                    // actualizar archivo y url en recurso
-                    $data = array(
-                        'id_recurso' => $id_recurso,
-                        'url' => base_url($up_dir . $nombre_archivo),
-                        'archivo' => $nombre_archivo,
-                    );
-                    // guardar
-                    $this->recurso_model->save($data);
-
-                    // eliminar archivo anterior
-                    $archivo_anterior = $up_dir . $archivo_actual;
-                    if ( file_exists($archivo_anterior) and $archivo_anterior !== $up_dir ) {
-                        $status = unlink($archivo_anterior) ? 'Se eliminó el archivo '.$archivo_anterior : 'Error al eliminar el archivo '.$archivo_anterior;
+                        return redirect()->to($url_actual);
                     }
 
-                    // registro en bitacora
-                    $accion = 'agregó';
-                    $entidad = 'archivo';
-                    $valor = $nombre_archivo;
-                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    $rec = $this->request->getFile('userfile');
+
+                    if (! $rec->hasMoved()) {
+                        // move(destination_path, filename, overwrite)
+                        $extension = $rec->guessExtension();
+                        $nombre_archivo = $this->fn_sis->create_uuid() . '.' . $extension;
+                        $rec->move(ROOTPATH.'public/'.$up_dir, $nombre_archivo, true);
+
+                        // actualizar archivo y url en recurso
+                        $data = array(
+                            'id_recurso' => $id_recurso,
+                            'url' => base_url($up_dir . $nombre_archivo),
+                            'archivo' => $nombre_archivo,
+                        );
+                        // guardar
+                        $this->recurso_model->save($data);
+
+                        // eliminar archivo anterior
+                        $archivo_anterior = $up_dir . $archivo_actual;
+                        if ( file_exists($archivo_anterior) and $archivo_anterior !== $up_dir ) {
+                            $status = unlink($archivo_anterior) ? 'Se eliminó el archivo '.$archivo_anterior : 'Error al eliminar el archivo '.$archivo_anterior;
+                        }
+
+                        // registro en bitacora
+                        $accion = 'agregó';
+                        $entidad = 'archivo';
+                        $valor = $nombre_archivo;
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+
+                        return redirect()->to($url_actual);
+                    }
+                    $this->session->setFlashdata('error', 'El archivo se ha movido');
 
                     return redirect()->to($url_actual);
                 }
-                $this->session->setFlashdata('error', 'El archivo se ha movido');
-
-                return redirect()->to($url_actual);
+            } else {
+                return redirect()->to(site_url());
             }
         } else {
             return redirect()->to(site_url());
@@ -284,48 +416,60 @@ class Archivo extends BaseController
     public function eliminar_recurso()
     {
         if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
+
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'recurso.can_edit',
+                'archivo.can_delete',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
 
 
-            $recurso = $this->request->getPost();
-            if ($recurso) {
-                $id_recurso = $recurso['id_recurso'];
-                $up_dir = $recurso['up_dir'];
-                $nombre_archivo = $recurso['nombre_archivo'];
-                $url_actual = $recurso['url_actual'];
-                $nombre_archivo_fs = $up_dir . $nombre_archivo;
-                $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
+                $recurso = $this->request->getPost();
+                if ($recurso) {
+                    $id_recurso = $recurso['id_recurso'];
+                    $up_dir = $recurso['up_dir'];
+                    $nombre_archivo = $recurso['nombre_archivo'];
+                    $url_actual = $recurso['url_actual'];
+                    $nombre_archivo_fs = $up_dir . $nombre_archivo;
+                    $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
 
-                // Eliminar archivo
-                if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ) {
-                    $status = unlink($nombre_archivo_fs) ? 'Se eliminó el archivo '.$nombre_archivo_fs : 'Error al eliminar el archivo '.$nombre_archivo_fs;
+                    // Eliminar archivo
+                    if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ) {
+                        $status = unlink($nombre_archivo_fs) ? 'Se eliminó el archivo '.$nombre_archivo_fs : 'Error al eliminar el archivo '.$nombre_archivo_fs;
+
+                        // registro en bitacora
+                        $accion = 'eliminó';
+                        $entidad = 'archivo';
+                        $valor = $nombre_archivo;
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    } else {
+                        $status = 'Archivo no existe';
+                        $this->session->setFlashdata('error', $status);
+                    }
+
+                    // actualizar archivo y url en recurso
+                    $data = array(
+                        'id_recurso' => $id_recurso,
+                        'url' => 'actualice la url',
+                        'archivo' => null,
+                    );
+                    // guardar
+                    $this->recurso_model->save($data);
 
                     // registro en bitacora
-                    $accion = 'eliminó';
-                    $entidad = 'archivo';
-                    $valor = $nombre_archivo;
+                    $accion = "eliminó";
+                    $entidad = 'recurso';
+                    $valor = $recurso['id_recurso'];
                     $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
-                } else {
-                    $status = 'Archivo no existe';
-                    $this->session->setFlashdata('error', $status);
                 }
 
-                // actualizar archivo y url en recurso
-                $data = array(
-                    'id_recurso' => $id_recurso,
-                    'url' => 'actualice la url',
-                    'archivo' => null,
-                );
-                // guardar
-                $this->recurso_model->save($data);
-
-                // registro en bitacora
-                $accion = "eliminó";
-                $entidad = 'recurso';
-                $valor = $recurso['id_recurso'];
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                return redirect()->to($url_actual);
+            } else {
+                return redirect()->to(site_url());
             }
-
-            return redirect()->to($url_actual);
         } else {
             return redirect()->to(site_url());
         }
@@ -334,36 +478,46 @@ class Archivo extends BaseController
     public function eliminar()
     {
         if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-            $archivo = $this->request->getPost();
-            if ($archivo) {
-                $up_dir = $archivo['up_dir'];
-                $nombre_archivo = $archivo['nombre_archivo'];
-                $url_actual = $archivo['url_actual'];
-                $nombre_archivo_fs = $up_dir . $nombre_archivo;
-                $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'archivo.can_delete',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
 
-                // Eliminar archivo
-                if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ) {
-                    $status = unlink($nombre_archivo_fs) ? 'Se eliminó el archivo '.$nombre_archivo_fs : 'Error al eliminar el archivo '.$nombre_archivo_fs;
+                $archivo = $this->request->getPost();
+                if ($archivo) {
+                    $up_dir = $archivo['up_dir'];
+                    $nombre_archivo = $archivo['nombre_archivo'];
+                    $url_actual = $archivo['url_actual'];
+                    $nombre_archivo_fs = $up_dir . $nombre_archivo;
+                    $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
 
-                    // registro en bitacora
-                    $accion = 'eliminó';
-                    $entidad = 'archivo';
-                    $valor = $nombre_archivo;
-                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
-                } else {
-                    $status = 'Archivo no existe';
-                    $this->session->setFlashdata('error', $status);
+                    // Eliminar archivo
+                    if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ) {
+                        $status = unlink($nombre_archivo_fs) ? 'Se eliminó el archivo '.$nombre_archivo_fs : 'Error al eliminar el archivo '.$nombre_archivo_fs;
+
+                        // registro en bitacora
+                        $accion = 'eliminó';
+                        $entidad = 'archivo';
+                        $valor = $nombre_archivo;
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    } else {
+                        $status = 'Archivo no existe';
+                        $this->session->setFlashdata('error', $status);
+                    }
                 }
-            }
 
-            return redirect()->to($url_actual);
+                return redirect()->to($url_actual);
+            } else {
+                return redirect()->to(site_url());
+            }
         } else {
             return redirect()->to(site_url());
         }
     }
-
 
 
 }

@@ -4,7 +4,14 @@
             <div class="row">
                 <div class="ui green center aligned segment">
                     <h1 class="ui header">Registro de evento</h1>
-                    <p><?= $error ?></p>
+                    <?php if ($error): ?>
+                        <div class="ui negative message transition">
+                            <div class="header">
+                                Error
+                            </div>
+                            <p><?= $error ?></p>
+                        </div>
+                    <?php endif ?>
 
                     <div class="ui hidden divider"></div>
 

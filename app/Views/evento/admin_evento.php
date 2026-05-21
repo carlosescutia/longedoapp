@@ -2,8 +2,14 @@
     <h4 class="ui header">Administración del evento</h4>
     <div class="ui hidden divider"></div>
     <div class="ui list">
-        <?php if ($error): ?>
-            <p><span class="ui red text"><?= $error ?></span></p>
+        <?php if ($error_adm): ?>
+            <div class="ui negative mini message transition">
+                <i class="close icon"></i>
+                <div class="header">
+                    Error
+                </div>
+                <p><?= $error_adm ?></p>
+            </div>
         <?php endif ?>
         <div class="item"><a href="<?= site_url('evento/editar/')?><?=$evento['id_evento']?>">Editar información</a></div>
         <div class="item"><a href="<?= site_url('reportes/asistentes_evento/')?><?=$evento['id_evento']?>">Lista de asistentes</a></div>
@@ -30,6 +36,7 @@
                         <td class="center aligned">
                             <form class="ui form" method="post" action="/evaluacion/eliminar" id="frm_elim_evaluacion<?=$evaluaciones_item['id_evaluacion']?>">
                                 <input type="hidden" name="id_evaluacion" id="id_evaluacion" value="<?= $evaluaciones_item['id_evaluacion'] ?>" >
+                                <input type="hidden" name="id_evento" id="id_evento" value="<?= $evento['id_evento'] ?>" >
                                 <input type="hidden" name="url_actual" id="url_actual" value="<?= site_url('evento/detalle/'.$evaluaciones_item['id_evento']) ?>">
                                 <?php
                                     $mensaje = '¡Se eliminará la evaluación!<br>¿Está seguro?' ;
@@ -82,7 +89,9 @@
 
             <p></p>
 
-            <div class="item"><a href="<?= site_url('externo/aprobar/')?><?=$evento['id_evento']?>">Aprobar asistentes externos</a></div>
+            <?php if ($evento['actual']): ?>
+                <div class="item"><a href="<?= site_url('externo/aprobar/')?><?=$evento['id_evento']?>">Aprobar asistentes externos</a></div>
+            <?php endif ?>
         </div>
 
         <div class="ui section divider"></div>
@@ -125,4 +134,5 @@
     $('#btn_qr').click( function() {
         $('.ui.modal').modal('show');
     });
+
 </script>

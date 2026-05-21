@@ -16,7 +16,7 @@ class Externo extends BaseController
         $evento = $this->evento_model->get_evento_token($token);
 
         if ( $evento ) {
-            if ( $evento['activo'] and $evento['registrar_externos'] ) {
+            if ( $evento['actual'] and $evento['registrar_externos'] ) {
                 $data['evento'] = $evento;
                 $data['tallas_niño'] = $this->talla_model->get_tallas_edad_drop('niño');
                 $data['tallas_adulto'] = $this->talla_model->get_tallas_edad_drop('adulto');
@@ -87,13 +87,21 @@ class Externo extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $data['id_evento'] = $id_evento;
-            $data['evento'] = $this->evento_model->get_evento($id_evento);
-            $data['externos'] = $this->externo_model->get_externos_evento($id_evento);
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'externo.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $data['id_evento'] = $id_evento;
+                $data['evento'] = $this->evento_model->get_evento($id_evento);
+                $data['externos'] = $this->externo_model->get_externos_evento($id_evento);
 
-            return view('templates/header', $data)
-                .view('externo/aprobar', $data)
-                .view('templates/footer');
+                return view('templates/header', $data)
+                    .view('externo/aprobar', $data)
+                    .view('templates/footer');
+            } else {
+                return redirect()->to(site_url());
+            }
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -102,25 +110,36 @@ class Externo extends BaseController
     public function guardar_activo()
     {
         if ($this->session->logueado) {
-            $externo = $this->request->getPost();
-            if ($externo) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-                $id_evento = $externo['id_evento'];
-                $data = array(
-                    'id_externo' => $externo['id_externo'],
-                    'activo' => array_key_exists('activo', $externo) ? 1 : 0,
-                );
-                // guardar
-                $this->externo_model->save($data);
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'externo.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $externo = $this->request->getPost();
+                if ($externo) {
 
-                // registro en bitacora
-                $registrar = array_key_exists('activo', $externo) ? 'aprobado' : 'no aprobado';
-                $accion = 'modificó';
-                $entidad = 'externo';
-                $valor = $externo['id_externo'] . ' ' .  $registrar;
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    $id_evento = $externo['id_evento'];
+                    $data = array(
+                        'id_externo' => $externo['id_externo'],
+                        'activo' => array_key_exists('activo', $externo) ? 1 : 0,
+                    );
+                    // guardar
+                    $this->externo_model->save($data);
+
+                    // registro en bitacora
+                    $registrar = array_key_exists('activo', $externo) ? 'aprobado' : 'no aprobado';
+                    $accion = 'modificó';
+                    $entidad = 'externo';
+                    $valor = $externo['id_externo'] . ' ' .  $registrar;
+                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                }
+                return redirect()->to(site_url('externo/aprobar/' . $externo['id_evento']));
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url('externo/aprobar/' . $externo['id_evento']));
         } else {
             return redirect()->to(site_url('login'));
         }
@@ -129,23 +148,34 @@ class Externo extends BaseController
     public function eliminar()
     {
         if ($this->session->logueado) {
-            $externo = $this->request->getPost();
-            if ($externo) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-                $id_externo = $externo['id_externo'];
-                $url_actual = $externo['url_actual'];
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'externo.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $externo = $this->request->getPost();
+                if ($externo) {
 
-                // registro en bitacora
-                $accion = "eliminó";
-                $entidad = 'externo';
-                $valor = $externo['id_externo'];
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    $id_externo = $externo['id_externo'];
+                    $url_actual = $externo['url_actual'];
 
-                // eliminado
-                $this->externo_model->delete($id_externo);
+                    // registro en bitacora
+                    $accion = "eliminó";
+                    $entidad = 'externo';
+                    $valor = $externo['id_externo'];
+                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+
+                    // eliminado
+                    $this->externo_model->delete($id_externo);
+                }
+
+                return redirect()->to($url_actual);
+            } else {
+                return redirect()->to(site_url());
             }
-
-            return redirect()->to($url_actual);
         } else {
             return redirect()->to(site_url("login"));
         }

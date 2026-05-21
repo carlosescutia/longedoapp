@@ -48,10 +48,17 @@
             </div>
 
             <div class="ui hidden divider"></div>
-
-            <?php if ( $evento['activo'] ): ?>
-                <?php include "user_actions_evento.php" ?>
+            <?php if ($error_alumno): ?>
+                <div class="ui negative mini message transition">
+                    <i class="close icon"></i>
+                    <div class="header">
+                        Error
+                    </div>
+                    <p><?= $error_alumno ?></p>
+                </div>
             <?php endif ?>
+
+                <?php include "user_actions_evento.php" ?>
         </div>
 
         <!-- Administración del evento -->
@@ -81,3 +88,13 @@
         </div>
     </div>
 </div>
+<script>
+    $('.message .close')
+        .on('click', function() {
+            $(this)
+                .closest('.message')
+                .transition('fade')
+            ;
+        })
+    ;
+</script>

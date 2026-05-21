@@ -106,6 +106,46 @@ class OpcionSistemaSeeder extends Seeder
                 'nom_opcion_sistema' => 'Editar recursos_entidad',
                 'otorgable' => null
             ],
+            [
+                'cod_opcion_sistema' => 'perfil.can_edit',
+                'nom_opcion_sistema' => 'Editar perfil',
+                'otorgable' => null
+            ],
+            [
+                'cod_opcion_sistema' => 'archivo.can_upload',
+                'nom_opcion_sistema' => 'Subir archivos',
+                'otorgable' => null
+            ],
+            [
+                'cod_opcion_sistema' => 'archivo.can_delete',
+                'nom_opcion_sistema' => 'Eliminar archivos',
+                'otorgable' => null
+            ],
+            [
+                'cod_opcion_sistema' => 'evaluacion.can_edit',
+                'nom_opcion_sistema' => 'Editar evaluación',
+                'otorgable' => null
+            ],
+            [
+                'cod_opcion_sistema' => 'evaluacion_usuario.can_edit',
+                'nom_opcion_sistema' => 'Asistir / cancelar evaluación',
+                'otorgable' => null
+            ],
+            [
+                'cod_opcion_sistema' => 'evento.can_view',
+                'nom_opcion_sistema' => 'Ver eventos',
+                'otorgable' => null
+            ],
+            [
+                'cod_opcion_sistema' => 'evento_usuario.can_edit',
+                'nom_opcion_sistema' => 'Asistir / cancelar evento',
+                'otorgable' => null
+            ],
+            [
+                'cod_opcion_sistema' => 'externo.can_edit',
+                'nom_opcion_sistema' => 'Editar asistentes externos',
+                'otorgable' => null
+            ],
         ];
 
         $this->db->table('opcion_sistema')->insertBatch($data);

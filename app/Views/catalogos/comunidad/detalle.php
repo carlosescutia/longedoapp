@@ -29,6 +29,7 @@
                             </div>
                         </div>
                         <input type="hidden" name="id_comunidad" id="id_comunidad" value="<?=$comunidad['id_comunidad']?>">
+                        <input type="hidden" name="url_actual" id="url_actual" value="<?= $url_actual ?>">
 
                         <div class="ui error message"></div>
                     </form>
@@ -38,7 +39,7 @@
 
         <div class="row">
             <div class="ui basic segment">
-                <a class="ui basic button" href="<?= site_url('comunidad') ?>">Volver</a>
+                <a class="ui basic button" href="<?= $url_actual ?>">Volver</a>
             </div>
         </div>
     </div>

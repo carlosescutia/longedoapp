@@ -20,26 +20,34 @@ class Perfil extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $id_usuario = $data['userdata']['id_usuario'];
-            $perfil = $this->perfil_model->get_perfil_usuario($id_usuario);
-            if (empty($perfil)) {
-                $this->crear_perfil();
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'perfil.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $id_usuario = $data['userdata']['id_usuario'];
                 $perfil = $this->perfil_model->get_perfil_usuario($id_usuario);
-            }
-            $data['perfil'] = $perfil;
-            $data['tallas_actual'] = $this->talla_model->get_tallas_edad($data['perfil']['edad']);
-            $data['tallas_niño'] = $this->talla_model->get_tallas_edad_drop('niño');
-            $data['tallas_adulto'] = $this->talla_model->get_tallas_edad_drop('adulto');
-            $data['tallas_adulto_mayor'] = $this->talla_model->get_tallas_edad_drop('adulto');
-            $data['grados'] = $this->evaluacion_usuario_model->get_grados_usuario($id_usuario);
-            $data['evaluacion_pendiente'] = $this->evaluacion_usuario_model->get_evaluacion_pendiente($id_usuario);
-            $data['aviso_privacidad'] = $this->parametro_sistema_model->get_parametro_sistema_nom('aviso_privacidad');
-            $id_grado = $this->perfil_model->get_grado_actual($id_usuario, $data['perfil']['edad']);
-            $data['grado'] = $this->grado_model->get_grado($id_grado);
+                if (empty($perfil)) {
+                    $this->crear_perfil();
+                    $perfil = $this->perfil_model->get_perfil_usuario($id_usuario);
+                }
+                $data['perfil'] = $perfil;
+                $data['tallas_actual'] = $this->talla_model->get_tallas_edad($data['perfil']['edad']);
+                $data['tallas_niño'] = $this->talla_model->get_tallas_edad_drop('niño');
+                $data['tallas_adulto'] = $this->talla_model->get_tallas_edad_drop('adulto');
+                $data['tallas_adulto_mayor'] = $this->talla_model->get_tallas_edad_drop('adulto');
+                $data['grados'] = $this->evaluacion_usuario_model->get_grados_usuario($id_usuario);
+                $data['evaluacion_pendiente'] = $this->evaluacion_usuario_model->get_evaluacion_pendiente($id_usuario);
+                $data['aviso_privacidad'] = $this->parametro_sistema_model->get_parametro_sistema_nom('aviso_privacidad');
+                $id_grado = $this->perfil_model->get_grado_actual($id_usuario, $data['perfil']['edad']);
+                $data['grado'] = $this->grado_model->get_grado($id_grado);
 
-            return view('templates/header', $data)
-                .view('catalogos/perfil/detalle', $data)
-                .view('templates/footer');
+                return view('templates/header', $data)
+                    .view('catalogos/perfil/detalle', $data)
+                    .view('templates/footer');
+            } else {
+                return redirect()->to(site_url());
+            }
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -70,41 +78,52 @@ class Perfil extends BaseController
     public function guardar()
     {
         if ($this->session->logueado) {
-            $perfil = $this->request->getPost();
-            if ($perfil) {
-                $data = array(
-                    'id_perfil' => $perfil['id_perfil'],
-                    'id_usuario' => $perfil['id_usuario'],
-                    'nom_capoeira' => $perfil['nom_capoeira'],
-                    'fecha_ingreso' => empty($perfil['fecha_ingreso']) ? null : $perfil['fecha_ingreso'],
-                    'sexo_diverso' => $perfil['sexo_diverso'],
-                    'whatsapp_usuario' => $perfil['whatsapp_usuario'],
-                    'correo_usuario' => $perfil['correo_usuario'],
-                    'contacto_emergencia' => $perfil['contacto_emergencia'],
-                    'whatsapp_emergencia' => $perfil['whatsapp_emergencia'],
-                    'contacto_responsable' => $perfil['contacto_responsable'],
-                    'whatsapp_responsable' => $perfil['whatsapp_responsable'],
-                    'sexo' => $perfil['sexo'],
-                    'edad' => $perfil['edad'],
-                    'id_talla' => empty($perfil['id_talla']) ? null : $perfil['id_talla'],
-                );
-                if (array_key_exists('chk_aviso_privacidad', $perfil)) {
-                    $data += array(
-                        'fech_acept_priv' => date("Y-m-d"),
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
+
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'perfil.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $perfil = $this->request->getPost();
+                if ($perfil) {
+                    $data = array(
+                        'id_perfil' => $perfil['id_perfil'],
+                        'id_usuario' => $perfil['id_usuario'],
+                        'nom_capoeira' => $perfil['nom_capoeira'],
+                        'fecha_ingreso' => empty($perfil['fecha_ingreso']) ? null : $perfil['fecha_ingreso'],
+                        'sexo_diverso' => $perfil['sexo_diverso'],
+                        'whatsapp_usuario' => $perfil['whatsapp_usuario'],
+                        'correo_usuario' => $perfil['correo_usuario'],
+                        'contacto_emergencia' => $perfil['contacto_emergencia'],
+                        'whatsapp_emergencia' => $perfil['whatsapp_emergencia'],
+                        'contacto_responsable' => $perfil['contacto_responsable'],
+                        'whatsapp_responsable' => $perfil['whatsapp_responsable'],
+                        'sexo' => $perfil['sexo'],
+                        'edad' => $perfil['edad'],
+                        'id_talla' => empty($perfil['id_talla']) ? null : $perfil['id_talla'],
                     );
+                    if (array_key_exists('chk_aviso_privacidad', $perfil)) {
+                        $data += array(
+                            'fech_acept_priv' => date("Y-m-d"),
+                        );
+                    }
+                    // guardar
+                    $this->perfil_model->save($data);
+
+                    $accion = 'modificó';
+                    $id_perfil = $perfil['id_perfil'];
+
+                    // registro en bitacora
+                    $entidad = 'perfil';
+                    $valor = $id_perfil . " " .$perfil['nom_capoeira'];
+                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
                 }
-                // guardar
-                $this->perfil_model->save($data);
-
-                $accion = 'modificó';
-                $id_perfil = $perfil['id_perfil'];
-
-                // registro en bitacora
-                $entidad = 'perfil';
-                $valor = $id_perfil . " " .$perfil['nom_capoeira'];
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                return redirect()->to(site_url("perfil"));
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url("perfil"));
         } else {
             return redirect()->to(site_url("login"));
         }

@@ -17,11 +17,19 @@ class Acceso_sistema extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $data['accesos_sistema'] = $this->acceso_sistema_model->get_accesos_sistema();
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'acceso_sistema.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $data['accesos_sistema'] = $this->acceso_sistema_model->get_accesos_sistema();
 
-            return view('templates/header', $data)
-                .view('catalogos/acceso_sistema/lista', $data)
-                .view('templates/footer');
+                return view('templates/header', $data)
+                    .view('catalogos/acceso_sistema/lista', $data)
+                    .view('templates/footer');
+            } else {
+                return redirect()->to(site_url());
+            }
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -33,12 +41,21 @@ class Acceso_sistema extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $data['roles'] = $this->rol_model->get_roles();
-            $data['opciones_sistema'] = $this->opcion_sistema_model->get_opciones_sistema();
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'acceso_sistema.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
 
-            return view('templates/header', $data)
-                .view('catalogos/acceso_sistema/nuevo', $data)
-                .view('templates/footer');
+                $data['roles'] = $this->rol_model->get_roles();
+                $data['opciones_sistema'] = $this->opcion_sistema_model->get_opciones_sistema();
+
+                return view('templates/header', $data)
+                    .view('catalogos/acceso_sistema/nuevo', $data)
+                    .view('templates/footer');
+            } else {
+                return redirect()->to(site_url());
+            }
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -49,20 +66,31 @@ class Acceso_sistema extends BaseController
         if ($this->session->logueado) {
             $acceso_sistema = $this->request->getPost();
             if ($acceso_sistema) {
-                $data = array(
-                    'id_rol' => $acceso_sistema['id_rol'],
-                    'cod_opcion_sistema' => $acceso_sistema['cod_opcion_sistema'],
-                );
-                // guardar
-                $this->acceso_sistema_model->save($data);
+                $data = [];
+                $data += $this->fn_sis->get_userdata();
 
-                // registro en bitacora
-                $accion = 'agregó';
-                $entidad = 'acceso_sistema';
-                $valor = $acceso_sistema['id_rol'] . " " . $acceso_sistema['cod_opcion_sistema'];
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                $permisos_usuario = $data['permisos_usuario'];
+                $permisos_requeridos = array(
+                    'acceso_sistema.can_edit',
+                );
+                if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                    $data = array(
+                        'id_rol' => $acceso_sistema['id_rol'],
+                        'cod_opcion_sistema' => $acceso_sistema['cod_opcion_sistema'],
+                    );
+                    // guardar
+                    $this->acceso_sistema_model->save($data);
+
+                    // registro en bitacora
+                    $accion = 'agregó';
+                    $entidad = 'acceso_sistema';
+                    $valor = $acceso_sistema['id_rol'] . " " . $acceso_sistema['cod_opcion_sistema'];
+                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                }
+                return redirect()->to(site_url("acceso_sistema"));
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url("acceso_sistema"));
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -71,25 +99,36 @@ class Acceso_sistema extends BaseController
     public function eliminar()
     {
         if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-            $acceso_sistema = $this->request->getPost();
-            if ($acceso_sistema) {
-                $id_acceso_sistema = $acceso_sistema['id_acceso_sistema'];
-                $url_actual = $acceso_sistema['url_actual'];
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'acceso_sistema.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
 
-                // registro en bitacora
-                $acceso_sistema = $this->acceso_sistema_model->get_acceso_sistema($id_acceso_sistema);
-                $accion = "eliminó";
-                $entidad = 'acceso_sistema';
-                $valor = $acceso_sistema['id_rol'] . " " . $acceso_sistema['cod_opcion_sistema'];
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                $acceso_sistema = $this->request->getPost();
+                if ($acceso_sistema) {
+                    $id_acceso_sistema = $acceso_sistema['id_acceso_sistema'];
+                    $url_actual = $acceso_sistema['url_actual'];
 
-                // eliminado
-                $this->acceso_sistema_model->delete($id_acceso_sistema);
-                return redirect()->to($url_actual);
+                    // registro en bitacora
+                    $acceso_sistema = $this->acceso_sistema_model->get_acceso_sistema($id_acceso_sistema);
+                    $accion = "eliminó";
+                    $entidad = 'acceso_sistema';
+                    $valor = $acceso_sistema['id_rol'] . " " . $acceso_sistema['cod_opcion_sistema'];
+                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
 
+                    // eliminado
+                    $this->acceso_sistema_model->delete($id_acceso_sistema);
+                    return redirect()->to($url_actual);
+
+                } else {
+                    return redirect()->to(site_url("acceso_sistema"));
+                }
             } else {
-                return redirect()->to(site_url("acceso_sistema"));
+                return redirect()->to(site_url());
             }
         } else {
             return redirect()->to(site_url("login"));

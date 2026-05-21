@@ -82,7 +82,13 @@
                         </div>
                     </form>
                     <?php if ($error): ?>
-                        <p><span class="ui red text"><?= $error ?></span></p>
+                        <div class="ui negative mini message transition">
+                            <i class="close icon"></i>
+                            <div class="header">
+                                Error
+                            </div>
+                            <p><?= $error ?></p>
+                        </div>
                     <?php endif ?>
                 </div>
             </div>
@@ -128,6 +134,15 @@
                     ]
                 },
             }
+        })
+    ;
+
+    $('.message .close')
+        .on('click', function() {
+            $(this)
+                .closest('.message')
+                .transition('fade')
+            ;
         })
     ;
 </script>

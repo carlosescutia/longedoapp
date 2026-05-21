@@ -3,7 +3,15 @@
         <div class="ui container">
             <div class="row">
                 <h1 class="ui header">
-                    <img class="ui large image" src="/assets/img/logotipo.png">
+                    <?php
+                        $nombre_archivo = $comunidad['logo'];
+                        $up_dir = 'imgs/comunidad/';
+                        $nombre_archivo_fs = $up_dir . $nombre_archivo;
+                        $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
+                    ?>
+                    <?php if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ): ?>
+                        <img class="ui massive circular image" src="<?= $nombre_archivo_url ?>">
+                    <?php endif ?>
                     <div class="content">
                         Directorio <?=$comunidad['nom_comunidad']?>
                     </div>

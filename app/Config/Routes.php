@@ -52,6 +52,7 @@ $routes->post('acceso_sistema_usuario/eliminar', 'Acceso_sistema_usuario::elimin
 
 $routes->post('archivo/subir', 'Archivo::subir');
 $routes->post('archivo/subir_perfil', 'Archivo::subir_perfil');
+$routes->post('archivo/subir_comunidad', 'Archivo::subir_comunidad');
 $routes->post('archivo/subir_evento', 'Archivo::subir_evento');
 $routes->post('archivo/subir_recurso', 'Archivo::subir_recurso');
 $routes->post('archivo/eliminar_recurso', 'Archivo::eliminar_recurso');
@@ -87,6 +88,7 @@ $routes->post('evento/actualizar_codigo', 'Evento::actualizar_codigo');
 
 $routes->get('comunidad/', 'Comunidad::index');
 $routes->get('comunidad/detalle/(:num)', 'Comunidad::detalle/$1');
+$routes->get('comunidad/editar_comunidad_propia', 'Comunidad::editar_comunidad_propia');
 $routes->get('comunidad/nuevo', 'Comunidad::nuevo');
 $routes->post('comunidad/guardar', 'Comunidad::guardar');
 $routes->post('comunidad/eliminar', 'Comunidad::eliminar');

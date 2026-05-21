@@ -67,3 +67,35 @@
 
     </div>
 </div>
+<script>
+$('.ui.form')
+    .form({
+        fields: {
+            nom_evento: {
+                rules: [
+                    {
+                        type   : 'notEmpty',
+                        prompt : 'Nombre no puede estar vacio'
+                    }
+                ]
+            },
+            fech_ini: {
+                rules: [
+                    {
+                        type   : 'notEmpty',
+                        prompt : 'Desde no puede estar vacio'
+                    }
+                ]
+            },
+            fech_fin: {
+                rules: [
+                    {
+                        type   : 'notEmpty',
+                        prompt : 'Hasta no puede estar vacio'
+                    }
+                ]
+            },
+        }
+    })
+;
+</script>

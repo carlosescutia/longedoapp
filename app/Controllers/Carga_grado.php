@@ -18,11 +18,22 @@ class Carga_grado extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $data['cargas_grado'] = $this->evaluacion_model->get_cargas_grado($data['userdata']['id_usuario']);
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evaluacion.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $data = [];
+                $data += $this->fn_sis->get_userdata();
 
-            return view('templates/header', $data)
-                .view('carga_grado/lista', $data)
-                .view('templates/footer');
+                $data['cargas_grado'] = $this->evaluacion_model->get_cargas_grado($data['userdata']['id_usuario']);
+
+                return view('templates/header', $data)
+                    .view('carga_grado/lista', $data)
+                    .view('templates/footer');
+            } else {
+                return redirect()->to(site_url());
+            }
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -31,40 +42,51 @@ class Carga_grado extends BaseController
     public function nuevo()
     {
         if ($this->session->logueado) {
-            $db = \Config\Database::connect();
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $data += array(
-                'id_evento' => null,
-                'id_evaluador' => $data['userdata']['id_usuario'],
-                'edad' => 'todos',
-                'fecha' => date("Y-m-d"),
-                'status' => 'proceso',
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evaluacion.can_edit',
             );
-            // guardar evaluacion
-            $this->evaluacion_model->save($data);
-            $id_evaluacion = $this->evaluacion_model->getInsertID();
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $db = \Config\Database::connect();
+                $data = [];
+                $data += $this->fn_sis->get_userdata();
 
-            // guardar usuarios de la evaluacion
-            if ( $data['userdata']['id_rol'] == 'admin' ) {
-                // evaluados = mentores
-                $evaluados = $this->usuario_model->get_mentores_evaluar_carga_grado($id_evaluacion);
+                $data += array(
+                    'id_evento' => null,
+                    'id_evaluador' => $data['userdata']['id_usuario'],
+                    'edad' => 'todos',
+                    'fecha' => date("Y-m-d"),
+                    'status' => 'proceso',
+                );
+                // guardar evaluacion
+                $this->evaluacion_model->save($data);
+                $id_evaluacion = $this->evaluacion_model->getInsertID();
+
+                // guardar usuarios de la evaluacion
+                if ( $data['userdata']['id_rol'] == 'admin' ) {
+                    // evaluados = mentores
+                    $evaluados = $this->usuario_model->get_mentores_evaluar_carga_grado($id_evaluacion);
+                } else {
+                    // evaluados = usuarios de la comunidad
+                    $id_comunidad = $data['userdata']['id_comunidad'] ;
+                    $evaluados = $this->usuario_model->get_alumnos_evaluar_carga_grado($id_comunidad, $id_evaluacion);
+                }
+                $db->table('evaluacion_usuario')->insertBatch($evaluados);
+
+
+                // registro en bitacora
+                $accion = 'agregó';
+                $entidad = 'evaluacion';
+                $valor = $id_evaluacion . " carga_grados";
+                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+
+                return redirect()->to(site_url('carga_grado/aplicar/' . $id_evaluacion));
             } else {
-                // evaluados = usuarios de la comunidad
-                $id_comunidad = $data['userdata']['id_comunidad'] ;
-                $evaluados = $this->usuario_model->get_alumnos_evaluar_carga_grado($id_comunidad, $id_evaluacion);
+                return redirect()->to(site_url());
             }
-            $db->table('evaluacion_usuario')->insertBatch($evaluados);
-
-
-            // registro en bitacora
-            $accion = 'agregó';
-            $entidad = 'evaluacion';
-            $valor = $id_evaluacion . " carga_grados";
-            $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
-
-            return redirect()->to(site_url('carga_grado/aplicar/' . $id_evaluacion));
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -73,26 +95,37 @@ class Carga_grado extends BaseController
     public function eliminar()
     {
         if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-            $carga_grado = $this->request->getPost();
-            if ($carga_grado) {
-                $id_evaluacion = $carga_grado['id_evaluacion'];
-                $url_actual = $carga_grado['url_actual'];
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evaluacion.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
 
-                // registro en bitacora
-                $evaluacion = $this->evaluacion_model->get_evaluacion($id_evaluacion);
-                $accion = "eliminó";
-                $entidad = 'evaluacion';
-                $valor = $id_evaluacion . " " . $evaluacion['id_evento'] . " " . $evaluacion['id_evaluador'];
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                $carga_grado = $this->request->getPost();
+                if ($carga_grado) {
+                    $id_evaluacion = $carga_grado['id_evaluacion'];
+                    $url_actual = $carga_grado['url_actual'];
 
-                // eliminado
-                $this->evaluacion_model->delete($id_evaluacion);
+                    // registro en bitacora
+                    $evaluacion = $this->evaluacion_model->get_evaluacion($id_evaluacion);
+                    $accion = "eliminó";
+                    $entidad = 'evaluacion';
+                    $valor = $id_evaluacion . " " . $evaluacion['id_evento'] . " " . $evaluacion['id_evaluador'];
+                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
 
-                return redirect()->to($url_actual);
+                    // eliminado
+                    $this->evaluacion_model->delete($id_evaluacion);
 
+                    return redirect()->to($url_actual);
+
+                } else {
+                    return redirect()->to(site_url('carga_grado'));
+                }
             } else {
-                return redirect()->to(site_url('carga_grado'));
+                return redirect()->to(site_url());
             }
         } else {
             return redirect()->to(site_url("login"));
@@ -105,13 +138,21 @@ class Carga_grado extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $data['evaluacion'] = $this->evaluacion_model->get_evaluacion($id_evaluacion);
-            $data['evaluados'] = $this->evaluacion_usuario_model->get_evaluados($id_evaluacion);
-            $data['grados'] = $this->grado_model->get_grados_activos();
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evaluacion.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $data['evaluacion'] = $this->evaluacion_model->get_evaluacion($id_evaluacion);
+                $data['evaluados'] = $this->evaluacion_usuario_model->get_evaluados($id_evaluacion);
+                $data['grados'] = $this->grado_model->get_grados_activos();
 
-            return view('templates/header', $data)
-                .view('carga_grado/aplicacion', $data)
-                .view('templates/footer');
+                return view('templates/header', $data)
+                    .view('carga_grado/aplicacion', $data)
+                    .view('templates/footer');
+            } else {
+                return redirect()->to(site_url());
+            }
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -120,21 +161,32 @@ class Carga_grado extends BaseController
     public function eliminar_usuario()
     {
         if ($this->session->logueado) {
-            $evaluacion = $this->request->getPost();
-            if ($evaluacion) {
-                $id_usuario = $evaluacion['id_usuario'];
-                $id_evaluacion = $evaluacion['id_evaluacion'];
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-                // eliminar
-                $this->evaluacion_usuario_model->where('id_evaluacion', $id_evaluacion)->where('id_usuario', $id_usuario)->delete();
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evaluacion.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $evaluacion = $this->request->getPost();
+                if ($evaluacion) {
+                    $id_usuario = $evaluacion['id_usuario'];
+                    $id_evaluacion = $evaluacion['id_evaluacion'];
 
-                // registro en bitacora
-                $accion = 'canceló';
-                $entidad = 'evaluación';
-                $valor = 'evnt: ' . $id_evaluacion . ' usr: ' . $id_usuario ;
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    // eliminar
+                    $this->evaluacion_usuario_model->where('id_evaluacion', $id_evaluacion)->where('id_usuario', $id_usuario)->delete();
+
+                    // registro en bitacora
+                    $accion = 'canceló';
+                    $entidad = 'evaluación';
+                    $valor = 'evnt: ' . $id_evaluacion . ' usr: ' . $id_usuario ;
+                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                }
+                return redirect()->to(site_url('carga_grado/aplicar/' . $id_evaluacion));
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url('carga_grado/aplicar/' . $id_evaluacion));
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -143,22 +195,33 @@ class Carga_grado extends BaseController
     public function actualizar_item()
     {
         if ($this->session->logueado) {
-            $evaluacion_usuario = $this->request->getPost();
-            if ($evaluacion_usuario) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-                $data = $evaluacion_usuario ;
-                $this->evaluacion_usuario_model->save($data);
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evaluacion.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $evaluacion_usuario = $this->request->getPost();
+                if ($evaluacion_usuario) {
 
-                // guardar
-                $data = $evaluacion_usuario;
+                    $data = $evaluacion_usuario ;
+                    $this->evaluacion_usuario_model->save($data);
 
-                // registro en bitacora
-                $accion = 'modificó';
-                $entidad = 'evaluacion_usuario';
-                $valor = $data['id_evaluacion_usuario'] ;
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    // guardar
+                    $data = $evaluacion_usuario;
+
+                    // registro en bitacora
+                    $accion = 'modificó';
+                    $entidad = 'evaluacion_usuario';
+                    $valor = $data['id_evaluacion_usuario'] ;
+                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                }
+                return redirect()->to(site_url('carga_grado/aplicar/' . $evaluacion_usuario['id_evaluacion']));
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url('carga_grado/aplicar/' . $evaluacion_usuario['id_evaluacion']));
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -167,23 +230,34 @@ class Carga_grado extends BaseController
     public function actualizar_status()
     {
         if ($this->session->logueado) {
-            $evaluacion = $this->request->getPost();
-            if ($evaluacion) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-                $data = array(
-                    'id_evaluacion' => $evaluacion['id_evaluacion'],
-                    'status' => $evaluacion['status'],
-                );
-                // guardar
-                $this->evaluacion_model->save($data);
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evaluacion.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $evaluacion = $this->request->getPost();
+                if ($evaluacion) {
 
-                // registro en bitacora
-                $accion = 'modificó';
-                $entidad = 'evaluacion';
-                $valor = $evaluacion['id_evaluacion'] . " " . $evaluacion['status'];
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    $data = array(
+                        'id_evaluacion' => $evaluacion['id_evaluacion'],
+                        'status' => $evaluacion['status'],
+                    );
+                    // guardar
+                    $this->evaluacion_model->save($data);
+
+                    // registro en bitacora
+                    $accion = 'modificó';
+                    $entidad = 'evaluacion';
+                    $valor = $evaluacion['id_evaluacion'] . " " . $evaluacion['status'];
+                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                }
+                return redirect()->to(site_url('carga_grado'));
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url('carga_grado'));
         } else {
             return redirect()->to(site_url("login"));
         }

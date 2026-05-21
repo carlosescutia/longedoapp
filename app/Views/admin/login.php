@@ -30,8 +30,11 @@
                         <div class="ui divider"></div>
 
                         <?php if ($error): ?>
-                            <div class="ui negative message">
-                                <p><?php echo $error ?></p>
+                            <div class="ui negative message transition">
+                                <div class="header">
+                                    Error
+                                </div>
+                                <p><?= $error ?></p>
                             </div>
                         <?php endif ?>
 
@@ -64,4 +67,13 @@
     $(document).ready( function() {
         $('#nom_login').focus();
     });
+
+    $('.message .close')
+        .on('click', function() {
+            $(this)
+                .closest('.message')
+                .transition('fade')
+            ;
+        })
+    ;
 </script>

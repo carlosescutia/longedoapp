@@ -9,9 +9,15 @@
                     <div class="ui hidden divider"></div>
 
                     <div class="ui basic center aligned segment">
-                        <div class="ui medium image">
-                            <img class="ui image" src="/assets/img/logotipo.png">
-                        </div>
+                        <?php
+                            $nombre_archivo = $comunidad['logo'];
+                            $up_dir = 'imgs/comunidad/';
+                            $nombre_archivo_fs = $up_dir . $nombre_archivo;
+                            $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
+                        ?>
+                        <?php if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ): ?>
+                            <img class="ui centered small image" src="<?= $nombre_archivo_url ?>">
+                        <?php endif ?>
                     </div>
                 </div>
             </div>

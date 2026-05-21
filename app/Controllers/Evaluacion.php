@@ -24,7 +24,7 @@ class Evaluacion extends BaseController
             $id_evento = $evaluacion['id_evento'];
             $evento = $this->evento_model->get_evento($id_evento);
             $permisos_requeridos = array(
-                'evento.can_edit',
+                'evaluacion.can_edit',
             );
             if ($data['userdata']['id_comunidad'] == $evento['id_comunidad']) {
                 if (has_permission_and($permisos_requeridos, $data['permisos_usuario'])) {
@@ -53,12 +53,26 @@ class Evaluacion extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $data['id_evento'] = $id_evento;
-            $data['evaluadores'] = $this->usuario_model->get_evaluadores();
+            $evento = $this->evento_model->get_evento($id_evento);
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evaluacion.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                if ( $evento['actual'] ) {
+                    $data['id_evento'] = $id_evento;
+                    $data['evaluadores'] = $this->usuario_model->get_evaluadores();
 
-            return view('templates/header', $data)
-                .view('evaluacion/nuevo', $data)
-                .view('templates/footer');
+                    return view('templates/header', $data)
+                        .view('evaluacion/nuevo', $data)
+                        .view('templates/footer');
+                } else {
+                    $this->session->setFlashdata('error_adm', 'No se pueden agregar evaluaciones, el evento ya pasó');
+                    return redirect()->to(site_url('evento/detalle/'.$evento['id_evento']));
+                }
+            } else {
+                return redirect()->to(site_url());
+            }
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -67,52 +81,68 @@ class Evaluacion extends BaseController
     public function guardar()
     {
         if ($this->session->logueado) {
-            $evaluacion = $this->request->getPost();
-            if ($evaluacion) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-                $data = [];
-                if (array_key_exists('id_evaluacion', $evaluacion)) {
-                    // guardar evaluacion existente
-                    // no comprobar restricción de edad 
-                    $data += array(
-                        'id_evaluacion' => $evaluacion['id_evaluacion'],
-                    );
-                } else {
-                    // guardar evaluación nueva
-                    // comprobar restricción de edad
-                    $id_evento = $evaluacion['id_evento'];
-                    $edad = $evaluacion['edad'];
-                    $evaluacion_registrada = $this->evaluacion_model->get_evaluacion_registrada($id_evento, $edad);
-                    if ( $evaluacion_registrada ) {
-                        $this->session->setFlashdata('error', 'Ya existe evaluación para esta edad');
-                        return redirect()->to(site_url('evento/detalle/' . $evaluacion['id_evento']));
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evaluacion.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $evaluacion = $this->request->getPost();
+                $evento = $this->evento_model->get_evento($evaluacion['id_evento']);
+                if ( $evento['actual'] ) {
+                    if ($evaluacion) {
+                        $data = [];
+                        if (array_key_exists('id_evaluacion', $evaluacion)) {
+                            // guardar evaluacion existente
+                            // no comprobar restricción de edad 
+                            $data += array(
+                                'id_evaluacion' => $evaluacion['id_evaluacion'],
+                            );
+                        } else {
+                            // guardar evaluación nueva
+                            // comprobar restricción de edad
+                            $id_evento = $evaluacion['id_evento'];
+                            $edad = $evaluacion['edad'];
+                            $evaluacion_registrada = $this->evaluacion_model->get_evaluacion_registrada($id_evento, $edad);
+                            if ( $evaluacion_registrada ) {
+                                $this->session->setFlashdata('error_adm', 'Ya existe evaluación para esta edad');
+                                return redirect()->to(site_url('evento/detalle/' . $evaluacion['id_evento']));
+                            }
+                        }
+
+                        $data += array(
+                            'id_evento' => $evaluacion['id_evento'],
+                            'id_evaluador' => $evaluacion['id_evaluador'],
+                            'edad' => $evaluacion['edad'],
+                            'fecha' => empty($evaluacion['fecha']) ? null: $evaluacion['fecha'],
+                            'status' => $evaluacion['status'],
+                        );
+                        // guardar
+                        $this->evaluacion_model->save($data);
+
+                        if (array_key_exists('id_evaluacion', $evaluacion)) {
+                            $accion = 'modificó';
+                            $id_evaluacion = $evaluacion['id_evaluacion'];
+                        } else {
+                            $accion = 'agregó';
+                            $id_evaluacion = $this->evaluacion_model->getInsertID();
+                        }
+
+                        // registro en bitacora
+                        $entidad = 'evaluacion';
+                        $valor = $id_evaluacion . " " .$evaluacion['id_evento'] . " " . $evaluacion['id_evaluador'];
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
                     }
-                }
-
-                $data += array(
-                    'id_evento' => $evaluacion['id_evento'],
-                    'id_evaluador' => $evaluacion['id_evaluador'],
-                    'edad' => $evaluacion['edad'],
-                    'fecha' => empty($evaluacion['fecha']) ? null: $evaluacion['fecha'],
-                    'status' => $evaluacion['status'],
-                );
-                // guardar
-                $this->evaluacion_model->save($data);
-
-                if (array_key_exists('id_evaluacion', $evaluacion)) {
-                    $accion = 'modificó';
-                    $id_evaluacion = $evaluacion['id_evaluacion'];
+                    return redirect()->to(site_url('evento/detalle/' . $evaluacion['id_evento']));
                 } else {
-                    $accion = 'agregó';
-                    $id_evaluacion = $this->evaluacion_model->getInsertID();
+                    $this->session->setFlashdata('error_adm', 'No se puede modificar, el evento ya pasó');
+                    return redirect()->to(site_url('evento/detalle/'.$evento['id_evento']));
                 }
-
-                // registro en bitacora
-                $entidad = 'evaluacion';
-                $valor = $id_evaluacion . " " .$evaluacion['id_evento'] . " " . $evaluacion['id_evaluador'];
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url('evento/detalle/' . $evaluacion['id_evento']));
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -121,34 +151,51 @@ class Evaluacion extends BaseController
     public function asistir()
     {
         if ($this->session->logueado) {
-            $evaluacion = $this->request->getPost();
-            if ($evaluacion) {
-                $id_evento = $evaluacion['id_evento'];
-                $id_usuario = $evaluacion['id_usuario'];
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-                $usuario = $this->usuario_model->get_usuario($id_usuario);
-                $edad = $usuario['edad'];
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evaluacion_usuario.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $evaluacion = $this->request->getPost();
+                $evento = $this->evento_model->get_evento($evaluacion['id_evento']);
+                if ( $evento['actual'] ) {
+                    if ($evaluacion) {
+                        $id_evento = $evaluacion['id_evento'];
+                        $id_usuario = $evaluacion['id_usuario'];
 
-                $evaluacion = $this->evaluacion_model->get_evaluacion_evento_edad($id_evento, $edad);
-                $id_evaluacion = $evaluacion['id_evaluacion'];
+                        $usuario = $this->usuario_model->get_usuario($id_usuario);
+                        $edad = $usuario['edad'];
 
-                $id_grado = $this->perfil_model->get_grado_proximo($id_usuario, $edad);
+                        $evaluacion = $this->evaluacion_model->get_evaluacion_evento_edad($id_evento, $edad);
+                        $id_evaluacion = $evaluacion['id_evaluacion'];
 
-                $data = array(
-                    'id_evaluacion' => $id_evaluacion,
-                    'id_usuario' => $id_usuario,
-                    'id_grado' => $id_grado,
-                );
-                // guardar
-                $this->evaluacion_usuario_model->save($data);
+                        $id_grado = $this->perfil_model->get_grado_proximo($id_usuario, $edad);
 
-                // registro en bitacora
-                $accion = 'agregó';
-                $entidad = 'evaluacion_usuario';
-                $valor = 'evnt: ' . $id_evaluacion . ' usr: ' . $id_usuario ;
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                        $data = array(
+                            'id_evaluacion' => $id_evaluacion,
+                            'id_usuario' => $id_usuario,
+                            'id_grado' => $id_grado,
+                        );
+                        // guardar
+                        $this->evaluacion_usuario_model->save($data);
+
+                        // registro en bitacora
+                        $accion = 'agregó';
+                        $entidad = 'evaluacion_usuario';
+                        $valor = 'evnt: ' . $id_evaluacion . ' usr: ' . $id_usuario ;
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    }
+                    return redirect()->to(site_url('evento/detalle/' . $id_evento));
+                } else {
+                    $this->session->setFlashdata('error_alumno', 'No se puede asistir a evaluación, el evento ya pasó');
+                    return redirect()->to(site_url('evento/detalle/'.$evento['id_evento']));
+                }
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url('evento/detalle/' . $id_evento));
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -157,27 +204,44 @@ class Evaluacion extends BaseController
     public function cancelar()
     {
         if ($this->session->logueado) {
-            $evaluacion = $this->request->getPost();
-            if ($evaluacion) {
-                $id_evento = $evaluacion['id_evento'];
-                $id_usuario = $evaluacion['id_usuario'];
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-                $usuario = $this->usuario_model->get_usuario($id_usuario);
-                $edad = $usuario['edad'];
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evaluacion_usuario.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $evaluacion = $this->request->getPost();
+                $evento = $this->evento_model->get_evento($evaluacion['id_evento']);
+                if ( $evento['actual'] ) {
+                    if ($evaluacion) {
+                        $id_evento = $evaluacion['id_evento'];
+                        $id_usuario = $evaluacion['id_usuario'];
 
-                $evaluacion = $this->evaluacion_model->get_evaluacion_evento_edad($id_evento, $edad);
-                $id_evaluacion = $evaluacion['id_evaluacion'];
+                        $usuario = $this->usuario_model->get_usuario($id_usuario);
+                        $edad = $usuario['edad'];
 
-                // eliminar
-                $this->evaluacion_usuario_model->where('id_evaluacion', $id_evaluacion)->where('id_usuario', $id_usuario)->delete();
+                        $evaluacion = $this->evaluacion_model->get_evaluacion_evento_edad($id_evento, $edad);
+                        $id_evaluacion = $evaluacion['id_evaluacion'];
 
-                // registro en bitacora
-                $accion = 'canceló';
-                $entidad = 'evaluación';
-                $valor = 'evnt: ' . $id_evaluacion . ' usr: ' . $id_usuario ;
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                        // eliminar
+                        $this->evaluacion_usuario_model->where('id_evaluacion', $id_evaluacion)->where('id_usuario', $id_usuario)->delete();
+
+                        // registro en bitacora
+                        $accion = 'canceló';
+                        $entidad = 'evaluación';
+                        $valor = 'evnt: ' . $id_evaluacion . ' usr: ' . $id_usuario ;
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    }
+                    return redirect()->to(site_url('evento/detalle/' . $id_evento));
+                } else {
+                    $this->session->setFlashdata('error_alumno', 'No se puede cancelar la evaluación, el evento ya pasó');
+                    return redirect()->to(site_url('evento/detalle/'.$evento['id_evento']));
+                }
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url('evento/detalle/' . $id_evento));
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -186,25 +250,42 @@ class Evaluacion extends BaseController
     public function eliminar()
     {
         if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-            $evaluacion = $this->request->getPost();
-            if ($evaluacion) {
-                $id_evaluacion = $evaluacion['id_evaluacion'];
-                $url_actual = $evaluacion['url_actual'];
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evaluacion.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
 
-                // registro en bitacora
-                $evaluacion = $this->evaluacion_model->get_evaluacion($id_evaluacion);
-                $accion = "eliminó";
-                $entidad = 'evaluacion';
-                $valor = $id_evaluacion . " " . $evaluacion['id_evento'] . " " . $evaluacion['id_evaluador'];
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                $evaluacion = $this->request->getPost();
+                $evento = $this->evento_model->get_evento($evaluacion['id_evento']);
+                if ( $evento['actual'] ) {
+                    if ($evaluacion) {
+                        $id_evaluacion = $evaluacion['id_evaluacion'];
+                        $url_actual = $evaluacion['url_actual'];
 
-                // eliminado
-                $this->evaluacion_model->delete($id_evaluacion);
+                        // registro en bitacora
+                        $evaluacion = $this->evaluacion_model->get_evaluacion($id_evaluacion);
+                        $accion = "eliminó";
+                        $entidad = 'evaluacion';
+                        $valor = $id_evaluacion . " " . $evaluacion['id_evento'] . " " . $evaluacion['id_evaluador'];
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
 
-                return redirect()->to($url_actual);
+                        // eliminado
+                        $this->evaluacion_model->delete($id_evaluacion);
+
+                        return redirect()->to($url_actual);
+                    } else {
+                        return redirect()->to(site_url('evento/detalle/' . $evaluacion['id_evento']));
+                    }
+                } else {
+                    $this->session->setFlashdata('error_adm', 'No se puede eliminar la evaluación, el evento ya pasó');
+                    return redirect()->to(site_url('evento/detalle/'.$evento['id_evento']));
+                }
             } else {
-                return redirect()->to(site_url('evento/detalle/' . $evaluacion['id_evento']));
+                return redirect()->to(site_url());
             }
         } else {
             return redirect()->to(site_url("login"));
@@ -217,16 +298,25 @@ class Evaluacion extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $data['evaluacion'] = $this->evaluacion_model->get_evaluacion($id_evaluacion);
-            $evaluadores_evento = $this->evaluacion_model->get_evaluadores_evento($data['evaluacion']['id_evento']);
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evaluacion.can_edit',
+            );
 
-            if ( in_array($data['userdata']['id_usuario'], array_column($evaluadores_evento, 'id_evaluador')) ) {
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
 
-                $data['evaluados'] = $this->evaluacion_usuario_model->get_evaluados($id_evaluacion);
+                $data['evaluacion'] = $this->evaluacion_model->get_evaluacion($id_evaluacion);
+                if ( $data['evaluacion']['id_evaluador'] == $data['userdata']['id_usuario'] ) {
 
-                return view('templates/header', $data)
-                    .view('evaluacion/aplicacion', $data)
-                    .view('templates/footer');
+                    $data['error'] = $this->session->getFlashdata('error');
+                    $data['evaluados'] = $this->evaluacion_usuario_model->get_evaluados($id_evaluacion);
+
+                    return view('templates/header', $data)
+                        .view('evaluacion/aplicacion', $data)
+                        .view('templates/footer');
+                } else {
+                    return redirect()->to(site_url());
+                }
             } else {
                 return redirect()->to(site_url());
             }
@@ -238,23 +328,40 @@ class Evaluacion extends BaseController
     public function actualizar_status()
     {
         if ($this->session->logueado) {
-            $evaluacion = $this->request->getPost();
-            if ($evaluacion) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-                $data = array(
-                    'id_evaluacion' => $evaluacion['id_evaluacion'],
-                    'status' => $evaluacion['status'],
-                );
-                // guardar
-                $this->evaluacion_model->save($data);
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evaluacion.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $evaluacion = $this->request->getPost();
+                $curr_eval = $this->evaluacion_model->get_evaluacion($evaluacion['id_evaluacion']);
+                $evento = $this->evento_model->get_evento($curr_eval['id_evento']);
+                if ( $evento['actual'] ) {
+                    if ($evaluacion) {
+                        $data = array(
+                            'id_evaluacion' => $evaluacion['id_evaluacion'],
+                            'status' => $evaluacion['status'],
+                        );
+                        // guardar
+                        $this->evaluacion_model->save($data);
 
-                // registro en bitacora
-                $accion = 'modificó';
-                $entidad = 'evaluacion';
-                $valor = $evaluacion['id_evaluacion'] . " " . $evaluacion['status'];
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                        // registro en bitacora
+                        $accion = 'modificó';
+                        $entidad = 'evaluacion';
+                        $valor = $evaluacion['id_evaluacion'] . " " . $evaluacion['status'];
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    }
+                    return redirect()->to(site_url('evaluacion/aplicar/' . $evaluacion['id_evaluacion']));
+                } else {
+                    $this->session->setFlashdata('error', 'No se puede modificar la evaluación, el evento ya pasó');
+                    return redirect()->to(site_url('evaluacion/aplicar/'.$evaluacion['id_evaluacion']));
+                }
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url('evaluacion/aplicar/' . $evaluacion['id_evaluacion']));
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -263,27 +370,43 @@ class Evaluacion extends BaseController
     public function actualizar_item()
     {
         if ($this->session->logueado) {
-            $evaluacion_usuario = $this->request->getPost();
-            if ($evaluacion_usuario) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-                $data = $evaluacion_usuario ;
-                $this->evaluacion_usuario_model->save($data);
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evaluacion.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $evaluacion_usuario = $this->request->getPost();
+                $evaluacion = $this->evaluacion_model->get_evaluacion($evaluacion_usuario['id_evaluacion']);
+                $evento = $this->evento_model->get_evento($evaluacion['id_evento']);
+                if ( $evento['actual'] ) {
+                    if ($evaluacion_usuario) {
+                        $data = $evaluacion_usuario ;
+                        $this->evaluacion_usuario_model->save($data);
 
-                // guardar
-                $data = $evaluacion_usuario;
+                        // guardar
+                        $data = $evaluacion_usuario;
 
-                // registro en bitacora
-                $accion = 'modificó';
-                $entidad = 'evaluacion_usuario';
-                $valor = $data['id_evaluacion_usuario'] ;
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                        // registro en bitacora
+                        $accion = 'modificó';
+                        $entidad = 'evaluacion_usuario';
+                        $valor = $data['id_evaluacion_usuario'] ;
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    }
+                    return redirect()->to(site_url('evaluacion/aplicar/' . $evaluacion_usuario['id_evaluacion']));
+                } else {
+                    $this->session->setFlashdata('error', 'No se puede modificar la evaluación, el evento ya pasó');
+                    return redirect()->to(site_url('evaluacion/aplicar/'.$evaluacion_usuario['id_evaluacion']));
+                }
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url('evaluacion/aplicar/' . $evaluacion_usuario['id_evaluacion']));
         } else {
             return redirect()->to(site_url("login"));
         }
     }
-
 
 
 }

@@ -1,15 +1,32 @@
 <div class="ui segment">
     <h3 class="ui header">
-        <?= $comunidad['nom_comunidad'] ?>
-        <div class="sub header">Gestión de la comunidad</div>
+        <?php
+            $nombre_archivo = $comunidad['logo'];
+            $up_dir = 'imgs/comunidad/';
+            $nombre_archivo_fs = $up_dir . $nombre_archivo;
+            $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
+        ?>
+        <?php if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ): ?>
+            <img class="ui large circular image" src="<?= $nombre_archivo_url ?>">
+        <?php endif ?>
+        <div class="content">
+            <?= $comunidad['nom_comunidad'] ?>
+            <div class="sub header">Gestión de la comunidad</div>
+        </div>
     </h3>
     <div class="ui hidden divider"></div>
     <div class="ui list">
         <?php if ($error): ?>
-            <p><span class="ui red text"><?= $error ?></span></p>
+            <div class="ui negative mini message transition">
+                <i class="close icon"></i>
+                <div class="header">
+                    Error
+                </div>
+                <p><?= $error ?></p>
+            </div>
         <?php endif ?>
 
-        <div class="item"><a href="<?= site_url('comunidad/detalle/'. $comunidad['id_comunidad'])?>">Editar comunidad</a></div>
+        <div class="item"><a href="<?= site_url('comunidad/editar_comunidad_propia')?>">Editar comunidad</a></div>
         <div class="item"><a href="<?= site_url('reportes/directorio')?>">Directorio de alumnos</a></div>
 
         <div class="ui segment">
@@ -82,4 +99,13 @@
     $('#btn_qr').click( function() {
         $('.ui.modal').modal('show');
     });
+
+    $('.message .close')
+        .on('click', function() {
+            $(this)
+                .closest('.message')
+                .transition('fade')
+            ;
+        })
+    ;
 </script>

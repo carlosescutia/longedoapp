@@ -15,6 +15,7 @@ class Comunidad_model extends Model
         'codigo',
         'registrar_alumnos',
         'activo',
+        'logo',
     ];
 
     public function get_comunidades_todas() {

@@ -4,7 +4,7 @@
             <div class="twelve wide column">
                 <div class="row">
                     <h1 class="ui header">
-                        Tallas
+                        Nueva comunidad
                         <button class="ui right floated primary button" type="submit" form="frm_comunidad">Guardar</button>
                     </h1>
                 </div>
@@ -30,6 +30,7 @@
                         </div>
 
                         <div class="ui error message"></div>
+                        <input type="hidden" name="url_actual" id="url_actual" value="<?= $url_actual ?>">
                     </form>
                 </div>
             </div>

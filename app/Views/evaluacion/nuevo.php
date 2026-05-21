@@ -52,7 +52,7 @@
                                     </div>
 
                                     <input type="hidden" name="id_evento" id="id_evento" value="<?= $id_evento ?>">
-                                    <input type="hidden" name="status" id="status" value="cerrado">
+                                    <input type="hidden" name="status" id="status" value="abierto">
 
                                     <div class="ui error message"></div>
                                 </form>

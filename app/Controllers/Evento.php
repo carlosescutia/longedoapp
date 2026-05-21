@@ -21,25 +21,34 @@ class Evento extends BaseController
         if ($this->session->logueado) {
             $data = [];
             $data += $this->fn_sis->get_userdata();
-            $data['error'] = $this->session->getFlashdata('error');
+            $data['error_adm'] = $this->session->getFlashdata('error_adm');
+            $data['error_alumno'] = $this->session->getFlashdata('error_alumno');
             $qrcode = new Generator;
 
-            $id_usuario = $data['userdata']['id_usuario'];
-            $usuario = $this->usuario_model->get_usuario($id_usuario);
-            $edad = $usuario['edad'];
-            $data['evento'] = $this->evento_model->get_evento($id_evento);
-            $data['usuario_asiste'] = $this->evento_usuario_model->get_usuario_asiste($id_evento, $id_usuario);
-            $data['perfil_completo'] = $this->perfil_model->get_perfil_completo($id_usuario);
-            $data['evaluacion_disponible'] = $this->evaluacion_model->get_evaluacion_disponible($id_evento, $edad);
-            $data['evaluacion_pendiente'] = $this->evaluacion_model->get_evaluacion_pendiente($id_usuario);
-            $data['evaluaciones'] = $this->evaluacion_model->get_evaluaciones($id_evento);
-            $data['usuario_evalua'] = $this->evaluacion_usuario_model->get_usuario_evalua($id_evento, $id_usuario);
-            $data['evaluadores_evento'] = $this->evaluacion_model->get_evaluadores_evento($id_evento);
-            $data['qr'] = $qrcode->size(450)->color(0, 0, 0)->backgroundColor(255, 255, 255)->style('dot')->format('png')->generate(site_url('registro/' . $data['evento']['token']));
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evento.can_view',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $id_usuario = $data['userdata']['id_usuario'];
+                $usuario = $this->usuario_model->get_usuario($id_usuario);
+                $edad = $usuario['edad'];
+                $data['evento'] = $this->evento_model->get_evento($id_evento);
+                $data['usuario_asiste'] = $this->evento_usuario_model->get_usuario_asiste($id_evento, $id_usuario);
+                $data['perfil_completo'] = $this->perfil_model->get_perfil_completo($id_usuario);
+                $data['evaluacion_disponible'] = $this->evaluacion_model->get_evaluacion_disponible($id_evento, $edad);
+                $data['evaluacion_pendiente'] = $this->evaluacion_model->get_evaluacion_pendiente($id_usuario);
+                $data['evaluaciones'] = $this->evaluacion_model->get_evaluaciones($id_evento);
+                $data['usuario_evalua'] = $this->evaluacion_usuario_model->get_usuario_evalua($id_evento, $id_usuario);
+                $data['evaluadores_evento'] = $this->evaluacion_model->get_evaluadores_evento($id_evento);
+                $data['qr'] = $qrcode->size(450)->color(0, 0, 0)->backgroundColor(255, 255, 255)->style('dot')->format('png')->generate(site_url('registro/' . $data['evento']['token']));
 
-            return view('templates/header', $data)
-                .view('evento/detalle', $data)
-                .view('templates/footer');
+                return view('templates/header', $data)
+                    .view('evento/detalle', $data)
+                    .view('templates/footer');
+            } else {
+                return redirect()->to(site_url());
+            }
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -51,11 +60,18 @@ class Evento extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $data['evento'] = $this->evento_model->get_evento($id_evento);
-
-            return view('templates/header', $data)
-                .view('evento/editar', $data)
-                .view('templates/footer');
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evento.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $data['evento'] = $this->evento_model->get_evento($id_evento);
+                return view('templates/header', $data)
+                    .view('evento/editar', $data)
+                    .view('templates/footer');
+            } else {
+                return redirect()->to(site_url());
+            }
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -67,9 +83,20 @@ class Evento extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            return view('templates/header', $data)
-                .view('evento/nuevo', $data)
-                .view('templates/footer');
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evento.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $data = [];
+                $data += $this->fn_sis->get_userdata();
+
+                return view('templates/header', $data)
+                    .view('evento/nuevo', $data)
+                    .view('templates/footer');
+            } else {
+                return redirect()->to(site_url());
+            }
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -78,48 +105,59 @@ class Evento extends BaseController
     public function guardar()
     {
         if ($this->session->logueado) {
-            $evento = $this->request->getPost();
-            if ($evento) {
-                $data = [];
-                if (array_key_exists('id_evento', $evento)) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
+
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evento.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $evento = $this->request->getPost();
+                if ($evento) {
+                    $data = [];
+                    if (array_key_exists('id_evento', $evento)) {
+                        $data += array(
+                            'id_evento' => $evento['id_evento'],
+                        );
+                    } else {
+                        // generar token y codigo solamente en nuevos eventos
+                        $data += array(
+                            'token' => $this->fn_sis->create_uuid(),
+                            'codigo' => $this->fn_sis->create_random_string(6),
+                        );
+                    }
+
                     $data += array(
-                        'id_evento' => $evento['id_evento'],
+                        'nom_evento' => $evento['nom_evento'],
+                        'fech_ini' => empty($evento['fech_ini']) ? null: $evento['fech_ini'],
+                        'fech_fin' => empty($evento['fech_fin']) ? null: $evento['fech_fin'],
+                        'lugar' => $evento['lugar'],
+                        'ubicacion' => $evento['ubicacion'],
+                        'redaccion' => $evento['redaccion'],
+                        'activo' => array_key_exists('activo', $evento) ? 1 : 0,
+                        'id_comunidad' => $evento['id_comunidad'],
                     );
-                } else {
-                    // generar token y codigo solamente en nuevos eventos
-                    $data += array(
-                        'token' => $this->fn_sis->create_uuid(),
-                        'codigo' => $this->fn_sis->create_random_string(6),
-                    );
+                    // guardar
+                    $this->evento_model->save($data);
+
+                    if (array_key_exists('id_evento', $evento)) {
+                        $accion = 'modificó';
+                        $id_evento = $evento['id_evento'];
+                    } else {
+                        $accion = 'agregó';
+                        $id_evento = $this->evento_model->getInsertID();
+                    }
+
+                    // registro en bitacora
+                    $entidad = 'evento';
+                    $valor = $id_evento . " " .$evento['nom_evento'];
+                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
                 }
-
-                $data += array(
-                    'nom_evento' => $evento['nom_evento'],
-                    'fech_ini' => empty($evento['fech_ini']) ? null: $evento['fech_ini'],
-                    'fech_fin' => empty($evento['fech_fin']) ? null: $evento['fech_fin'],
-                    'lugar' => $evento['lugar'],
-                    'ubicacion' => $evento['ubicacion'],
-                    'redaccion' => $evento['redaccion'],
-                    'activo' => array_key_exists('activo', $evento) ? 1 : 0,
-                    'id_comunidad' => $evento['id_comunidad'],
-                );
-                // guardar
-                $this->evento_model->save($data);
-
-                if (array_key_exists('id_evento', $evento)) {
-                    $accion = 'modificó';
-                    $id_evento = $evento['id_evento'];
-                } else {
-                    $accion = 'agregó';
-                    $id_evento = $this->evento_model->getInsertID();
-                }
-
-                // registro en bitacora
-                $entidad = 'evento';
-                $valor = $id_evento . " " .$evento['nom_evento'];
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                return redirect()->to(site_url('evento/detalle/' . $id_evento));
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url('evento/detalle/' . $id_evento));
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -128,25 +166,42 @@ class Evento extends BaseController
     public function asistir()
     {
         if ($this->session->logueado) {
-            $evento = $this->request->getPost();
-            if ($evento) {
-                $id_evento = $evento['id_evento'];
-                $id_usuario = $evento['id_usuario'];
-                $data = array(
-                    'id_evento' => $id_evento,
-                    'id_usuario' => $id_usuario,
-                    'fecha' => date("Y-m-d"),
-                );
-                // guardar
-                $this->evento_usuario_model->save($data);
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-                // registro en bitacora
-                $accion = 'agregó';
-                $entidad = 'evento_usuario';
-                $valor = 'evnt: ' . $id_evento . ' usr: ' . $id_usuario ;
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evento_usuario.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $evento = $this->request->getPost();
+                if ($evento) {
+                    $curr_evento = $this->evento_model->get_evento($evento['id_evento']);
+                    if ( $curr_evento['actual'] ) {
+                        $id_evento = $evento['id_evento'];
+                        $id_usuario = $evento['id_usuario'];
+                        $data = array(
+                            'id_evento' => $id_evento,
+                            'id_usuario' => $id_usuario,
+                            'fecha' => date("Y-m-d"),
+                        );
+                        // guardar
+                        $this->evento_usuario_model->save($data);
+
+                        // registro en bitacora
+                        $accion = 'agregó';
+                        $entidad = 'evento_usuario';
+                        $valor = 'evnt: ' . $id_evento . ' usr: ' . $id_usuario ;
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    } else {
+                        $this->session->setFlashdata('error_alumno', 'No se puede asistir, el evento ya pasó');
+                        return redirect()->to(site_url('evento/detalle/'.$evento['id_evento']));
+                    }
+                }
+                return redirect()->to(site_url('evento/detalle/' . $id_evento));
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url('evento/detalle/' . $id_evento));
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -155,56 +210,90 @@ class Evento extends BaseController
     public function cancelar()
     {
         if ($this->session->logueado) {
-            $evento = $this->request->getPost();
-            if ($evento) {
-                $id_evento = $evento['id_evento'];
-                $id_usuario = $evento['id_usuario'];
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-                // eliminar asistencia a evaluacion
-                $usuario = $this->usuario_model->get_usuario($id_usuario);
-                $edad = $usuario['edad'];
-                $evaluacion = $this->evaluacion_model->get_evaluacion_evento_edad($id_evento, $edad);
-                $id_evaluacion = $evaluacion['id_evaluacion'];
-                $this->evaluacion_usuario_model->where('id_evaluacion', $id_evaluacion)->where('id_usuario', $id_usuario)->delete();
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evento_usuario.can_edit',
+            );
 
-                // eliminar asistencia a evento
-                $this->evento_usuario_model->where('id_evento', $id_evento)->where('id_usuario', $id_usuario)->delete();
 
-                // registro en bitacora
-                $accion = 'agregó';
-                $entidad = 'evento_usuario';
-                $valor = 'evnt: ' . $id_evento . ' usr: ' . $id_usuario ;
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $evento = $this->request->getPost();
+                if ($evento) {
+                    $curr_evento = $this->evento_model->get_evento($evento['id_evento']);
+                    if ( $curr_evento['actual'] ) {
+                        $id_evento = $evento['id_evento'];
+                        $id_usuario = $evento['id_usuario'];
+
+                        // eliminar asistencia a evaluacion
+                        $usuario = $this->usuario_model->get_usuario($id_usuario);
+                        $edad = $usuario['edad'];
+                        $evaluacion = $this->evaluacion_model->get_evaluacion_evento_edad($id_evento, $edad);
+                        if ($evaluacion) {
+                            $id_evaluacion = $evaluacion['id_evaluacion'];
+                            $this->evaluacion_usuario_model->where('id_evaluacion', $id_evaluacion)->where('id_usuario', $id_usuario)->delete();
+                        }
+
+                        // eliminar asistencia a evento
+                        $this->evento_usuario_model->where('id_evento', $id_evento)->where('id_usuario', $id_usuario)->delete();
+
+                        // registro en bitacora
+                        $accion = 'agregó';
+                        $entidad = 'evento_usuario';
+                        $valor = 'evnt: ' . $id_evento . ' usr: ' . $id_usuario ;
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    } else {
+                        $this->session->setFlashdata('error_alumno', 'No se puede cancelar la asistencia, el evento ya pasó');
+                        return redirect()->to(site_url('evento/detalle/'.$evento['id_evento']));
+                    }
+                }
+                return redirect()->to(site_url('evento/detalle/' . $id_evento));
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url('evento/detalle/' . $id_evento));
         } else {
             return redirect()->to(site_url("login"));
         }
     }
 
 
-    public function eliminar()
-    {
+    public function eliminar() {
         if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-            $evento = $this->request->getPost();
-            if ($evento) {
-                $id_evento = $evento['id_evento'];
-                $url_actual = $evento['url_actual'];
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evento.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $evento = $this->request->getPost();
+                if ($evento) {
+                    $curr_evento = $this->evento_model->get_evento($evento['id_evento']);
+                    if ( ! $curr_evento['evaluaciones_aplicadas'] ) {
+                        $id_evento = $evento['id_evento'];
+                        $url_actual = $evento['url_actual'];
 
-                // registro en bitacora
-                $evento = $this->evento_model->get_evento($id_evento);
-                $accion = "eliminó";
-                $entidad = 'evento';
-                $valor = $evento['id_evento'] . " " . $evento['nom_evento'];
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                        // registro en bitacora
+                        $evento = $this->evento_model->get_evento($id_evento);
+                        $accion = "eliminó";
+                        $entidad = 'evento';
+                        $valor = $evento['id_evento'] . " " . $evento['nom_evento'];
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
 
-                // eliminado
-                $this->evento_model->delete($id_evento);
-
+                        // eliminado
+                        $this->evento_model->delete($id_evento);
+                    } else {
+                        $this->session->setFlashdata('error_adm', 'No se puede eliminar, el evento tiene evaluaciones aplicadas');
+                        return redirect()->to(site_url('evento/detalle/'.$evento['id_evento']));
+                    }
+                }
+                return redirect()->to(site_url());
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url());
-
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -213,23 +302,40 @@ class Evento extends BaseController
     public function actualizar_codigo()
     {
         if ($this->session->logueado) {
-            $evento = $this->request->getPost();
-            if ($evento) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-                $data = array(
-                    'id_evento' => $evento['id_evento'],
-                    'codigo' => $evento['codigo'],
-                );
-                // guardar
-                $this->evento_model->save($data);
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evento.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $evento = $this->request->getPost();
+                if ($evento) {
+                    $curr_evento = $this->evento_model->get_evento($evento['id_evento']);
+                    if ( $curr_evento['actual'] ) {
 
-                // registro en bitacora
-                $accion = 'modificó';
-                $entidad = 'evento';
-                $valor = $evento['id_evento'] . " codigo " . $evento['codigo'];
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                        $data = array(
+                            'id_evento' => $evento['id_evento'],
+                            'codigo' => $evento['codigo'],
+                        );
+                        // guardar
+                        $this->evento_model->save($data);
+
+                        // registro en bitacora
+                        $accion = 'modificó';
+                        $entidad = 'evento';
+                        $valor = $evento['id_evento'] . " codigo " . $evento['codigo'];
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    } else {
+                        $this->session->setFlashdata('error_adm', 'No se puede modificar, el evento ya pasó');
+                        return redirect()->to(site_url('evento/detalle/'.$evento['id_evento']));
+                    }
+                }
+                return redirect()->to(site_url('evento/detalle/' . $evento['id_evento']));
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url('evento/detalle/' . $evento['id_evento']));
         } else {
             return redirect()->to(site_url('login'));
         }
@@ -238,24 +344,40 @@ class Evento extends BaseController
     public function actualizar_registrar_externos()
     {
         if ($this->session->logueado) {
-            $evento = $this->request->getPost();
-            if ($evento) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-                $data = array(
-                    'id_evento' => $evento['id_evento'],
-                    'registrar_externos' => array_key_exists('registrar_externos', $evento) ? 1 : 0,
-                );
-                // guardar
-                $this->evento_model->save($data);
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evento.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $evento = $this->request->getPost();
+                if ($evento) {
+                    $curr_evento = $this->evento_model->get_evento($evento['id_evento']);
+                    if ( $curr_evento['actual'] ) {
+                        $data = array(
+                            'id_evento' => $evento['id_evento'],
+                            'registrar_externos' => array_key_exists('registrar_externos', $evento) ? 1 : 0,
+                        );
+                        // guardar
+                        $this->evento_model->save($data);
 
-                // registro en bitacora
-                $registrar = array_key_exists('registrar_externos', $evento) ? 'registrar' : 'no registrar';
-                $accion = 'modificó';
-                $entidad = 'evento';
-                $valor = $evento['id_evento'] . " registrar_externos " . $registrar;
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                        // registro en bitacora
+                        $registrar = array_key_exists('registrar_externos', $evento) ? 'registrar' : 'no registrar';
+                        $accion = 'modificó';
+                        $entidad = 'evento';
+                        $valor = $evento['id_evento'] . " registrar_externos " . $registrar;
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    } else {
+                        $this->session->setFlashdata('error_adm', 'No se puede modificar, el evento ya pasó');
+                        return redirect()->to(site_url('evento/detalle/'.$evento['id_evento']));
+                    }
+                }
+                return redirect()->to(site_url('evento/detalle/' . $evento['id_evento']));
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url('evento/detalle/' . $evento['id_evento']));
         } else {
             return redirect()->to(site_url('login'));
         }

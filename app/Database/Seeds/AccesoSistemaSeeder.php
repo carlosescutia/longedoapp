@@ -76,6 +76,22 @@ class AccesoSistemaSeeder extends Seeder
                 'cod_opcion_sistema' => 'recurso_entidad.can_edit',
             ],
             [
+                'id_rol' => 'admin',
+                'cod_opcion_sistema' => 'archivo.can_upload',
+            ],
+            [
+                'id_rol' => 'admin',
+                'cod_opcion_sistema' => 'archivo.can_delete',
+            ],
+            [
+                'id_rol' => 'admin',
+                'cod_opcion_sistema' => 'evaluacion.can_edit',
+            ],
+            [
+                'id_rol' => 'admin',
+                'cod_opcion_sistema' => 'evento.can_view',
+            ],
+            [
                 'id_rol' => 'mentor',
                 'cod_opcion_sistema' => 'reporte.can_view',
             ],
@@ -100,12 +116,68 @@ class AccesoSistemaSeeder extends Seeder
                 'cod_opcion_sistema' => 'admin_comunidad.can_edit',
             ],
             [
+                'id_rol' => 'mentor',
+                'cod_opcion_sistema' => 'perfil.can_edit',
+            ],
+            [
+                'id_rol' => 'mentor',
+                'cod_opcion_sistema' => 'archivo.can_upload',
+            ],
+            [
+                'id_rol' => 'mentor',
+                'cod_opcion_sistema' => 'archivo.can_delete',
+            ],
+            [
+                'id_rol' => 'mentor',
+                'cod_opcion_sistema' => 'evaluacion.can_edit',
+            ],
+            [
+                'id_rol' => 'mentor',
+                'cod_opcion_sistema' => 'evaluacion_usuario.can_edit',
+            ],
+            [
+                'id_rol' => 'mentor',
+                'cod_opcion_sistema' => 'evento.can_view',
+            ],
+            [
+                'id_rol' => 'mentor',
+                'cod_opcion_sistema' => 'evento_usuario.can_edit',
+            ],
+            [
+                'id_rol' => 'mentor',
+                'cod_opcion_sistema' => 'externo.can_edit',
+            ],
+            [
                 'id_rol' => 'alumno',
                 'cod_opcion_sistema' => 'reporte.can_view',
             ],
             [
                 'id_rol' => 'alumno',
                 'cod_opcion_sistema' => 'reporte_alumno.can_view',
+            ],
+            [
+                'id_rol' => 'alumno',
+                'cod_opcion_sistema' => 'perfil.can_edit',
+            ],
+            [
+                'id_rol' => 'alumno',
+                'cod_opcion_sistema' => 'archivo.can_upload',
+            ],
+            [
+                'id_rol' => 'alumno',
+                'cod_opcion_sistema' => 'archivo.can_delete',
+            ],
+            [
+                'id_rol' => 'alumno',
+                'cod_opcion_sistema' => 'evaluacion_usuario.can_edit',
+            ],
+            [
+                'id_rol' => 'alumno',
+                'cod_opcion_sistema' => 'evento.can_view',
+            ],
+            [
+                'id_rol' => 'alumno',
+                'cod_opcion_sistema' => 'evento_usuario.can_edit',
             ],
         ];
 

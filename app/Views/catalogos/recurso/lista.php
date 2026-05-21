@@ -9,7 +9,7 @@
                     </h1>
                 </div>
 
-                <table class="ui very basic striped unstackable table">
+                <table class="ui very basic striped unstackable table" id="tbl_recursos">
                     <thead>
                         <tr>
                             <th>Nombre</th>
@@ -75,4 +75,17 @@
 
     </div>
 </div>
-
+<script type="text/javascript">
+$(document).ready( function () {
+    $('#tbl_recursos').DataTable( {
+        responsive: true,
+        language: {
+            url: '<?=base_url()?>assets/js/es-MX.json',
+            lengthLabels: { 
+                '-1': 'Todos'
+            },
+        },
+        lengthMenu: [10, 50, -1],
+    });
+});
+</script>

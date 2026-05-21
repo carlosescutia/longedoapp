@@ -2,7 +2,15 @@
     <div class="ui stackable centered grid">
         <div class="fourteen wide column">
             <h1 class="ui center aligned header">Registro a <?= $comunidad['nom_comunidad'] ?></h1>
-            <img class="ui centered tiny image" src="/assets/img/logotipo.png">
+            <?php
+                $nombre_archivo = $comunidad['logo'];
+                $up_dir = 'imgs/comunidad/';
+                $nombre_archivo_fs = $up_dir . $nombre_archivo;
+                $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
+            ?>
+            <?php if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ): ?>
+                <img class="ui centered tiny image" src="<?= $nombre_archivo_url ?>">
+            <?php endif ?>
 
             <form class="ui form"  method="post" action="/registro_alumno/guardar" id="frm_alumno">
                 <input type="hidden" name="id_comunidad" id="id_comunidad" value="<?= $comunidad['id_comunidad'] ?>">

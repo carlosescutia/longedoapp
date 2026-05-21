@@ -17,7 +17,15 @@
                         <p>El mentor de tu comunidad activará tu cuenta y podrás acceder a la aplicación en la siguiente dirección:</p>
                     </div>
                     <div class="three wide column">
-                        <img class="ui centered fluid image" src="/assets/img/logotipo.png">
+                        <?php
+                            $nombre_archivo = $comunidad['logo'];
+                            $up_dir = 'imgs/comunidad/';
+                            $nombre_archivo_fs = $up_dir . $nombre_archivo;
+                            $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
+                        ?>
+                        <?php if ( file_exists($nombre_archivo_fs) and $nombre_archivo_fs !== $up_dir ): ?>
+                            <img class="ui small image" src="<?= $nombre_archivo_url ?>">
+                        <?php endif ?>
                     </div>
                 </div>
             </div>

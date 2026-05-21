@@ -25,13 +25,21 @@ class Usuario extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $id_rol = $data['userdata']['id_rol'];
-            $id_comunidad = $data['userdata']['id_comunidad'];
-            $data['usuarios'] = $this->usuario_model->get_usuarios($id_rol, $id_comunidad);
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'usuario.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $id_rol = $data['userdata']['id_rol'];
+                $id_comunidad = $data['userdata']['id_comunidad'];
+                $data['usuarios'] = $this->usuario_model->get_usuarios($id_rol, $id_comunidad);
 
-            return view('templates/header', $data)
-                .view('catalogos/usuario/lista', $data)
-                .view('templates/footer');
+                return view('templates/header', $data)
+                    .view('catalogos/usuario/lista', $data)
+                    .view('templates/footer');
+            } else {
+                return redirect()->to(site_url());
+            }
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -42,19 +50,27 @@ class Usuario extends BaseController
         if ($this->session->logueado) {
             $data = [];
             $data += $this->fn_sis->get_userdata();
-            $qrcode = new Generator;
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'usuario.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $qrcode = new Generator;
 
-            $data['usuario'] = $this->usuario_model->get_usuario($id_usuario);
-            $data['roles'] = $this->rol_model->get_roles();
-            $data['comunidades'] = $this->comunidad_model->get_comunidades_activas();
-            $data['accesos_sistema_rol'] = $this->acceso_sistema_model->get_accesos_sistema_rol_usuario($id_usuario);
-            $data['accesos_sistema_usuario'] = $this->acceso_sistema_usuario_model->get_accesos_sistema_usuario($id_usuario);
-            $data['opciones_sistema_otorgables'] = $this->opcion_sistema_model->get_opciones_sistema_otorgables();
-            $data['qr'] = $qrcode->size(450)->format('png')->generate(site_url('usuario/nuevo_pwd/' . $data['usuario']['token_cambio_pwd']));
+                $data['usuario'] = $this->usuario_model->get_usuario($id_usuario);
+                $data['roles'] = $this->rol_model->get_roles();
+                $data['comunidades'] = $this->comunidad_model->get_comunidades_activas();
+                $data['accesos_sistema_rol'] = $this->acceso_sistema_model->get_accesos_sistema_rol_usuario($id_usuario);
+                $data['accesos_sistema_usuario'] = $this->acceso_sistema_usuario_model->get_accesos_sistema_usuario($id_usuario);
+                $data['opciones_sistema_otorgables'] = $this->opcion_sistema_model->get_opciones_sistema_otorgables();
+                $data['qr'] = $qrcode->size(450)->format('png')->generate(site_url('usuario/nuevo_pwd/' . $data['usuario']['token_cambio_pwd']));
 
-            return view('templates/header', $data)
-                .view('catalogos/usuario/detalle', $data)
-                .view('templates/footer');
+                return view('templates/header', $data)
+                    .view('catalogos/usuario/detalle', $data)
+                    .view('templates/footer');
+            } else {
+                return redirect()->to(site_url());
+            }
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -66,12 +82,20 @@ class Usuario extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $data['roles'] = $this->rol_model->get_roles();
-            $data['comunidades'] = $this->comunidad_model->get_comunidades_activas();
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'usuario.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $data['roles'] = $this->rol_model->get_roles();
+                $data['comunidades'] = $this->comunidad_model->get_comunidades_activas();
 
-            return view('templates/header', $data)
-                .view('catalogos/usuario/nuevo', $data)
-                .view('templates/footer');
+                return view('templates/header', $data)
+                    .view('catalogos/usuario/nuevo', $data)
+                    .view('templates/footer');
+            } else {
+                return redirect()->to(site_url());
+            }
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -80,43 +104,54 @@ class Usuario extends BaseController
     public function guardar()
     {
         if ($this->session->logueado) {
-            $usuario = $this->request->getPost();
-            if ($usuario) {
-                $data = [];
-                if (array_key_exists('id_usuario', $usuario)) {
-                    $data += array(
-                        'id_usuario' => $usuario['id_usuario'],
-                    );
-                }
-                if (array_key_exists('password', $usuario)) {
-                    $data += array(
-                        'password' => password_hash($usuario['password'], PASSWORD_DEFAULT),
-                    );
-                }
-                $data += array(
-                    'id_rol' => $usuario['id_rol'],
-                    'nom_usuario' => $usuario['nom_usuario'],
-                    'nom_login' => $usuario['nom_login'],
-                    'activo' => array_key_exists('activo', $usuario) ? 1 : 0,
-                    'id_comunidad' => empty($usuario['id_comunidad']) ? null : $usuario['id_comunidad'],
-                );
-                // guardar
-                $this->usuario_model->save($data);
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-                if (array_key_exists('id_usuario', $usuario)) {
-                    $accion = 'modificó';
-                    $id_usuario = $usuario['id_usuario'];
-                } else {
-                    $accion = 'agregó';
-                    $id_usuario = $this->usuario_model->getInsertID();
-                }
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'usuario.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $usuario = $this->request->getPost();
+                if ($usuario) {
+                    $data = [];
+                    if (array_key_exists('id_usuario', $usuario)) {
+                        $data += array(
+                            'id_usuario' => $usuario['id_usuario'],
+                        );
+                    }
+                    if (array_key_exists('password', $usuario)) {
+                        $data += array(
+                            'password' => password_hash($usuario['password'], PASSWORD_DEFAULT),
+                        );
+                    }
+                    $data += array(
+                        'id_rol' => $usuario['id_rol'],
+                        'nom_usuario' => $usuario['nom_usuario'],
+                        'nom_login' => $usuario['nom_login'],
+                        'activo' => array_key_exists('activo', $usuario) ? 1 : 0,
+                        'id_comunidad' => empty($usuario['id_comunidad']) ? null : $usuario['id_comunidad'],
+                    );
+                    // guardar
+                    $this->usuario_model->save($data);
 
-                // registro en bitacora
-                $entidad = 'usuario';
-                $valor = $id_usuario . " " .$usuario['nom_login'];
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    if (array_key_exists('id_usuario', $usuario)) {
+                        $accion = 'modificó';
+                        $id_usuario = $usuario['id_usuario'];
+                    } else {
+                        $accion = 'agregó';
+                        $id_usuario = $this->usuario_model->getInsertID();
+                    }
+
+                    // registro en bitacora
+                    $entidad = 'usuario';
+                    $valor = $id_usuario . " " .$usuario['nom_login'];
+                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                }
+                return redirect()->to(site_url("usuario"));
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url("usuario"));
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -125,24 +160,35 @@ class Usuario extends BaseController
     public function guardar_activo()
     {
         if ($this->session->logueado) {
-            $usuario = $this->request->getPost();
-            if ($usuario) {
-                $accion = 'modificó';
-                $activo = array_key_exists('activo', $usuario) ? 'activo' : 'inactivo';
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-                // guardado
-                $data = array(
-                    'id_usuario' => $usuario['id_usuario'],
-                    'activo' => array_key_exists('activo', $usuario) ? 1 : 0,
-                );
-                $this->usuario_model->save($data);
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'usuario.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $usuario = $this->request->getPost();
+                if ($usuario) {
+                    $accion = 'modificó';
+                    $activo = array_key_exists('activo', $usuario) ? 'activo' : 'inactivo';
 
-                // registro en bitacora
-                $entidad = 'usuario';
-                $valor = $usuario['id_usuario'] . " " .$usuario['nom_login'] . " " . $activo;
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    // guardado
+                    $data = array(
+                        'id_usuario' => $usuario['id_usuario'],
+                        'activo' => array_key_exists('activo', $usuario) ? 1 : 0,
+                    );
+                    $this->usuario_model->save($data);
+
+                    // registro en bitacora
+                    $entidad = 'usuario';
+                    $valor = $usuario['id_usuario'] . " " .$usuario['nom_login'] . " " . $activo;
+                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                }
+                return redirect()->to(site_url("usuario"));
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url("usuario"));
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -151,25 +197,36 @@ class Usuario extends BaseController
     public function eliminar()
     {
         if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-            $usuario = $this->request->getPost();
-            if ($usuario) {
-                $id_usuario = $usuario['id_usuario'];
-                $url_actual = $usuario['url_actual'];
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'usuario.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
 
-                // registro en bitacora
-                $usuario = $this->usuario_model->get_usuario($id_usuario);
-                $accion = "eliminó";
-                $entidad = 'usuario';
-                $valor = $usuario['id_usuario'] . " " . $usuario['nom_login'];
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                $usuario = $this->request->getPost();
+                if ($usuario) {
+                    $id_usuario = $usuario['id_usuario'];
+                    $url_actual = $usuario['url_actual'];
 
-                // eliminado
-                $this->usuario_model->delete($id_usuario);
+                    // registro en bitacora
+                    $usuario = $this->usuario_model->get_usuario($id_usuario);
+                    $accion = "eliminó";
+                    $entidad = 'usuario';
+                    $valor = $usuario['id_usuario'] . " " . $usuario['nom_login'];
+                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
 
-                return redirect()->to($url_actual);
+                    // eliminado
+                    $this->usuario_model->delete($id_usuario);
+
+                    return redirect()->to($url_actual);
+                } else {
+                    return redirect()->to(site_url("usuario"));
+                }
             } else {
-                return redirect()->to(site_url("usuario"));
+                return redirect()->to(site_url());
             }
         } else {
             return redirect()->to(site_url("login"));
@@ -182,11 +239,22 @@ class Usuario extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
-            $data['evaluadores'] = $this->usuario_model->get_mentores();
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'usuario.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $data = [];
+                $data += $this->fn_sis->get_userdata();
 
-            return view('templates/header', $data)
-                .view('catalogos/usuario/lista_evaluadores', $data)
-                .view('templates/footer');
+                $data['evaluadores'] = $this->usuario_model->get_mentores();
+
+                return view('templates/header', $data)
+                    .view('catalogos/usuario/lista_evaluadores', $data)
+                    .view('templates/footer');
+            } else {
+                return redirect()->to(site_url());
+            }
         } else {
             return redirect()->to(site_url("login"));
         }
@@ -195,24 +263,35 @@ class Usuario extends BaseController
     public function guardar_evaluador()
     {
         if ($this->session->logueado) {
-            $usuario = $this->request->getPost();
-            if ($usuario) {
-                $accion = 'modificó';
-                $evaluador = array_key_exists('evaluador', $usuario) ? 'evaluador' : 'no_evaluador';
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
 
-                // guardado
-                $data = array(
-                    'id_usuario' => $usuario['id_usuario'],
-                    'evaluador' => array_key_exists('evaluador', $usuario) ? 1 : 0,
-                );
-                $this->usuario_model->save($data);
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'usuario.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $usuario = $this->request->getPost();
+                if ($usuario) {
+                    $accion = 'modificó';
+                    $evaluador = array_key_exists('evaluador', $usuario) ? 'evaluador' : 'no_evaluador';
 
-                // registro en bitacora
-                $entidad = 'usuario';
-                $valor = $usuario['id_usuario'] . " " .$usuario['nom_login'] . " " . $evaluador;
-                $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    // guardado
+                    $data = array(
+                        'id_usuario' => $usuario['id_usuario'],
+                        'evaluador' => array_key_exists('evaluador', $usuario) ? 1 : 0,
+                    );
+                    $this->usuario_model->save($data);
+
+                    // registro en bitacora
+                    $entidad = 'usuario';
+                    $valor = $usuario['id_usuario'] . " " .$usuario['nom_login'] . " " . $evaluador;
+                    $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                }
+                return redirect()->to(site_url("usuario/lista_evaluadores"));
+            } else {
+                return redirect()->to(site_url());
             }
-            return redirect()->to(site_url("usuario/lista_evaluadores"));
         } else {
             return redirect()->to(site_url("login"));
         }
