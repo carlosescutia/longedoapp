@@ -68,7 +68,7 @@
                             <?php if (has_permission_and($permisos_requeridos, $permisos_usuario)): ?>
                                 <div class="four wide field">
                                     <label>Comunidad</label>
-                                    <div class="ui selection dropdown">
+                                    <div class="ui search selection dropdown">
                                         <input type="hidden" name="id_comunidad">
                                         <i class="dropdown icon"></i>
                                         <div class="default text">Comunidad</div>
