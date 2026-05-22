@@ -109,8 +109,15 @@ class Perfil extends BaseController
                             'fech_acept_priv' => date("Y-m-d"),
                         );
                     }
-                    // guardar
+                    // guardar perfil
                     $this->perfil_model->save($data);
+
+                    $data = array(
+                        'id_usuario' => $perfil['id_usuario'],
+                        'nom_usuario' => $perfil['nom_usuario'],
+                    );
+                    // guardar usuario
+                    $this->usuario_model->save($data);
 
                     $accion = 'modificó';
                     $id_perfil = $perfil['id_perfil'];

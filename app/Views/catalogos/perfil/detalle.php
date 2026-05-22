@@ -119,9 +119,15 @@
                                 </div>
                             </div>
                             <div class="ui form">
-                                <div class="field">
-                                    <label>Nombre de capoeira</label>
-                                    <input type="text" name="nom_capoeira" id="nom_capoeira" value="<?=$perfil['nom_capoeira']?>" form="frm_perfil">
+                                <div class="fields">
+                                    <div class="eight wide field">
+                                        <label>Nombre de capoeira</label>
+                                        <input type="text" name="nom_capoeira" id="nom_capoeira" value="<?=$perfil['nom_capoeira']?>" form="frm_perfil">
+                                    </div>
+                                    <div class="eight wide field">
+                                        <label>Nombre completo</label>
+                                        <input type="text" name="nom_usuario" id="nom_usuario" value="<?=$perfil['nom_usuario']?>" form="frm_perfil">
+                                    </div>
                                 </div>
                                 <div class="fields">
                                     <div class="field">
