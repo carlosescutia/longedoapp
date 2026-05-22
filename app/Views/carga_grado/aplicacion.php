@@ -98,7 +98,7 @@
                                         <form class="ui form" method="post" action="/carga_grado/actualizar_item" id="frm_grd_<?=$evaluados_item['id_evaluacion_usuario']?>">
                                             <div class="field">
                                                 <label></label>
-                                                <div class="ui selection dropdown">
+                                                <div class="ui search selection dropdown">
                                                     <input type="hidden" name="id_grado" id="id_grado" value="<?= $evaluados_item['id_grado'] ?>" onchange="$('#frm_grd_<?=$evaluados_item['id_evaluacion_usuario']?>').submit()">
                                                     <i class="dropdown icon"></i>
                                                     <div class="default text">grado</div>
