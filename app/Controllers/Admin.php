@@ -15,6 +15,7 @@ class Admin extends BaseController
         $this->comunidad_model = model('Comunidad_model');
         $this->recurso_entidad_model = model('Recurso_entidad_model');
         $this->perfil_model = model('Perfil_model');
+        $this->roda_model = model('Roda_model');
     }
 
     public function index()
@@ -43,6 +44,8 @@ class Admin extends BaseController
                 $entidad = 'grado';
                 $data['recursos_entidad'] = $this->recurso_entidad_model->get_recursos_entidad_entidad($id_entidad, $entidad);
             }
+            $data['rodas_actuales'] = $this->roda_model->get_rodas_actuales();
+            $data['rodas_anteriores'] = $this->roda_model->get_rodas_anteriores();
 
             return view('templates/header', $data)
                 .view('admin/index', $data)

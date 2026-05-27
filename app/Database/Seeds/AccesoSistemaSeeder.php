@@ -92,6 +92,14 @@ class AccesoSistemaSeeder extends Seeder
                 'cod_opcion_sistema' => 'evento.can_view',
             ],
             [
+                'id_rol' => 'admin',
+                'cod_opcion_sistema' => 'roda.can_view',
+            ],
+            [
+                'id_rol' => 'admin',
+                'cod_opcion_sistema' => 'grado.can_view',
+            ],
+            [
                 'id_rol' => 'mentor',
                 'cod_opcion_sistema' => 'reporte.can_view',
             ],
@@ -110,6 +118,10 @@ class AccesoSistemaSeeder extends Seeder
             [
                 'id_rol' => 'mentor',
                 'cod_opcion_sistema' => 'evento.can_edit',
+            ],
+            [
+                'id_rol' => 'mentor',
+                'cod_opcion_sistema' => 'roda.can_edit',
             ],
             [
                 'id_rol' => 'mentor',
@@ -141,11 +153,19 @@ class AccesoSistemaSeeder extends Seeder
             ],
             [
                 'id_rol' => 'mentor',
+                'cod_opcion_sistema' => 'roda.can_view',
+            ],
+            [
+                'id_rol' => 'mentor',
                 'cod_opcion_sistema' => 'evento_usuario.can_edit',
             ],
             [
                 'id_rol' => 'mentor',
                 'cod_opcion_sistema' => 'externo.can_edit',
+            ],
+            [
+                'id_rol' => 'mentor',
+                'cod_opcion_sistema' => 'grado.can_view',
             ],
             [
                 'id_rol' => 'alumno',
@@ -174,6 +194,10 @@ class AccesoSistemaSeeder extends Seeder
             [
                 'id_rol' => 'alumno',
                 'cod_opcion_sistema' => 'evento.can_view',
+            ],
+            [
+                'id_rol' => 'alumno',
+                'cod_opcion_sistema' => 'roda.can_view',
             ],
             [
                 'id_rol' => 'alumno',

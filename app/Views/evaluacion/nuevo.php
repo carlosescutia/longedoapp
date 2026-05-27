@@ -33,11 +33,11 @@
                                     </div>
                                     <div class="fields">
                                         <div class="eight wide field">
-                                            <label>Edad</label>
+                                            <label>Tipo de evaluación</label>
                                             <div class="ui selection dropdown">
                                                 <input type="hidden" name="edad" id="edad">
                                                 <i class="dropdown icon"></i>
-                                                <div class="default text">Edad</div>
+                                                <div class="default text">Tipo</div>
                                                 <div class="menu">
                                                     <div class="item" data-value="niño">Niño</div>
                                                     <div class="item" data-value="adulto">Adulto</div>

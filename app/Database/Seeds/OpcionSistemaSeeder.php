@@ -146,6 +146,21 @@ class OpcionSistemaSeeder extends Seeder
                 'nom_opcion_sistema' => 'Editar asistentes externos',
                 'otorgable' => null
             ],
+            [
+                'cod_opcion_sistema' => 'roda.can_edit',
+                'nom_opcion_sistema' => 'Editar rodas',
+                'otorgable' => null
+            ],
+            [
+                'cod_opcion_sistema' => 'roda.can_view',
+                'nom_opcion_sistema' => 'Ver rodas',
+                'otorgable' => null
+            ],
+            [
+                'cod_opcion_sistema' => 'grado.can_view',
+                'nom_opcion_sistema' => 'Ver grados',
+                'otorgable' => null
+            ],
         ];
 
         $this->db->table('opcion_sistema')->insertBatch($data);

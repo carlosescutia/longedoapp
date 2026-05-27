@@ -2,14 +2,14 @@
     <div class="ui stackable grid">
 
         <div class="ten wide column">
-            <h1 class="ui header"><?= $evento['nom_evento'] ?></h1>
+            <h1 class="ui header"><?= $roda['nom_roda'] ?></h1>
             <div class="ui hidden divider"></div>
             <div class="ui stackable grid">
                 <div class="sixteen wide column">
                     <div class="ui medium left floated stackable image">
                         <?php
-                            $nombre_archivo = $evento['cartel'];
-                            $up_dir = 'imgs/evento/';
+                            $nombre_archivo = $roda['cartel'];
+                            $up_dir = 'imgs/roda/';
                             $nombre_archivo_fs = $up_dir . $nombre_archivo;
                             $nombre_archivo_url = base_url($up_dir . $nombre_archivo);
                         ?>
@@ -19,7 +19,7 @@
                             <img class="ui bordered image" src="<?= base_url('assets/img/image.png') ?>">
                         <?php endif ?>
                     </div>
-                    <p class="redaccion"><?= $evento['redaccion'] ?></p>
+                    <p class="redaccion"><?= $roda['redaccion'] ?></p>
                 </div>
             </div>
 
@@ -35,19 +35,18 @@
                         IntlDateFormatter::GREGORIAN,
                         'EEEE dd/MMM/yy'
                     );
-                    $fech_ini = strtotime($evento['fech_ini']);
-                    $fech_fin = strtotime($evento['fech_fin']);
+                    $fecha = strtotime($roda['fecha']);
                 ?>
 
                 <div class="eight wide column">
-                    Del <?= datefmt_format($fmt, $fech_ini) ?> al <?= datefmt_format($fmt, $fech_fin) ?>
+                    <?= datefmt_format($fmt, $fecha) ?>
                 </div>
                 <div class="eight wide column">
-                    <?php if ( $evento['ubicacion'] ): ?>
-                        <a class="item" href="<?=$evento['ubicacion']?>" target="_blank"><i class="marker icon"></i>
+                    <?php if ( $roda['ubicacion'] ): ?>
+                        <a class="item" href="<?=$roda['ubicacion']?>" target="_blank"><i class="marker icon"></i>
                     <?php endif ?>
-                        <?= $evento['lugar'] ?>
-                    <?php if ( $evento['ubicacion'] ): ?>
+                        <?= $roda['lugar'] ?>
+                    <?php if ( $roda['ubicacion'] ): ?>
                         </a>
                     <?php endif ?>
                 </div>
@@ -63,28 +62,20 @@
                     <p><?= $error_alumno ?></p>
                 </div>
             <?php endif ?>
-
-                <?php include "user_actions_evento.php" ?>
         </div>
 
-        <!-- Administración del evento -->
-        <?php if ($userdata['id_comunidad'] == $evento['id_comunidad']): ?>
+        <!-- Administración de la roda -->
+        <?php if ($userdata['id_comunidad'] == $roda['id_comunidad']): ?>
             <?php
                 $permisos_requeridos = array(
-                    'evento.can_edit',
+                    'roda.can_edit',
                 );
             ?>
             <?php if (has_permission_and($permisos_requeridos, $permisos_usuario)): ?>
                 <div class="five wide column">
-                    <?php include "admin_evento.php" ?>
+                    <?php include "admin_roda.php" ?>
                 </div>
             <?php endif ?>
-        <?php endif ?>
-
-        <?php if ( in_array($userdata['id_usuario'], array_column($evaluadores_evento, 'id_evaluador')) ): ?>
-            <div class="five wide column">
-                <?php include "gestion_evaluacion.php" ?>
-            </div>
         <?php endif ?>
 
         <div class="row">

@@ -28,7 +28,7 @@
                         ?>
                         <?php
                             $permisos_requeridos = array(
-                            'grado.can_edit',
+                            'grado.can_view',
                             );
                             if (has_permission_or($permisos_requeridos, $permisos_usuario)) { ?>
                                 <div class="four wide column">

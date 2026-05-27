@@ -57,6 +57,7 @@ $routes->post('archivo/subir_evento', 'Archivo::subir_evento');
 $routes->post('archivo/subir_recurso', 'Archivo::subir_recurso');
 $routes->post('archivo/eliminar_recurso', 'Archivo::eliminar_recurso');
 $routes->post('archivo/eliminar', 'Archivo::eliminar');
+$routes->post('archivo/subir_roda', 'Archivo::subir_roda');
 
 $routes->get('proceso/', 'Proceso::index');
 
@@ -142,3 +143,10 @@ $routes->post('recurso/eliminar', 'Recurso::eliminar');
 
 $routes->post('recurso_entidad/nuevo', 'Recurso_entidad::nuevo');
 $routes->post('recurso_entidad/eliminar', 'Recurso_entidad::eliminar');
+
+$routes->get('roda/detalle/(:num)', 'Roda::detalle/$1');
+$routes->get('roda/nuevo', 'Roda::nuevo');
+$routes->get('roda/editar/(:num)', 'Roda::editar/$1');
+$routes->post('roda/guardar', 'Roda::guardar');
+$routes->post('roda/eliminar', 'Roda::eliminar');
+

@@ -2,31 +2,37 @@
 
 namespace App\Controllers;
 
-class Grado extends BaseController
+use SimpleSoftwareIO\QrCode\Generator;
+
+class Roda extends BaseController
 {
     public function __construct()
     {
-        $this->grado_model = model('Grado_model');
-        $this->evaluacion_model = model('Evaluacion_model');
-        $this->recurso_entidad_model = model('Recurso_entidad_model');
-        $this->recurso_model = model('Recurso_model');
+        $this->roda_model = model('Roda_model');
+        $this->usuario_model = model('Usuario_model');
     }
 
-    public function index()
+    public function detalle($id_roda)
     {
         if ($this->session->logueado) {
             $data = [];
             $data += $this->fn_sis->get_userdata();
+            $data['error_adm'] = $this->session->getFlashdata('error_adm');
+            $data['error_alumno'] = $this->session->getFlashdata('error_alumno');
+            $qrcode = new Generator;
 
             $permisos_usuario = $data['permisos_usuario'];
             $permisos_requeridos = array(
-                'grado.can_view',
+                'roda.can_view',
             );
             if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
-                $data['grados'] = $this->grado_model->get_grados_todos();
+                $id_usuario = $data['userdata']['id_usuario'];
+                $usuario = $this->usuario_model->get_usuario($id_usuario);
+                $edad = $usuario['edad'];
+                $data['roda'] = $this->roda_model->get_roda($id_roda);
 
                 return view('templates/header', $data)
-                    .view('catalogos/grado/lista', $data)
+                    .view('roda/detalle', $data)
                     .view('templates/footer');
             } else {
                 return redirect()->to(site_url());
@@ -36,7 +42,7 @@ class Grado extends BaseController
         }
     }
 
-    public function detalle($id_grado)
+    public function editar($id_roda)
     {
         if ($this->session->logueado) {
             $data = [];
@@ -44,19 +50,12 @@ class Grado extends BaseController
 
             $permisos_usuario = $data['permisos_usuario'];
             $permisos_requeridos = array(
-                'grado.can_view',
+                'roda.can_edit',
             );
             if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
-                $data['grado'] = $this->grado_model->get_grado($id_grado);
-                $id_entidad = $id_grado;
-                $entidad = 'grado';
-                $data['recursos_entidad'] = $this->recurso_entidad_model->get_recursos_entidad_entidad($id_entidad, $entidad);
-                $data['recursos'] = $this->recurso_model->get_recursos_activos();
-                $data['entidad'] = $entidad;
-                $data['id_entidad'] = $id_entidad;
-
+                $data['roda'] = $this->roda_model->get_roda($id_roda);
                 return view('templates/header', $data)
-                    .view('catalogos/grado/detalle', $data)
+                    .view('roda/editar', $data)
                     .view('templates/footer');
             } else {
                 return redirect()->to(site_url());
@@ -74,11 +73,14 @@ class Grado extends BaseController
 
             $permisos_usuario = $data['permisos_usuario'];
             $permisos_requeridos = array(
-                'grado.can_edit',
+                'roda.can_edit',
             );
             if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $data = [];
+                $data += $this->fn_sis->get_userdata();
+
                 return view('templates/header', $data)
-                    .view('catalogos/grado/nuevo', $data)
+                    .view('roda/nuevo', $data)
                     .view('templates/footer');
             } else {
                 return redirect()->to(site_url());
@@ -96,45 +98,44 @@ class Grado extends BaseController
 
             $permisos_usuario = $data['permisos_usuario'];
             $permisos_requeridos = array(
-                'grado.can_edit',
+                'roda.can_edit',
             );
             if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
-                $grado = $this->request->getPost();
-                if ($grado) {
+                $roda = $this->request->getPost();
+                if ($roda) {
                     $data = [];
-                    if (array_key_exists('id_grado', $grado)) {
+                    if (array_key_exists('id_roda', $roda)) {
                         $data += array(
-                            'id_grado' => $grado['id_grado'],
+                            'id_roda' => $roda['id_roda'],
                         );
                     }
+
                     $data += array(
-                        'nom_grado' => $grado['nom_grado'],
-                        'edad' => $grado['edad'],
-                        'iniciales' => $grado['iniciales'],
-                        'musica' => $grado['musica'],
-                        'cultura' => $grado['cultura'],
-                        'jogo' => $grado['jogo'],
-                        'color' => $grado['color'],
-                        'orden' => $grado['orden'],
-                        'activo' => array_key_exists('activo', $grado) ? 1 : 0,
+                        'nom_roda' => $roda['nom_roda'],
+                        'fecha' => empty($roda['fecha']) ? null: $roda['fecha'],
+                        'lugar' => $roda['lugar'],
+                        'ubicacion' => $roda['ubicacion'],
+                        'redaccion' => $roda['redaccion'],
+                        'activo' => array_key_exists('activo', $roda) ? 1 : 0,
+                        'id_comunidad' => $roda['id_comunidad'],
                     );
                     // guardar
-                    $this->grado_model->save($data);
+                    $this->roda_model->save($data);
 
-                    if (array_key_exists('id_grado', $grado)) {
+                    if (array_key_exists('id_roda', $roda)) {
                         $accion = 'modificó';
-                        $id_grado = $grado['id_grado'];
+                        $id_roda = $roda['id_roda'];
                     } else {
                         $accion = 'agregó';
-                        $id_grado = $this->grado_model->getInsertID();
+                        $id_roda = $this->roda_model->getInsertID();
                     }
 
                     // registro en bitacora
-                    $entidad = 'grado';
-                    $valor = $id_grado . " " .$grado['nom_grado'];
+                    $entidad = 'roda';
+                    $valor = $id_roda . " " .$roda['nom_roda'];
                     $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
                 }
-                return redirect()->to(site_url("grado"));
+                return redirect()->to(site_url('roda/detalle/' . $id_roda));
             } else {
                 return redirect()->to(site_url());
             }
@@ -143,38 +144,32 @@ class Grado extends BaseController
         }
     }
 
-    public function eliminar()
-    {
+    public function eliminar() {
         if ($this->session->logueado) {
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
             $permisos_usuario = $data['permisos_usuario'];
             $permisos_requeridos = array(
-                'grado.can_edit',
+                'roda.can_edit',
             );
             if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
-
-                $grado = $this->request->getPost();
-                if ($grado) {
-                    $id_grado = $grado['id_grado'];
-                    $url_actual = $grado['url_actual'];
+                $roda = $this->request->getPost();
+                if ($roda) {
+                    $id_roda = $roda['id_roda'];
+                    $url_actual = $roda['url_actual'];
 
                     // registro en bitacora
-                    $grado = $this->grado_model->get_grado($id_grado);
+                    $roda = $this->roda_model->get_roda($id_roda);
                     $accion = "eliminó";
-                    $entidad = 'grado';
-                    $valor = $grado['id_grado'] . " " . $grado['nom_grado'];
+                    $entidad = 'roda';
+                    $valor = $roda['id_roda'] . " " . $roda['nom_roda'];
                     $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
 
                     // eliminado
-                    $this->grado_model->delete($id_grado);
-
-                    return redirect()->to($url_actual);
-
-                } else {
-                    return redirect()->to(site_url("grado"));
+                    $this->roda_model->delete($id_roda);
                 }
+                return redirect()->to(site_url());
             } else {
                 return redirect()->to(site_url());
             }
@@ -184,3 +179,4 @@ class Grado extends BaseController
     }
 
 }
+

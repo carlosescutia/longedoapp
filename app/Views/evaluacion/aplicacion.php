@@ -49,7 +49,7 @@
                         <div class="four wide column">
                             <div class="ui header">
                                 <div class="content">
-                                    <div class="sub header">Edad</div>
+                                    <div class="sub header">Tipo de evaluación</div>
                                     <?= ucfirst($evaluacion['edad']) ?>
                                 </div>
                             </div>

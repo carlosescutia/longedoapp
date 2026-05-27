@@ -12,6 +12,7 @@ class Archivo extends BaseController
         $this->evento_model = model('Evento_model');
         $this->recurso_model = model('Recurso_model');
         $this->comunidad_model = model('Comunidad_model');
+        $this->roda_model = model('Roda_model');
     }
 
     public function subir()
@@ -306,6 +307,93 @@ class Archivo extends BaseController
                         );
                         // guardar
                         $this->evento_model->save($data);
+
+                        // eliminar archivo de cartel anterior
+                        $archivo_anterior = $up_dir . $archivo_actual;
+                        if ( file_exists($archivo_anterior) and $archivo_anterior !== $up_dir ) {
+                            $status = unlink($archivo_anterior) ? 'Se eliminó el archivo '.$archivo_anterior : 'Error al eliminar el archivo '.$archivo_anterior;
+                        }
+
+                        // registro en bitacora
+                        $accion = 'agregó';
+                        $entidad = 'archivo';
+                        $valor = $nombre_archivo;
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+
+                        return redirect()->to($url_actual);
+                    }
+                    $this->session->setFlashdata('error', 'El archivo se ha movido');
+
+                    return redirect()->to($url_actual);
+                }
+            } else {
+                return redirect()->to(site_url());
+            }
+        } else {
+            return redirect()->to(site_url());
+        }
+    }
+
+    public function subir_roda()
+    {
+        if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
+
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'roda.can_edit',
+                'archivo.can_upload',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+
+                $archivo = $this->request->getPost();
+                if ($archivo) {
+
+                    $up_dir = $archivo['up_dir'];
+                    $url_actual = $archivo['url_actual'];
+                    $id_roda = $archivo['id_roda'];
+                    $archivo_actual = $archivo['archivo_actual'];
+                    $res_x = $archivo['res_x'];
+                    $res_y = $archivo['res_y'];
+
+                    $validationRule = [
+                        'userfile' => [
+                            'label' => 'Imagen a subir',
+                            'rules' => [
+                                'uploaded[userfile]',
+                                'is_image[userfile]',
+                                'mime_in[userfile,image/jpg,image/jpeg,image/png,image/webp]',
+                            ],
+                        ],
+                    ];
+                    if (! $this->validateData([], $validationRule)) {
+                        $this->session->setFlashdata('error', $this->validator->getErrors()['userfile']);
+
+                        return redirect()->to($url_actual);
+                    }
+
+                    $img = $this->request->getFile('userfile');
+
+                    if (! $img->hasMoved()) {
+                        // move(destination_path, filename, overwrite)
+                        $extension = $img->guessExtension();
+                        $nombre_archivo = $this->fn_sis->create_uuid() . '.' . $extension;
+                        $img->move(ROOTPATH.'public/'.$up_dir, $nombre_archivo, true);
+
+                        // cambiar tamaño de imagen
+                        $image = service('image','imagick');
+                        $image->withFile(ROOTPATH.'public/'.$up_dir.$nombre_archivo)
+                            ->fit($res_x,$res_y, 'center')
+                            ->save(ROOTPATH.'public/'.$up_dir.$nombre_archivo);
+
+                        // actualizar cartel en roda
+                        $data = array(
+                            'id_roda' => $id_roda,
+                            'cartel' => $nombre_archivo
+                        );
+                        // guardar
+                        $this->roda_model->save($data);
 
                         // eliminar archivo de cartel anterior
                         $archivo_anterior = $up_dir . $archivo_actual;
