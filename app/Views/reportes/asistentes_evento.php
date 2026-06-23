@@ -23,7 +23,7 @@
                         <thead>
                             <tr>
                                 <th data-priority="1">Nombre capoeira / usuario</th>
-                                <th data-priority="1">Tipo</th>
+                                <th data-priority="1">Comunidad</th>
                                 <th data-priority="1">Corte</th>
                                 <th data-priority="1">Edad</th>
                                 <th data-priority="1">Talla</th>
@@ -43,7 +43,7 @@
                                         </h4>
                                     </td>
                                     <td>
-                                        <?=$asistentes_item['tipo']?>
+                                        <?=$asistentes_item['nom_comunidad']?>
                                     </td>
                                     <td>
                                         <?=$asistentes_item['sexo']?>
@@ -82,7 +82,11 @@ $(document).ready( function () {
         responsive: true,
         language: {
             url: '<?=base_url()?>assets/js/es-MX.json',
+            lengthLabels: { 
+                '-1': 'Todos'
+            },
         },
+        lengthMenu: [10, 50, -1],
     });
 });
 </script>

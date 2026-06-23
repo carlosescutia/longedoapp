@@ -56,7 +56,6 @@ class Funciones_sistema {
         $this->bitacora_model->save($data);
     }
 
-
     public function create_uuid() {
         // V4 UUID
         return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
@@ -86,4 +85,6 @@ class Funciones_sistema {
         }
 
         return $randomString;
-    }}
+    }
+
+}
