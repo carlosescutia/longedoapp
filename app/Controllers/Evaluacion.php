@@ -408,6 +408,90 @@ class Evaluacion extends BaseController
         }
     }
 
+    public function actualizar_items()
+    {
+        if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
+
+            $permisos_usuario = $data['permisos_usuario'];
+            $permisos_requeridos = array(
+                'evaluacion.can_edit',
+            );
+            if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
+                $db = \Config\Database::connect();
+                $evaluacion_usuario = $this->request->getPost();
+                $id_evaluacion = $evaluacion_usuario['id_evaluacion'];
+
+                $evaluacion = $this->evaluacion_model->get_evaluacion($id_evaluacion);
+                $evento = $this->evento_model->get_evento($evaluacion['id_evento']);
+                if ( $evento['actual'] ) {
+                    if ($evaluacion_usuario) {
+                        // borrado de items de la evaluacion
+                        $this->evaluacion_usuario_model->where('id_evaluacion', $id_evaluacion)->delete();
+
+                        // obtención de datos a guardar
+                        $data = [];
+                        foreach( $evaluacion_usuario as $key => $value) {
+                            $indice = substr($key, 4, strlen($key));
+                            if (! array_key_exists($indice, $data) and $key !== 'id_evaluacion' ) {
+                                $data[$indice] = [];
+                            }
+                            switch (substr($key, 0, 3)) {
+                                case 'ide':
+                                    $data[$indice] += [ 'id_evaluacion' => $value ];
+                                    break;
+                                case 'usu':
+                                    $data[$indice] += [ 'id_usuario' => $value ];
+                                    break;
+                                case 'mus':
+                                    $data[$indice] += [ 'musica' => $value ];
+                                    break;
+                                case 'cul':
+                                    $data[$indice] += [ 'cultura' => $value ];
+                                    break;
+                                case 'jog':
+                                    $data[$indice] += [ 'jogo' => $value ];
+                                    break;
+                                case 'obs':
+                                    $data[$indice] += [ 'observacion_evaluador' => $value ];
+                                    break;
+                                case 'grd':
+                                    $data[$indice] += [ 'id_grado' => isset($value) ? $value : null ];
+                                    break;
+                                case 'prm':
+                                    if ( $value == '0' or $value == '1' ) {
+                                        $data[$indice] += [ 'promovido' => $value ];
+                                    } else {
+                                        $data[$indice] += [ 'promovido' => null ];
+                                    }
+                                    break;
+                            }
+                        }
+                        if ($data) {
+                            // guardar datos
+                            $db->table('evaluacion_usuario')->insertBatch($data);
+                            $id_evaluacion_usuario = $this->evaluacion_usuario_model->getInsertID();
+                        }
+
+                        // registro en bitacora
+                        $accion = 'modificó';
+                        $entidad = 'evaluacion_usuario';
+                        $valor = $id_evaluacion_usuario ;
+                        $this->fn_sis->registro_bitacora($accion, $entidad, $valor);
+                    }
+                    return redirect()->to(site_url('evaluacion/aplicar/' . $evaluacion_usuario['id_evaluacion']));
+                } else {
+                    $this->session->setFlashdata('error', 'No se puede modificar la evaluación, el evento ya pasó');
+                    return redirect()->to(site_url('evaluacion/aplicar/'.$evaluacion_usuario['id_evaluacion']));
+                }
+            } else {
+                return redirect()->to(site_url());
+            }
+        } else {
+            return redirect()->to(site_url("login"));
+        }
+    }
 
 }
 

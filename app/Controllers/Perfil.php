@@ -28,7 +28,7 @@ class Perfil extends BaseController
                 $id_usuario = $data['userdata']['id_usuario'];
                 $perfil = $this->perfil_model->get_perfil_usuario($id_usuario);
                 if (empty($perfil)) {
-                    $this->crear_perfil();
+                    $this->crear_perfil($id_usuario);
                     $perfil = $this->perfil_model->get_perfil_usuario($id_usuario);
                 }
                 $data['perfil'] = $perfil;
@@ -53,16 +53,15 @@ class Perfil extends BaseController
         }
     }
 
-    public function crear_perfil()
+    public function crear_perfil($id_usuario)
     {
         $data = [];
         $data += $this->fn_sis->get_userdata();
 
-        $perfil = $this->perfil_model->get_perfil_usuario($data['userdata']['id_usuario']);
+        $perfil = $this->perfil_model->get_perfil_usuario($id_usuario);
         if (empty($perfil)) {
-            $id_usuario = $data['userdata']['id_usuario'];
             $data = array(
-                'id_usuario' => $data['userdata']['id_usuario'],
+                'id_usuario' => $id_usuario,
             );
             // guardar
             $this->perfil_model->save($data);

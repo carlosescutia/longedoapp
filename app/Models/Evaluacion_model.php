@@ -125,25 +125,6 @@ class Evaluacion_model extends Model
         return $query->getResultArray();
     }
 
-    public function get_cargas_grado($id_evaluador)
-    {
-        $sql = ""
-            ."select "
-            ."e.*, "
-            ."(case when p.nom_capoeira is not null then p.nom_capoeira else u.nom_usuario end) as nom_evaluador "
-            ."from "
-            ."evaluacion e "
-            ."left join usuario u on u.id_usuario = e.id_evaluador "
-            ."left join perfil p on p.id_usuario = u.id_usuario "
-            ."where "
-            ."e.id_evaluador = ? "
-            ."and e.id_evento is null "
-            ."order by e.id_evaluacion "
-            ."";
-        $query = $this->db->query($sql, array($id_evaluador));
-        return $query->getResultArray();
-    }
-
     public function get_evaluacion_pendiente($id_usuario)
     {
         $sql = ""

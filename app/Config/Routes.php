@@ -105,14 +105,7 @@ $routes->post('evaluacion/cancelar', 'Evaluacion::cancelar');
 $routes->get('evaluacion/aplicar/(:num)', 'Evaluacion::aplicar/$1');
 $routes->post('evaluacion/actualizar_status', 'Evaluacion::actualizar_status');
 $routes->post('evaluacion/actualizar_item', 'Evaluacion::actualizar_item');
-
-$routes->get('carga_grado/', 'Carga_grado::index');
-$routes->get('carga_grado/nuevo', 'Carga_grado::nuevo');
-$routes->get('carga_grado/aplicar/(:num)', 'Carga_grado::aplicar/$1');
-$routes->post('carga_grado/eliminar', 'Carga_grado::eliminar');
-$routes->post('carga_grado/eliminar_usuario', 'Carga_grado::eliminar_usuario');
-$routes->post('carga_grado/actualizar_status', 'Carga_grado::actualizar_status');
-$routes->post('carga_grado/actualizar_item', 'Carga_grado::actualizar_item');
+$routes->post('evaluacion/actualizar_items', 'Evaluacion::actualizar_items');
 
 $routes->get('talla/', 'Talla::index');
 $routes->get('talla/detalle/(:num)', 'Talla::detalle/$1');

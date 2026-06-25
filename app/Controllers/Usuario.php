@@ -17,6 +17,7 @@ class Usuario extends BaseController
         $this->talla_model = model('Talla_model');
         $this->parametro_sistema_model = model('Parametro_sistema_model');
         $this->perfil_model = model('Perfil_model');
+        $this->grado_model = model('Grado_model');
     }
 
     public function index()
@@ -63,6 +64,7 @@ class Usuario extends BaseController
                 $data['accesos_sistema_rol'] = $this->acceso_sistema_model->get_accesos_sistema_rol_usuario($id_usuario);
                 $data['accesos_sistema_usuario'] = $this->acceso_sistema_usuario_model->get_accesos_sistema_usuario($id_usuario);
                 $data['opciones_sistema_otorgables'] = $this->opcion_sistema_model->get_opciones_sistema_otorgables();
+                $data['grados'] = $this->grado_model->get_grados_todos();
                 $data['qr'] = $qrcode->size(450)->format('png')->generate(site_url('usuario/nuevo_pwd/' . $data['usuario']['token_cambio_pwd']));
 
                 return view('templates/header', $data)
@@ -89,6 +91,7 @@ class Usuario extends BaseController
             if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
                 $data['roles'] = $this->rol_model->get_roles();
                 $data['comunidades'] = $this->comunidad_model->get_comunidades_activas();
+                $data['grados'] = $this->grado_model->get_grados_todos();
 
                 return view('templates/header', $data)
                     .view('catalogos/usuario/nuevo', $data)
@@ -142,6 +145,20 @@ class Usuario extends BaseController
                         $accion = 'agregó';
                         $id_usuario = $this->usuario_model->getInsertID();
                     }
+
+                    // guardar perfil.grado_inicial
+                    $perfil = $this->perfil_model->get_perfil_usuario($id_usuario);
+                    if ( $perfil ) {
+                        $data = [];
+                        $data += array(
+                            'id_perfil' => $perfil['id_perfil'],
+                        );
+                    }
+                    $data += array(
+                        'id_usuario' => $id_usuario,
+                        'grado_inicial' => empty($usuario['grado_inicial']) ? null : $usuario['grado_inicial'],
+                    );
+                    $this->perfil_model->save($data);
 
                     // registro en bitacora
                     $entidad = 'usuario';

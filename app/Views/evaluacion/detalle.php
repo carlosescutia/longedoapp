@@ -121,7 +121,8 @@
                                         <?=$evaluados_item['jogo']?>
                                     </td>
                                     <td class="center aligned">
-                                        <?=$evaluados_item['promovido'] ? 'Si' : '' ?>
+                                        <?= $evaluados_item['promovido'] == '1' ? 'Si' : '' ?>
+                                        <?= $evaluados_item['promovido'] == '0' ? 'No' : '' ?>
                                     </td>
                                     <td>
                                         <?=$evaluados_item['observacion_evaluador']?>

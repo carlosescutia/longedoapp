@@ -25,6 +25,7 @@ class Perfil_model extends Model
         'id_talla',
         'fech_acept_priv',
         'foto',
+        'grado_inicial',
     ];
 
     public function get_perfil($id_perfil)

@@ -110,6 +110,30 @@
                             <?php else: ?>
                                 <input type="hidden" name="id_comunidad" value="<?=$userdata['id_comunidad']?>">
                             <?php endif ?>
+
+                            <?php
+                                $permisos_requeridos = array(
+                                    'rol_mentor',
+                                );
+                            ?>
+                            <?php if (has_permission_and($permisos_requeridos, $permisos_usuario)): ?>
+                                <div class="four wide field">
+                                    <label>Grado inicial</label>
+                                    <div class="ui search selection dropdown">
+                                        <input type="hidden" name="grado_inicial" value="<?=$usuario['grado_inicial']?>">
+                                        <i class="dropdown icon"></i>
+                                        <div class="default text">Grado inicial</div>
+                                        <div class="menu">
+                                            <div class="item" data-value="">Sin grado</div>
+                                            <?php foreach ($grados as $grados_item) { ?>
+                                                <div class="item" data-value="<?=$grados_item['id_grado'] ?>"><?=$grados_item['nom_grado'] ?></div>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php else: ?>
+                                <input type="hidden" name="grado_inicial" value="">
+                            <?php endif ?>
                         </div>
                         <input type="hidden" name="id_usuario" id="id_usuario" value="<?=$usuario['id_usuario']?>">
 
@@ -167,14 +191,6 @@ $('.ui.form')
                     {
                         type   : 'notEmpty',
                         prompt : 'Login no puede estar vacio'
-                    }
-                ]
-            },
-            password: {
-                rules: [
-                    {
-                        type   : 'notEmpty',
-                        prompt : 'Contraseña no puede estar vacio'
                     }
                 ]
             },

@@ -13,7 +13,7 @@
                     <thead>
                         <tr>
                             <th>Nombre capoeira / completo</th>
-                            <th>Usuario</th>
+                            <th>Grado</th>
                             <th>Rol / comunidad</th>
                             <th>Activo</th>
                             <th></th>
@@ -31,7 +31,7 @@
                                 </h4>
                             </td>
                             <td>
-                                <?= $usuarios_item['nom_login'] ?>
+                                <?= $usuarios_item['nom_grado'] ?>
                             </td>
                             <td>
                                 <h4 class="ui image header">

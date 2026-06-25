@@ -11,8 +11,8 @@
                             </div>
                             <div class="eight wide right aligned column">
                                 <form class="ui form" method="post" action="/evaluacion/actualizar_status" id="frm_evaluacion">
-                                    <input type="hidden" name="id_evaluacion" id="id_evaluacion" value="<?= $evaluacion['id_evaluacion'] ?>" >
-                                    <input type="hidden" name="status" id="status" value="cerrado">
+                                    <input type="hidden" name="id_evaluacion" value="<?= $evaluacion['id_evaluacion'] ?>" >
+                                    <input type="hidden" name="status" value="cerrado">
                                     <?php
                                         $mensaje = '¿Está seguro de finalizar la evaluación?<br>Ya no se podrá modificar' ;
                                         $forma = '#frm_evaluacion';
@@ -86,7 +86,8 @@
 
                 <div class="ui hidden divider"></div>
 
-                <div class="row">
+                <form class="ui form" method="post" action="/evaluacion/actualizar_items">
+                    <button class="field ui right floated primary button">Guardar</button>
                     <table id="tbl_evaluados" class="ui very basic striped unstackable table">
                         <thead>
                             <tr>
@@ -127,116 +128,99 @@
                                         </button>
                                     </td>
                                     <td>
-                                        <form class="ui form" method="post" action="/evaluacion/actualizar_item" id="frm_mus_<?=$evaluados_item['id_evaluacion_usuario']?>">
-                                            <div class="field">
-                                                <label></label>
-                                                <div class="ui selection dropdown">
-                                                    <input type="hidden" name="musica" id="musica" value="<?= $evaluados_item['musica'] ?>" onchange="$('#frm_mus_<?=$evaluados_item['id_evaluacion_usuario']?>').submit()">
-                                                    <i class="dropdown icon"></i>
-                                                    <div class="default text">música</div>
-                                                    <div class="menu">
-                                                        <div class="item" data-value="alto">alto</div>
-                                                        <div class="item" data-value="esperado">esperado</div>
-                                                        <div class="item" data-value="medio">medio</div>
-                                                        <div class="item" data-value="bajo">bajo</div>
-                                                    </div>
+                                        <div class="field">
+                                            <label></label>
+                                            <div class="ui selection dropdown">
+                                                <input type="hidden" name="mus_<?=$evaluados_item['id_evaluacion_usuario']?>" value="<?= $evaluados_item['musica'] ?>">
+                                                <i class="dropdown icon"></i>
+                                                <div class="default text">música</div>
+                                                <div class="menu">
+                                                    <div class="item" data-value="alto">alto</div>
+                                                    <div class="item" data-value="esperado">esperado</div>
+                                                    <div class="item" data-value="medio">medio</div>
+                                                    <div class="item" data-value="bajo">bajo</div>
                                                 </div>
                                             </div>
-                                        <input type="hidden" name="id_evaluacion" id="id_evaluacion" value="<?= $evaluacion['id_evaluacion'] ?>" >
-                                        <input type="hidden" name="id_evaluacion_usuario" id="id_evaluacion_usuario" value="<?= $evaluados_item['id_evaluacion_usuario'] ?>">
-                                        </form>
+                                        </div>
                                         <div class="ui basic segment info info_<?=$evaluados_item['id_evaluacion_usuario']?>">
                                             <?= $evaluados_item['req_musica'] ?>
                                         </div>
                                     </td>
                                     <td>
-                                        <form class="ui form" method="post" action="/evaluacion/actualizar_item" id="frm_cul_<?=$evaluados_item['id_evaluacion_usuario']?>">
-                                            <div class="field">
-                                                <label></label>
-                                                <div class="ui selection dropdown">
-                                                    <input type="hidden" name="cultura" id="cultura" value="<?= $evaluados_item['cultura'] ?>" onchange="$('#frm_cul_<?=$evaluados_item['id_evaluacion_usuario']?>').submit()">
-                                                    <i class="dropdown icon"></i>
-                                                    <div class="default text">cultura</div>
-                                                    <div class="menu">
-                                                        <div class="item" data-value="alto">alto</div>
-                                                        <div class="item" data-value="esperado">esperado</div>
-                                                        <div class="item" data-value="medio">medio</div>
-                                                        <div class="item" data-value="bajo">bajo</div>
-                                                    </div>
+                                        <div class="field">
+                                            <label></label>
+                                            <div class="ui selection dropdown">
+                                                <input type="hidden" name="cul_<?=$evaluados_item['id_evaluacion_usuario']?>" value="<?= $evaluados_item['cultura'] ?>">
+                                                <i class="dropdown icon"></i>
+                                                <div class="default text">cultura</div>
+                                                <div class="menu">
+                                                    <div class="item" data-value="alto">alto</div>
+                                                    <div class="item" data-value="esperado">esperado</div>
+                                                    <div class="item" data-value="medio">medio</div>
+                                                    <div class="item" data-value="bajo">bajo</div>
                                                 </div>
                                             </div>
-                                        <input type="hidden" name="id_evaluacion" id="id_evaluacion" value="<?= $evaluacion['id_evaluacion'] ?>" >
-                                        <input type="hidden" name="id_evaluacion_usuario" id="id_evaluacion_usuario" value="<?= $evaluados_item['id_evaluacion_usuario'] ?>">
-                                        </form>
+                                        </div>
                                         <div class="ui basic segment info info_<?=$evaluados_item['id_evaluacion_usuario']?>">
                                             <?= $evaluados_item['req_cultura'] ?>
                                         </div>
                                     </td>
                                     <td>
-                                        <form class="ui form" method="post" action="/evaluacion/actualizar_item" id="frm_jog<?=$evaluados_item['id_evaluacion_usuario']?>">
-                                            <div class="field">
-                                                <label></label>
-                                                <div class="ui selection dropdown">
-                                                    <input type="hidden" name="jogo" id="jogo" value="<?= $evaluados_item['jogo'] ?>" onchange="$('#frm_jog<?=$evaluados_item['id_evaluacion_usuario']?>').submit()">
-                                                    <i class="dropdown icon"></i>
-                                                    <div class="default text">jogo</div>
-                                                    <div class="menu">
-                                                        <div class="item" data-value="alto">alto</div>
-                                                        <div class="item" data-value="esperado">esperado</div>
-                                                        <div class="item" data-value="medio">medio</div>
-                                                        <div class="item" data-value="bajo">bajo</div>
-                                                    </div>
+                                        <div class="field">
+                                            <label></label>
+                                            <div class="ui selection dropdown">
+                                                <input type="hidden" name="jog_<?=$evaluados_item['id_evaluacion_usuario']?>" value="<?= $evaluados_item['jogo'] ?>">
+                                                <i class="dropdown icon"></i>
+                                                <div class="default text">jogo</div>
+                                                <div class="menu">
+                                                    <div class="item" data-value="alto">alto</div>
+                                                    <div class="item" data-value="esperado">esperado</div>
+                                                    <div class="item" data-value="medio">medio</div>
+                                                    <div class="item" data-value="bajo">bajo</div>
                                                 </div>
                                             </div>
-                                        <input type="hidden" name="id_evaluacion" id="id_evaluacion" value="<?= $evaluacion['id_evaluacion'] ?>" >
-                                        <input type="hidden" name="id_evaluacion_usuario" id="id_evaluacion_usuario" value="<?= $evaluados_item['id_evaluacion_usuario'] ?>">
-                                        </form>
+                                        </div>
                                         <div class="ui basic segment info info_<?=$evaluados_item['id_evaluacion_usuario']?>">
                                             <?= $evaluados_item['req_jogo'] ?>
                                         </div>
                                     </td>
                                     <td>
-                                        <form class="ui form" method="post" action="/evaluacion/actualizar_item" id="frm_prom<?=$evaluados_item['id_evaluacion_usuario']?>">
-                                            <div class="field">
-                                                <label></label>
-                                                <div class="ui selection dropdown">
-                                                    <input type="hidden" name="promovido" id="promovido" value="<?= $evaluados_item['promovido'] ?>" onchange="$('#frm_prom<?=$evaluados_item['id_evaluacion_usuario']?>').submit()">
-                                                    <i class="dropdown icon"></i>
-                                                    <div class="default text">promovido</div>
-                                                    <div class="menu">
-                                                        <div class="item" data-value="1">Si</div>
-                                                        <div class="item" data-value="0">No</div>
-                                                    </div>
+                                        <div class="field">
+                                            <label></label>
+                                            <div class="ui selection dropdown">
+                                                <input type="hidden" name="prm_<?=$evaluados_item['id_evaluacion_usuario']?>" value="<?= $evaluados_item['promovido'] ?>">
+                                                <i class="dropdown icon"></i>
+                                                <div class="default text">promovido</div>
+                                                <div class="menu">
+                                                    <div class="item" data-value="1">Si</div>
+                                                    <div class="item" data-value="0">No</div>
                                                 </div>
                                             </div>
-                                        <input type="hidden" name="id_evaluacion" id="id_evaluacion" value="<?= $evaluacion['id_evaluacion'] ?>" >
-                                        <input type="hidden" name="id_evaluacion_usuario" id="id_evaluacion_usuario" value="<?= $evaluados_item['id_evaluacion_usuario'] ?>">
-                                        </form>
+                                        </div>
                                         <div class="ui basic segment info">
                                             &nbsp;
                                         </div>
                                     </td>
                                     <td>
-                                        <form class="ui form" method="post" action="/evaluacion/actualizar_item" id="frm_obs<?=$evaluados_item['id_evaluacion_usuario']?>">
-                                            <div class="field">
-                                                <label></label>
-                                                <div class="ui action input">
-                                                    <input type="text" name="observacion_evaluador" id="observacion_evaluador" value="<?=$evaluados_item['observacion_evaluador']?>">
-                                                    <button class="ui icon button"> <i class="check icon"></i> </button> 
-                                                </div>
+                                        <div class="field">
+                                            <label></label>
+                                            <div class="ui input">
+                                                <input type="text" name="obs_<?=$evaluados_item['id_evaluacion_usuario']?>" value="<?=$evaluados_item['observacion_evaluador']?>">
                                             </div>
-                                        <input type="hidden" name="id_evaluacion" id="id_evaluacion" value="<?= $evaluacion['id_evaluacion'] ?>" >
-                                        <input type="hidden" name="id_evaluacion_usuario" id="id_evaluacion_usuario" value="<?= $evaluados_item['id_evaluacion_usuario'] ?>">
-                                        </form>
+                                        </div>
                                         <div class="ui basic segment info">
                                             &nbsp;
                                         </div>
                                     </td>
+                                    <input type="hidden" name="usu_<?=$evaluados_item['id_evaluacion_usuario']?>" value="<?= $evaluados_item['id_usuario'] ?>">
+                                    <input type="hidden" name="grd_<?=$evaluados_item['id_evaluacion_usuario']?>" value="<?= $evaluados_item['id_grado'] ?>">
+                                    <input type="hidden" name="ide_<?=$evaluados_item['id_evaluacion_usuario']?>" value="<?= $evaluados_item['id_evaluacion'] ?>">
                                 </tr>
                             <?php endforeach ?>
                         </tbody>
                     </table>
-                </div>
+                    <input type="hidden" name="id_evaluacion" value="<?= $evaluacion['id_evaluacion'] ?>" >
+                </form>
             </div>
         </div>
 
