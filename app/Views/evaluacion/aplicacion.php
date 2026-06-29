@@ -123,7 +123,7 @@
                                     </td>
                                     <td>
                                         <?= $evaluados_item['nom_grado'] ?>
-                                        <button class="ui tertiary icon button" id="btn_info" onclick="$('.info_<?=$evaluados_item['id_evaluacion_usuario']?>').toggle('fast')">
+                                        <a href="#" class="ui tertiary icon button" onclick="$('.info_<?=$evaluados_item['id_evaluacion_usuario']?>').toggle('fast')">
                                             <i class="question circle icon"></i>
                                         </button>
                                     </td>
@@ -249,10 +249,6 @@
         }
 
         $('.info').hide();
-    });
-
-    $('#btn_finalizar').click( function() {
-        confirm_action('Finalizar evaluacion', '#frm_evaluacion');
     });
 
     $('.open_image').click( function() {
