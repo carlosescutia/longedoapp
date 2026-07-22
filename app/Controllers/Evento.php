@@ -383,5 +383,40 @@ class Evento extends BaseController
         }
     }
 
+    public function gestion_asistentes($id_evento, $salida='')
+    {
+        if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
+
+            $data['error'] = $this->session->getFlashdata('error');
+            $evento = $this->evento_model->get_evento($id_evento);
+
+            $permisos_requeridos = array(
+                'reporte_mentor.can_view',
+            );
+            if (has_permission_and($permisos_requeridos, $data['permisos_usuario'])) {
+                if ($data['userdata']['id_comunidad'] == $evento['id_comunidad']) {
+
+                    $data['evento'] = $this->evento_model->get_evento($id_evento);
+                    $data['asistentes'] = $this->evento_usuario_model->get_asistentes_evento($id_evento, $salida);
+
+                    if ($salida == 'csv') {
+                        return $this->response->download("asistentes_evento" . $id_evento . '.csv', $data['asistentes']);
+                    } else {
+                        return view('templates/header', $data)
+                            .view('evento/gestion_asistentes', $data)
+                            .view('templates/footer');
+                    }
+                } else {
+                    return redirect()->to(site_url());
+                }
+            } else {
+                return redirect()->to(site_url());
+            }
+        } else {
+            return redirect()->to(site_url("login"));
+        }
+    }
 
 }

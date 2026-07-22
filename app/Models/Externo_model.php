@@ -20,6 +20,9 @@ class Externo_model extends Model
         'codigo',
         'nota',
         'activo',
+        'asistencia',
+        'pago',
+        'kit',
     ];
 
     public function get_externos()

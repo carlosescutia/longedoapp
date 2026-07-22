@@ -86,6 +86,7 @@ $routes->post('evento/asistir', 'Evento::asistir');
 $routes->post('evento/cancelar', 'Evento::cancelar');
 $routes->post('evento/actualizar_registrar_externos', 'Evento::actualizar_registrar_externos');
 $routes->post('evento/actualizar_codigo', 'Evento::actualizar_codigo');
+$routes->get('evento/gestion_asistentes/(:segment)', 'Evento::gestion_asistentes/$1');
 
 $routes->get('comunidad/', 'Comunidad::index');
 $routes->get('comunidad/detalle/(:num)', 'Comunidad::detalle/$1');
@@ -146,3 +147,7 @@ $routes->post('roda/eliminar', 'Roda::eliminar');
 
 $routes->post('delegado/guardar', 'Delegado::guardar');
 $routes->post('delegado/eliminar', 'Delegado::eliminar');
+
+$routes->post('evento_usuario/actualizar_asistencia', 'Evento_usuario::actualizar_asistencia');
+$routes->post('evento_usuario/actualizar_pago', 'Evento_usuario::actualizar_pago');
+$routes->post('evento_usuario/actualizar_kit', 'Evento_usuario::actualizar_kit');
