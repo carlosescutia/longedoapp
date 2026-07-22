@@ -161,6 +161,11 @@ class OpcionSistemaSeeder extends Seeder
                 'nom_opcion_sistema' => 'Ver grados',
                 'otorgable' => null
             ],
+            [
+                'cod_opcion_sistema' => 'delegado.can_edit',
+                'nom_opcion_sistema' => 'Delegar evaluaciones',
+                'otorgable' => null
+            ],
         ];
 
         $this->db->table('opcion_sistema')->insertBatch($data);

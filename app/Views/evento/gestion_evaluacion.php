@@ -1,5 +1,5 @@
 <div class="ui segment">
-    <h4 class="ui header">Gestión de la evaluación</h4>
+    <h4 class="ui header">Aplicación de evaluación</h4>
     <div class="ui hidden divider"></div>
 
     <table class="ui celled unstackable tiny table">

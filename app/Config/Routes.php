@@ -106,6 +106,7 @@ $routes->get('evaluacion/aplicar/(:num)', 'Evaluacion::aplicar/$1');
 $routes->post('evaluacion/actualizar_status', 'Evaluacion::actualizar_status');
 $routes->post('evaluacion/actualizar_item', 'Evaluacion::actualizar_item');
 $routes->post('evaluacion/actualizar_items', 'Evaluacion::actualizar_items');
+$routes->get('evaluacion/delegar/(:num)', 'Evaluacion::delegar/$1');
 
 $routes->get('talla/', 'Talla::index');
 $routes->get('talla/detalle/(:num)', 'Talla::detalle/$1');
@@ -143,3 +144,5 @@ $routes->get('roda/editar/(:num)', 'Roda::editar/$1');
 $routes->post('roda/guardar', 'Roda::guardar');
 $routes->post('roda/eliminar', 'Roda::eliminar');
 
+$routes->post('delegado/guardar', 'Delegado::guardar');
+$routes->post('delegado/eliminar', 'Delegado::eliminar');

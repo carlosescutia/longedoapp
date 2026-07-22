@@ -168,6 +168,10 @@ class AccesoSistemaSeeder extends Seeder
                 'cod_opcion_sistema' => 'grado.can_view',
             ],
             [
+                'id_rol' => 'mentor',
+                'cod_opcion_sistema' => 'delegado.can_edit',
+            ],
+            [
                 'id_rol' => 'alumno',
                 'cod_opcion_sistema' => 'reporte.can_view',
             ],

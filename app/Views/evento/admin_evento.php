@@ -30,20 +30,41 @@
             <tbody>
                 <?php foreach ($evaluaciones as $evaluaciones_item): ?>
                     <tr>
-                    <td><a href="<?=site_url('evaluacion/detalle/')?><?=$evaluaciones_item['id_evaluacion']?>"><?= $evaluaciones_item['nom_evaluador'] ?></a></td>
-                        <td><?= $evaluaciones_item['edad'] ?></td>
+                        <td>
+                            <?php if ( $evaluaciones_item['tipo_evaluador'] == 'encargado' ): ?>
+                                <a href="<?=site_url('evaluacion/detalle/')?><?=$evaluaciones_item['id_evaluacion']?>">
+                            <?php endif ?>
+
+                                <?= ucfirst($evaluaciones_item['edad']) ?>
+
+                            <?php if ( $evaluaciones_item['tipo_evaluador'] == 'encargado' ): ?>
+                                </a>
+                            <?php endif ?>
+                        </td>
+                        <td>
+                            <b><u><?= $evaluaciones_item['nom_evaluador'] ?></u></b><br>
+                            <?= $evaluaciones_item['grados'] ?>
+                            <?php if ( $evaluaciones_item['edad'] == 'adulto' and $evaluaciones_item['tipo_evaluador'] == 'encargado' ): ?>
+                                <p class="right aligned">
+                                    -----------<br>
+                                    <a href="<?=site_url('evaluacion/delegar/')?><?=$evaluaciones_item['id_evaluacion']?>">Delegar</a>
+                                </p>
+                            <?php endif ?>
+                        </td>
                         <td><?= $evaluaciones_item['status'] ?></td>
                         <td class="center aligned">
-                            <form class="ui form" method="post" action="/evaluacion/eliminar" id="frm_elim_evaluacion<?=$evaluaciones_item['id_evaluacion']?>">
-                                <input type="hidden" name="id_evaluacion" id="id_evaluacion" value="<?= $evaluaciones_item['id_evaluacion'] ?>" >
-                                <input type="hidden" name="id_evento" id="id_evento" value="<?= $evento['id_evento'] ?>" >
-                                <input type="hidden" name="url_actual" id="url_actual" value="<?= site_url('evento/detalle/'.$evaluaciones_item['id_evento']) ?>">
-                                <?php
-                                    $mensaje = '¡Se eliminará la evaluación!<br>¿Está seguro?' ;
-                                    $forma = '#frm_elim_evaluacion' . $evaluaciones_item['id_evaluacion'] ;
-                                ?>
-                                <a href="#" onclick="confirm_action('<?=$mensaje?>','<?=$forma?>')" ><span class="ui red text"><i class="icon times circle outline"></span></i></a>
-                            </form>
+                            <?php if ( $evaluaciones_item['tipo_evaluador'] == 'encargado' ): ?>
+                                <form class="ui form" method="post" action="/evaluacion/eliminar" id="frm_elim_evaluacion<?=$evaluaciones_item['id_evaluacion']?>">
+                                    <input type="hidden" name="id_evaluacion" id="id_evaluacion" value="<?= $evaluaciones_item['id_evaluacion'] ?>" >
+                                    <input type="hidden" name="id_evento" id="id_evento" value="<?= $evento['id_evento'] ?>" >
+                                    <input type="hidden" name="url_actual" id="url_actual" value="<?= site_url('evento/detalle/'.$evaluaciones_item['id_evento']) ?>">
+                                    <?php
+                                        $mensaje = '¡Se eliminará la evaluación!<br>¿Está seguro?' ;
+                                        $forma = '#frm_elim_evaluacion' . $evaluaciones_item['id_evaluacion'] ;
+                                    ?>
+                                    <a href="#" onclick="confirm_action('<?=$mensaje?>','<?=$forma?>')" ><span class="ui red text"><i class="icon times circle outline"></span></i></a>
+                                </form>
+                            <?php endif ?>
                         </td>
                     </tr>
                 <?php endforeach ?>

@@ -53,16 +53,17 @@ class Evaluacion_usuario_model extends Model
     {
         $sql = ""
             ."select "
-            ."elu.*, u.nom_usuario, c.nom_comunidad, p.id_perfil, p.nom_capoeira, p.foto, g.nom_grado, g.musica as req_musica, g.cultura as req_cultura, g.jogo as req_jogo "
+                ."elu.*, u.nom_usuario, c.nom_comunidad, p.id_perfil, p.nom_capoeira, p.foto, g.nom_grado "
             ."from "
-            ."evaluacion_usuario elu "
-            ."left join usuario u on u.id_usuario = elu.id_usuario "
-            ."left join comunidad c on c.id_comunidad = u.id_comunidad "
-            ."left join perfil p on p.id_usuario = elu.id_usuario "
-            ."left join grado g on g.id_grado = elu.id_grado "
+                ."evaluacion_usuario elu "
+                ."left join usuario u on u.id_usuario = elu.id_usuario "
+                ."left join comunidad c on c.id_comunidad = u.id_comunidad "
+                ."left join perfil p on p.id_usuario = elu.id_usuario "
+                ."left join grado g on g.id_grado = elu.id_grado "
             ."where "
-            ."elu.id_evaluacion = ? "
-            ."order by elu.id_usuario "
+                ."elu.id_evaluacion = ? "
+            ."order by "
+                ."g.edad, g.orden, p.nom_capoeira, u.nom_usuario "
             ."";
         $query = $this->db->query($sql, array($id_evaluacion));
         return $query->getResultArray();
@@ -89,17 +90,17 @@ class Evaluacion_usuario_model extends Model
     {
         $sql = ""
             ."select "
-            ."evt.nom_evento, evl.fecha, evu.id_grado, g.nom_grado, g.edad, g.orden "
+                ."evt.nom_evento, evl.fecha, evu.id_grado, g.nom_grado, g.edad, g.orden "
             ."from "
-            ."evaluacion_usuario evu "
-            ."left join evaluacion evl on evl.id_evaluacion = evu.id_evaluacion "
-            ."left join evento evt on evt.id_evento = evl.id_evento "
-            ."left join grado g on g.id_grado = evu.id_grado "
+                ."evaluacion_usuario evu "
+                ."left join evaluacion evl on evl.id_evaluacion = evu.id_evaluacion "
+                ."left join evento evt on evt.id_evento = evl.id_evento "
+                ."left join grado g on g.id_grado = evu.id_grado "
             ."where "
-            ."evu.id_usuario = ? "
-            ."and evu.promovido = 1 "
+                ."evu.id_usuario = ? "
+                ."and evu.promovido = 1 "
             ."order by "
-            ."evl.fecha, g.edad, g.orden "
+                ."evl.fecha, g.edad, g.orden "
             ."";
         $query = $this->db->query($sql, array($id_usuario));
         return $query->getResultArray();
@@ -138,6 +139,116 @@ class Evaluacion_usuario_model extends Model
             ."";
         $query = $this->db->query($sql, array($id_usuario));
         return $query->getRowArray() ;
+    }
+
+    public function get_evaluados_mentor($id_evaluacion, $id_usuario)
+    {
+        // determinar si el mentor es el dueño de la evaluación o un delegado
+        $sql = ""
+            ."select "
+                ."1 as dueno "
+            ."from "
+                ."evaluacion e "
+            ."where "
+                ."e.id_evaluacion = ? "
+                ."and e.id_evaluador = ? "
+            ."";
+        $query = $this->db->query($sql, array($id_evaluacion, $id_usuario));
+        $mentor_dueno = $query->getRowArray();
+
+        if ( $mentor_dueno ) {
+            // dueño de evaluacion, todos los evaluados menos los que corresponden a los delegados
+            $sql = ""
+                ."select "
+                    ."elu.*, u.nom_usuario, c.nom_comunidad, p.id_perfil, p.nom_capoeira, p.foto, g.nom_grado "
+                ."from "
+                    ."evaluacion_usuario elu "
+                    ."left join usuario u on u.id_usuario = elu.id_usuario "
+                    ."left join comunidad c on c.id_comunidad = u.id_comunidad "
+                    ."left join perfil p on p.id_usuario = elu.id_usuario "
+                    ."left join grado g on g.id_grado = elu.id_grado "
+                ."where "
+                    ."elu.id_evaluacion = ? "
+                    ."and elu.id_grado not in (select id_grado from delegado where id_evaluacion = ?) "
+                ."order by "
+                    ."g.edad, g.orden, p.nom_capoeira, u.nom_usuario "
+                ."";
+            $query = $this->db->query($sql, array($id_evaluacion, $id_evaluacion));
+        } else {
+            // evaluados que corresponden a delegado
+            $sql = ""
+                ."select "
+                    ."elu.*, u.nom_usuario, c.nom_comunidad, p.id_perfil, p.nom_capoeira, p.foto, g.nom_grado "
+                ."from "
+                    ."evaluacion_usuario elu "
+                    ."left join usuario u on u.id_usuario = elu.id_usuario "
+                    ."left join comunidad c on c.id_comunidad = u.id_comunidad "
+                    ."left join perfil p on p.id_usuario = elu.id_usuario "
+                    ."left join grado g on g.id_grado = elu.id_grado "
+                    ."left join delegado d on d.id_evaluacion = elu.id_evaluacion "
+                ."where "
+                    ."elu.id_evaluacion = ? "
+                    ."and g.id_grado = d.id_grado "
+                    ."and d.id_evaluador = ? "
+                ."order by "
+                    ."g.edad, g.orden, p.nom_capoeira, u.nom_usuario "
+                ."";
+            $query = $this->db->query($sql, array($id_evaluacion, $id_usuario));
+        }
+
+        return $query->getResultArray();
+    }
+
+    public function get_grados_mentor($id_evaluacion, $id_usuario)
+    {
+        // determinar si el mentor es el dueño de la evaluación o un delegado
+        $sql = ""
+            ."select "
+                ."1 as dueno "
+            ."from "
+                ."evaluacion e "
+            ."where "
+                ."e.id_evaluacion = ? "
+                ."and e.id_evaluador = ? "
+            ."";
+        $query = $this->db->query($sql, array($id_evaluacion, $id_usuario));
+        $mentor_dueno = $query->getRowArray();
+
+        if ( $mentor_dueno ) {
+            // dueño de evaluacion, todos los evaluados menos los que corresponden a los delegados
+            $sql = ""
+                ."select "
+                    ."distinct g.nom_grado, g.edad, g.orden, g.musica as req_musica, g.cultura as req_cultura, g.jogo as req_jogo "
+                ."from "
+                    ."evaluacion_usuario elu "
+                    ."left join grado g on g.id_grado = elu.id_grado "
+                ."where "
+                    ."elu.id_evaluacion = ? "
+                    ."and elu.id_grado not in (select id_grado from delegado where id_evaluacion = ?) "
+                ."order by "
+                    ."g.edad, g.orden "
+                ."";
+            $query = $this->db->query($sql, array($id_evaluacion, $id_evaluacion));
+        } else {
+            // evaluados que corresponden a delegado
+            $sql = ""
+                ."select "
+                    ."distinct g.nom_grado, g.edad, g.orden, g.musica as req_musica, g.cultura as req_cultura, g.jogo as req_jogo "
+                ."from "
+                    ."evaluacion_usuario elu "
+                    ."left join grado g on g.id_grado = elu.id_grado "
+                    ."left join delegado d on d.id_evaluacion = elu.id_evaluacion "
+                ."where "
+                    ."elu.id_evaluacion = ? "
+                    ."and g.id_grado = d.id_grado "
+                    ."and d.id_evaluador = ? "
+                ."order by "
+                    ."g.edad, g.orden "
+                ."";
+            $query = $this->db->query($sql, array($id_evaluacion, $id_usuario));
+        }
+
+        return $query->getResultArray();
     }
 
 }

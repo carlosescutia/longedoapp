@@ -86,6 +86,39 @@
 
                 <div class="ui hidden divider"></div>
 
+                <div class="row">
+                    <div class="ui accordion">
+                        <div class="title">
+                            <i class="dropdown icon"></i>
+                            Requisitos de grados
+                        </div>
+                        <div class="content">
+                            <table id="tbl_grados" class="ui very basic striped unstackable table">
+                                <thead>
+                                    <tr>
+                                        <th data-priority="1">Grado</th>
+                                        <th data-priority="1">Música</th>
+                                        <th data-priority="1">Cultura</th>
+                                        <th data-priority="1">Jogo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($grados as $grados_item): ?>
+                                    <tr>
+                                        <td><?= $grados_item['nom_grado'] ?></td>
+                                        <td><?= $grados_item['req_musica'] ?></td>
+                                        <td><?= $grados_item['req_cultura'] ?></td>
+                                        <td><?= $grados_item['req_jogo'] ?></td>
+                                    </tr>
+                                    <?php endforeach ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui hidden divider"></div>
+
                 <form class="ui form" method="post" action="/evaluacion/actualizar_items">
                     <button class="field ui right floated primary button">Guardar</button>
                     <table id="tbl_evaluados" class="ui very basic striped unstackable table">
@@ -123,9 +156,6 @@
                                     </td>
                                     <td>
                                         <?= $evaluados_item['nom_grado'] ?>
-                                        <a href="#" class="ui tertiary icon button" onclick="$('.info_<?=$evaluados_item['id_evaluacion_usuario']?>').toggle('fast')">
-                                            <i class="question circle icon"></i>
-                                        </button>
                                     </td>
                                     <td>
                                         <div class="field">
@@ -141,9 +171,6 @@
                                                     <div class="item" data-value="bajo">bajo</div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="ui basic segment info info_<?=$evaluados_item['id_evaluacion_usuario']?>">
-                                            <?= $evaluados_item['req_musica'] ?>
                                         </div>
                                     </td>
                                     <td>
@@ -161,9 +188,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="ui basic segment info info_<?=$evaluados_item['id_evaluacion_usuario']?>">
-                                            <?= $evaluados_item['req_cultura'] ?>
-                                        </div>
                                     </td>
                                     <td>
                                         <div class="field">
@@ -180,9 +204,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="ui basic segment info info_<?=$evaluados_item['id_evaluacion_usuario']?>">
-                                            <?= $evaluados_item['req_jogo'] ?>
-                                        </div>
                                     </td>
                                     <td>
                                         <div class="field">
@@ -197,9 +218,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="ui basic segment info">
-                                            &nbsp;
-                                        </div>
                                     </td>
                                     <td>
                                         <div class="field">
@@ -207,9 +225,6 @@
                                             <div class="ui input">
                                                 <input type="text" name="obs_<?=$evaluados_item['id_evaluacion_usuario']?>" value="<?=$evaluados_item['observacion_evaluador']?>">
                                             </div>
-                                        </div>
-                                        <div class="ui basic segment info">
-                                            &nbsp;
                                         </div>
                                     </td>
                                     <input type="hidden" name="usu_<?=$evaluados_item['id_evaluacion_usuario']?>" value="<?= $evaluados_item['id_usuario'] ?>">
@@ -243,6 +258,10 @@
 
 <script>
     $(document).ready( function() {
+        $('.ui.accordion')
+            .accordion()
+        ;
+
         estado = '<?= $evaluacion['status'] ?>';
         if ( estado !== 'proceso') {
             $('.field').addClass('disabled');

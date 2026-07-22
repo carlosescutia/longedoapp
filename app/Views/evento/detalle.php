@@ -43,12 +43,9 @@
                     Del <?= datefmt_format($fmt, $fech_ini) ?> al <?= datefmt_format($fmt, $fech_fin) ?>
                 </div>
                 <div class="eight wide column">
+                    <?= $evento['lugar'] ?>
                     <?php if ( $evento['ubicacion'] ): ?>
-                        <a class="item" href="<?=$evento['ubicacion']?>" target="_blank"><i class="marker icon"></i>
-                    <?php endif ?>
-                        <?= $evento['lugar'] ?>
-                    <?php if ( $evento['ubicacion'] ): ?>
-                        </a>
+                        <a class="ui icon teal mini button" href="<?=$evento['ubicacion']?>" target="_blank"><i class="marker icon"></i>Ver en Maps</a>
                     <?php endif ?>
                 </div>
             </div>
@@ -67,25 +64,26 @@
                 <?php include "user_actions_evento.php" ?>
         </div>
 
-        <!-- Administración del evento -->
-        <?php if ($userdata['id_comunidad'] == $evento['id_comunidad']): ?>
-            <?php
-                $permisos_requeridos = array(
-                    'evento.can_edit',
-                );
-            ?>
-            <?php if (has_permission_and($permisos_requeridos, $permisos_usuario)): ?>
+        <div class="five wide column">
+            <!-- Administración del evento -->
+            <?php if ($userdata['id_comunidad'] == $evento['id_comunidad']): ?>
+                <?php
+                    $permisos_requeridos = array(
+                        'evento.can_edit',
+                    );
+                ?>
+                <?php if (has_permission_and($permisos_requeridos, $permisos_usuario)): ?>
+                        <?php include "admin_evento.php" ?>
+                <?php endif ?>
+            <?php endif ?>
+
+            <!-- Aplicación de evaluación -->
+            <?php if ( in_array($userdata['id_usuario'], array_column($evaluadores_evento, 'id_evaluador')) ): ?>
                 <div class="five wide column">
-                    <?php include "admin_evento.php" ?>
+                    <?php include "gestion_evaluacion.php" ?>
                 </div>
             <?php endif ?>
-        <?php endif ?>
-
-        <?php if ( in_array($userdata['id_usuario'], array_column($evaluadores_evento, 'id_evaluador')) ): ?>
-            <div class="five wide column">
-                <?php include "gestion_evaluacion.php" ?>
-            </div>
-        <?php endif ?>
+        </div>
 
         <div class="row">
             <div class="ui basic segment">

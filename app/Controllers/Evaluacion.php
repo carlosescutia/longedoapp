@@ -12,6 +12,7 @@ class Evaluacion extends BaseController
         $this->evento_model = model('Evento_model');
         $this->evento_usuario_model = model('Evento_usuario_model');
         $this->perfil_model = model('Perfil_model');
+        $this->delegado_model = model('Delegado_model');
     }
 
     public function detalle($id_evaluacion)
@@ -96,7 +97,7 @@ class Evaluacion extends BaseController
                         $data = [];
                         if (array_key_exists('id_evaluacion', $evaluacion)) {
                             // guardar evaluacion existente
-                            // no comprobar restricción de edad 
+                            // no comprobar restricción de edad
                             $data += array(
                                 'id_evaluacion' => $evaluacion['id_evaluacion'],
                             );
@@ -298,6 +299,8 @@ class Evaluacion extends BaseController
             $data = [];
             $data += $this->fn_sis->get_userdata();
 
+            $id_usuario = $data['userdata']['id_usuario'];
+
             $permisos_usuario = $data['permisos_usuario'];
             $permisos_requeridos = array(
                 'evaluacion.can_edit',
@@ -305,17 +308,19 @@ class Evaluacion extends BaseController
 
             if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
 
-                $data['evaluacion'] = $this->evaluacion_model->get_evaluacion($id_evaluacion);
-                if ( $data['evaluacion']['id_evaluador'] == $data['userdata']['id_usuario'] ) {
-
+                $evaluacion = $this->evaluacion_model->get_evaluacion_mentor($id_evaluacion, $id_usuario);
+                $id_evento = $evaluacion['id_evento'];
+                if ( $evaluacion ) {
                     $data['error'] = $this->session->getFlashdata('error');
-                    $data['evaluados'] = $this->evaluacion_usuario_model->get_evaluados($id_evaluacion);
+                    $data['evaluacion'] = $evaluacion;
+                    $data['evaluados'] = $this->evaluacion_usuario_model->get_evaluados_mentor($id_evaluacion, $id_usuario);
+                    $data['grados'] = $this->evaluacion_usuario_model->get_grados_mentor($id_evaluacion, $id_usuario);
 
                     return view('templates/header', $data)
                         .view('evaluacion/aplicacion', $data)
                         .view('templates/footer');
                 } else {
-                    return redirect()->to(site_url());
+                    return redirect()->to(site_url('evento/detalle/' . $id_evento));
                 }
             } else {
                 return redirect()->to(site_url());
@@ -367,6 +372,7 @@ class Evaluacion extends BaseController
         }
     }
 
+    /*
     public function actualizar_item()
     {
         if ($this->session->logueado) {
@@ -407,6 +413,7 @@ class Evaluacion extends BaseController
             return redirect()->to(site_url("login"));
         }
     }
+    */
 
     public function actualizar_items()
     {
@@ -421,14 +428,18 @@ class Evaluacion extends BaseController
             if (has_permission_and($permisos_requeridos, $permisos_usuario)) {
                 $db = \Config\Database::connect();
                 $evaluacion_usuario = $this->request->getPost();
+
                 $id_evaluacion = $evaluacion_usuario['id_evaluacion'];
+                $id_usuario = $data['userdata']['id_usuario'];
+                $evaluados = $this->evaluacion_usuario_model->get_evaluados_mentor($id_evaluacion, $id_usuario);
+                $usuarios = array_column($evaluados, 'id_evaluacion_usuario');
 
                 $evaluacion = $this->evaluacion_model->get_evaluacion($id_evaluacion);
                 $evento = $this->evento_model->get_evento($evaluacion['id_evento']);
                 if ( $evento['actual'] ) {
                     if ($evaluacion_usuario) {
                         // borrado de items de la evaluacion
-                        $this->evaluacion_usuario_model->where('id_evaluacion', $id_evaluacion)->delete();
+                        $this->evaluacion_usuario_model->whereIn('id_evaluacion_usuario', $usuarios)->delete();
 
                         // obtención de datos a guardar
                         $data = [];
@@ -484,6 +495,41 @@ class Evaluacion extends BaseController
                 } else {
                     $this->session->setFlashdata('error', 'No se puede modificar la evaluación, el evento ya pasó');
                     return redirect()->to(site_url('evaluacion/aplicar/'.$evaluacion_usuario['id_evaluacion']));
+                }
+            } else {
+                return redirect()->to(site_url());
+            }
+        } else {
+            return redirect()->to(site_url("login"));
+        }
+    }
+
+    public function delegar($id_evaluacion)
+    {
+        if ($this->session->logueado) {
+            $data = [];
+            $data += $this->fn_sis->get_userdata();
+
+            $evaluacion = $this->evaluacion_model->get_evaluacion($id_evaluacion);
+            $id_evento = $evaluacion['id_evento'];
+            $evento = $this->evento_model->get_evento($id_evento);
+            $permisos_requeridos = array(
+                'evaluacion.can_edit',
+            );
+            if ($data['userdata']['id_comunidad'] == $evento['id_comunidad']) {
+                if (has_permission_and($permisos_requeridos, $data['permisos_usuario'])) {
+
+                    $data['delegados'] = $this->delegado_model->get_delegados_evaluacion($id_evaluacion);
+                    $data['evaluacion'] = $this->evaluacion_model->get_evaluacion($id_evaluacion);
+                    $data['evento'] = $this->evento_model->get_evento($evaluacion['id_evento']);
+                    $data['evaluadores'] = $this->usuario_model->get_evaluadores();
+                    $data['grados'] = $this->evaluacion_model->get_grados_evaluacion($id_evaluacion);
+
+                    return view('templates/header', $data)
+                        .view('evaluacion/delegar', $data)
+                        .view('templates/footer');
+                } else {
+                    return redirect()->to(site_url());
                 }
             } else {
                 return redirect()->to(site_url());
